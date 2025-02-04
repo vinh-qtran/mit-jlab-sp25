@@ -1,6 +1,4 @@
 def set_plot_configs():
-    from matplotlib import pyplot as plt
-    from matplotlib.ticker import MultipleLocator, MaxNLocator
     import matplotlib as mpl
 
     # define matplotlib style
