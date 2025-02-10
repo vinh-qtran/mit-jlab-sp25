@@ -9,11 +9,11 @@ class BaseFitter:
         self.y = y
         self.yerr = yerr
 
-    def _get_model(self, params):
+    def _get_model(self, x, params):
         raise NotImplementedError("Not implemented in base class.")
     
     def _get_residuals(self, params):
-        yhat = self._get_model(params)
+        yhat = self._get_model(self.x,params)
         return (self.y - yhat)**2 / self.yerr**2
     
     def _get_chisqr(self, params):
@@ -28,8 +28,11 @@ class BaseFitter:
             self._get_residuals, initial_guess
         )
 
+        chisqr = self._get_chisqr(result.x)
+        alpha = 1 - chi2.cdf(chisqr, len(self.x) - len(result.x))
+
         try:
-            cov = np.linalg.inv(np.dot(result.jac.T,result.jac))
+            cov = np.linalg.inv(np.dot(result.jac.T, result.jac))
             e_params = np.sqrt(np.diagonal(cov))
         except np.linalg.LinAlgError:
             cov = None
@@ -40,6 +43,8 @@ class BaseFitter:
             'e_params': e_params,
 
             'chisqr': self._get_chisqr(result.x),
+            'alpha': alpha,
+
             'cov': cov,
 
             'success': result.success,
