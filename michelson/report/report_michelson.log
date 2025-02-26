@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.28)  25 FEB 2025 15:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.28)  26 FEB 2025 14:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/Users/yongao/Desktop/8.13/mit-jlab-sp25/michelson/Report/report_michelson.tex
-(/Users/yongao/Desktop/8.13/mit-jlab-sp25/michelson/Report/report_michelson.tex
+**/Users/yongao/Desktop/8.13/mit-jlab-sp25/michelson/report/report_michelson.tex
+(/Users/yongao/Desktop/8.13/mit-jlab-sp25/michelson/report/report_michelson.tex
 LaTeX2e <2022-11-01> patch level 1
 L3 programming layer <2023-02-22> (/usr/local/texlive/2023/texmf-dist/tex/latex/revtex4-1/revtex4-1.cls
 Document Class: revtex4-1 2020/09/30 4.1s (http://publish.aps.org/revtex4/ for documentation)
@@ -301,10 +301,10 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 )
 \Hy@SectionHShift=\skip55
 )
-Class revtex4-1 Info: Unrecognized LaTeX tabular. Please update this document class! (Proceeding with fingers crossed.) on input line 20.
-Class revtex4-1 Info: cite was not loaded (OK!) on input line 20.
-Class revtex4-1 Info: mcite was not loaded (OK!) on input line 20.
-Class revtex4-1 Info: multicol was not loaded (OK!) on input line 20.
+Class revtex4-1 Info: Unrecognized LaTeX tabular. Please update this document class! (Proceeding with fingers crossed.) on input line 21.
+Class revtex4-1 Info: cite was not loaded (OK!) on input line 21.
+Class revtex4-1 Info: mcite was not loaded (OK!) on input line 21.
+Class revtex4-1 Info: multicol was not loaded (OK!) on input line 21.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count291
@@ -312,24 +312,24 @@ File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 ) (./report_michelson.aux)
 \openout1 = `report_michelson.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
  (/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count292
@@ -355,71 +355,74 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 149.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-Package hyperref Info: Link coloring ON on input line 20.
+Package hyperref Info: Link coloring ON on input line 21.
  (./report_michelson.out) (./report_michelson.out)
 \@outlinefile=\write4
 \openout4 = `report_michelson.out'.
 
-Class revtex4-1 Info: Taking \maketitle back from hyperref on input line 20.
+Class revtex4-1 Info: Taking \maketitle back from hyperref on input line 21.
 \openout3 = `report_michelsonNotes.bib'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 30.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 31.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 30.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 31.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-<fig/michelson_setup.png, id=50, 837.1275pt x 672.5125pt>
+) [1{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+<fig/michelson_setup.png, id=112, 837.1275pt x 672.5125pt>
 File: fig/michelson_setup.png Graphic file (type png)
 <use fig/michelson_setup.png>
-Package pdftex.def Info: fig/michelson_setup.png  used on input line 67.
+Package pdftex.def Info: fig/michelson_setup.png  used on input line 89.
 (pdftex.def)             Requested size: 229.49844pt x 184.36171pt.
+<fig/Intensity.png, id=118, 509.0217pt x 402.0621pt>
+File: fig/Intensity.png Graphic file (type png)
+<use fig/Intensity.png>
+Package pdftex.def Info: fig/Intensity.png  used on input line 108.
+(pdftex.def)             Requested size: 229.49844pt x 181.27596pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<fig/Primary_Maxima_Minima.png, id=55, 515.526pt x 402.0621pt>
-File: fig/Primary_Maxima_Minima.png Graphic file (type png)
-<use fig/Primary_Maxima_Minima.png>
-Package pdftex.def Info: fig/Primary_Maxima_Minima.png  used on input line 78.
-(pdftex.def)             Requested size: 255.0pt x 198.87718pt.
+[2 <./fig/michelson_setup.png>]
 
-Overfull \hbox (9.0pt too wide) in paragraph at lines 78--79
- [][] 
- []
+LaTeX Warning: A float is stuck (cannot be placed) on input line 120.
 
 
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[1{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 86.
-
-
-LaTeX Warning: A float is stuck (cannot be placed) on input line 86.
+LaTeX Warning: A float is stuck (cannot be placed) on input line 120.
 
 
 Class revtex4-1 Warning: Deferred float stuck during \clearpage processing.
 
-(./report_michelson.bbl) [2 <./fig/michelson_setup.png> <./fig/Primary_Maxima_Minima.png>] (./report_michelson.aux)
+<fig/Primary_Maxima_Minima.png, id=131, 515.526pt x 402.0621pt>
+File: fig/Primary_Maxima_Minima.png Graphic file (type png)
+<use fig/Primary_Maxima_Minima.png>
+Package pdftex.def Info: fig/Primary_Maxima_Minima.png  used on input line 127.
+(pdftex.def)             Requested size: 229.49844pt x 178.98761pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3 <./fig/Intensity.png> <./fig/Primary_Maxima_Minima.png>] (./report_michelson.bbl) [4] (./report_michelson.aux)
 Package rerunfilecheck Info: File `report_michelson.out' has not changed.
-(rerunfilecheck)             Checksum: FECB68B2884555047242380BEF967401;1030.
+(rerunfilecheck)             Checksum: DCA438451EC196B2183264745880F675;2974.
  ) 
 Here is how much of TeX's memory you used:
- 11738 strings out of 476025
- 179015 string characters out of 5790017
- 1879388 words of memory out of 5000000
- 32020 multiletter control sequences out of 15000+600000
- 520057 words of font info for 63 fonts, out of 8000000 for 9000
+ 11781 strings out of 476025
+ 179596 string characters out of 5790017
+ 1878388 words of memory out of 5000000
+ 32044 multiletter control sequences out of 15000+600000
+ 520403 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 71i,8n,76p,643b,514s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on report_michelson.pdf (2 pages, 304428 bytes).
+ 71i,8n,76p,1040b,514s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on report_michelson.pdf (4 pages, 435416 bytes).
 PDF statistics:
- 156 PDF objects out of 1000 (max. 8388607)
- 116 compressed objects within 2 object streams
- 20 named destinations out of 1000 (max. 500000)
- 83 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 229 PDF objects out of 1000 (max. 8388607)
+ 181 compressed objects within 2 object streams
+ 37 named destinations out of 1000 (max. 500000)
+ 152 words of extra memory for PDF output out of 10000 (max. 10000000)
 
