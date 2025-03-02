@@ -1,7 +1,11 @@
 import numpy as np
 
 from scipy.optimize import minimize, least_squares
-from scipy.stats import chi2
+from scipy.stats import chi2, f
+
+from tqdm import tqdm
+
+# BASE FITTERS
 
 class BaseFitter:
     def __init__(self, x, y, yerr):
@@ -50,6 +54,61 @@ class BaseFitter:
             'success': result.success,
             'message': result.message,
         }
+    
+    def model_interpolation(self, x=None, params=None):
+        if x is None:
+            x = np.linspace(self.x.min(), self.x.max(), 1000)
+
+        if params is None:
+            params = self.fit()['params']
+
+        return x, self._get_model(x, params)
+    
+class BaseUniformMonteCarloFitter():
+    def __init__(self,
+                 x,x_err,
+                 y,y_err,
+                 fitter:BaseFitter,
+                 N_sample=10000):
+        self.x = x
+        self.x_err = x_err
+
+        self.y = y
+        self.y_err = y_err
+
+        self.fitter = fitter
+
+        self.N_sample = N_sample
+
+    def _sample_fit(self,sampled_x):
+        fitter = self.fitter(sampled_x, self.y, self.y_err)
+        fitting_result = fitter.fit()
+        return fitting_result['params'], fitting_result['e_params']
+    
+    def fit(self):
+        params = []
+        e_params = []
+
+        for i in tqdm(range(self.N_sample)):
+            sampled_x = np.random.uniform(self.x - self.x_err,self.x + self.x_err)
+            sampled_params, sampled_e_params = self._sample_fit(sampled_x)
+
+            if sampled_e_params is None or np.any(np.isnan(sampled_e_params)):
+                continue
+
+            params.append(sampled_params)
+            e_params.append(sampled_e_params)
+
+        params = np.concatenate(params).reshape(-1,len(sampled_params))
+        e_params = np.concatenate(e_params).reshape(-1,len(sampled_params))
+
+        weights = 1 / e_params**2
+        params_mean = np.sum(params * weights, axis=0) / np.sum(weights, axis=0)
+        params_std = np.sqrt(np.var(params, axis=0) + 1 / np.sum(weights, axis=0))
+
+        return params_mean, params_std, params, e_params
+
+# SPECIFIC FITTERS
 
 class BayesianGaussian:
     def __init__(self,x):
@@ -80,3 +139,74 @@ class BayesianGaussian:
         chisqr = np.sum((self.x - mu)**2 / sigma**2)
         alpha = 1 - chi2.cdf(chisqr, len(self.x) - len(params))
         return chisqr, alpha
+    
+class PolynomialFitter(BaseFitter):
+    def __init__(self, 
+                 x, y, yerr,
+                 order=0,
+                 initial_guess=None):
+        super().__init__(x, y, yerr)
+
+        self.order = order
+        self.initial_guess = initial_guess
+
+        if self.initial_guess:
+            assert len(self.initial_guess) == self.order + 1, "Initial guess does not match polynomial order."
+        else:
+            self.initial_guess = np.zeros(self.order + 1)
+
+    def _get_model(self, x, params):
+        return np.polyval(params, x)
+    
+    def _get_initial_guess(self):
+        return self.initial_guess
+    
+class ChowPolynomial:
+    def __init__(self, 
+                 x, y, yerr,
+                 max_order=7,
+                 alpha=0.05):
+        self.x = x
+        self.y = y
+        self.yerr = yerr
+
+        self.n = len(x)
+
+        self.max_order = max_order
+        self.alpha = alpha
+
+    def _get_model(self, x, params):
+        return np.polyval(params, x)
+    
+    def _get_model_derivative(self, x, params, order=1):
+        return np.polyval(np.polyder(params, order), x)
+
+    def _fit_polynomial(self, order):
+        fitter = PolynomialFitter(
+            self.x, self.y, self.yerr,
+            order=order
+        )
+        return fitter.fit()
+    
+    def fit(self):
+        param_nums = np.arange(1, self.max_order + 1)
+        fitting_results = [
+            self._fit_polynomial(param_num-1) for param_num in param_nums
+        ]
+
+        F_ratio = []
+
+        for i in range(self.max_order-1):
+            F_stat = (
+                (fitting_results[i]['chisqr'] - fitting_results[i+1]['chisqr']) /
+                (fitting_results[i+1]['chisqr'] / (self.n - param_nums[i+1]))
+            )
+
+            F_crit = f.ppf(1 - self.alpha, 1, self.n - param_nums[i+1])
+
+            F_ratio.append(F_stat / F_crit)
+
+            if F_stat < F_crit:
+                return fitting_results[i]
+            
+        return fitting_results[-1]
