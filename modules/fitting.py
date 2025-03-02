@@ -3,22 +3,38 @@ import numpy as np
 from scipy.optimize import minimize, least_squares
 from scipy.stats import chi2, f
 
+from matplotlib import pyplot as plt
+
 from tqdm import tqdm
 
 # BASE FITTERS
 
 class BaseFitter:
-    def __init__(self, x, y, yerr):
+    def __init__(self, x, y, yerr, xerr=None):
         self.x = x
         self.y = y
         self.yerr = yerr
+        self.xerr = xerr
+
+        if self.xerr is not None:
+            self.dx = (self.x.max() - self.x.min()) / 1000
+
+    def _normalize(self,x):
+        return x.mean(), x.std()
 
     def _get_model(self, x, params):
         raise NotImplementedError("Not implemented in base class.")
     
     def _get_residuals(self, params):
         yhat = self._get_model(self.x,params)
-        return (self.y - yhat)**2 / self.yerr**2
+        if self.xerr is not None:
+            dyhat_dx = (self._get_model(self.x + self.dx,params) - self._get_model(self.x - self.dx,params)) / (2*self.dx)
+            
+            sigma_sqr = self.yerr**2 + dyhat_dx**2 * self.xerr**2
+        else:
+            sigma_sqr = self.yerr**2
+        
+        return (self.y - yhat)**2 / sigma_sqr
     
     def _get_chisqr(self, params):
         return np.sum(self._get_residuals(params))
@@ -139,7 +155,8 @@ class BayesianGaussian:
         chisqr = np.sum((self.x - mu)**2 / sigma**2)
         alpha = 1 - chi2.cdf(chisqr, len(self.x) - len(params))
         return chisqr, alpha
-    
+
+
 class PolynomialFitter(BaseFitter):
     def __init__(self, 
                  x, y, yerr,
@@ -210,3 +227,67 @@ class ChowPolynomial:
                 return fitting_results[i]
             
         return fitting_results[-1]
+    
+
+# ANALYSIS TOOLS
+
+class NSigma:
+    def __init__(self,params,cov,range=3,resolution=100):
+        self.cov = cov
+        if self.cov is None:
+            raise ValueError("Covariance matrix is not available.")
+        if self.cov.shape[0] != self.cov.shape[1]:
+            raise ValueError("Covariance matrix is not square.")
+        if self.cov.shape[0] != len(params):
+            raise ValueError("Covariance matrix does not match parameter length.")
+        if self.cov.shape[0] != 2:
+            raise ValueError("Only 2D parameter space is supported.")
+        
+        self.params = params
+        self.e_params = np.sqrt(np.diagonal(self.cov))
+
+        self.range = range
+        self.resolution = resolution
+
+    def _extend_param(self,param,e_param):
+        return np.linspace(-self.range,self.range,self.resolution) * e_param + param
+    
+    def _get_par_and_delta_par(self):        
+        par0 = self._extend_param(self.params[0],self.e_params[0])
+        par1 = self._extend_param(self.params[1],self.e_params[1])
+
+        delta_par0 = par0 - self.params[0]
+        delta_par1 = par1 - self.params[1]
+
+        return par0, par1, delta_par0, delta_par1
+    
+    def _get_Nsigma(self,i_delta_par0,i_delta_par1):
+        sig_squared = np.dot(np.dot([i_delta_par0, i_delta_par1], np.linalg.inv(self.cov)),
+                             [i_delta_par0, i_delta_par1])
+        return np.sqrt(sig_squared)
+    
+    def get_Nsigma(self):
+        par0, par1, delta_par0, delta_par1 = self._get_par_and_delta_par()
+
+        par0_grid, par1_grid = np.meshgrid(par0,par1)
+        n_sigma_grid = np.array([
+            [self._get_Nsigma(i_delta_par0,i_delta_par1) for i_delta_par0 in delta_par0]
+            for i_delta_par1 in delta_par1
+        ])
+
+        return par0_grid, par1_grid, n_sigma_grid
+    
+    def show_n_sigma(self,fig,ax,par0_scaler=1,par1_scaler=1,cb_loc='top'):
+        par0_grid, par1_grid, n_sigma_grid = self.get_Nsigma()
+        par0_grid *= par0_scaler
+        par1_grid *= par1_scaler
+
+        c = ax.pcolor(par0_grid,par1_grid,n_sigma_grid,cmap='RdBu',vmin=0,vmax=5)
+        con = ax.contour(par0_grid,par1_grid,n_sigma_grid,levels=[1,2,3],colors='black',linewidths=2.5, linestyles=':', alpha=1)
+        plt.clabel(con, inline=True, fmt=r'$%.0f \, \sigma$', fontsize=24, use_clabeltext=True)
+
+        cb = fig.colorbar(c, ax=ax, ticks=[0,1,2,3,4,5], location=cb_loc)
+        cb.set_label(r'$N \sigma$')
+
+        ax.set_xlim(par0_grid.min(),par0_grid.max())
+        ax.set_ylim(par1_grid.min(),par1_grid.max())
