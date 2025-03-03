@@ -1,0 +1,73 @@
+%merlin.mbs apsrev4-1.bst 2010-07-25 4.21a (PWD, AO, DPC) hacked
+%Control: key (0)
+%Control: author (8) initials jnrlst
+%Control: editor formatted (1) identically to author
+%Control: production of article title (-1) disabled
+%Control: page (0) single
+%Control: year (1) truncated
+%Control: production of eprint (0) enabled
+\begin{thebibliography}{7}%
+\makeatletter
+\providecommand \@ifxundefined [1]{%
+ \@ifx{#1\undefined}
+}%
+\providecommand \@ifnum [1]{%
+ \ifnum #1\expandafter \@firstoftwo
+ \else \expandafter \@secondoftwo
+ \fi
+}%
+\providecommand \@ifx [1]{%
+ \ifx #1\expandafter \@firstoftwo
+ \else \expandafter \@secondoftwo
+ \fi
+}%
+\providecommand \natexlab [1]{#1}%
+\providecommand \enquote  [1]{``#1''}%
+\providecommand \bibnamefont  [1]{#1}%
+\providecommand \bibfnamefont [1]{#1}%
+\providecommand \citenamefont [1]{#1}%
+\providecommand \href@noop [0]{\@secondoftwo}%
+\providecommand \href [0]{\begingroup \@sanitize@url \@href}%
+\providecommand \@href[1]{\@@startlink{#1}\@@href}%
+\providecommand \@@href[1]{\endgroup#1\@@endlink}%
+\providecommand \@sanitize@url [0]{\catcode `\\12\catcode `\$12\catcode `\&12\catcode `\#12\catcode `\^12\catcode `\_12\catcode `\%12\relax}%
+\providecommand \@@startlink[1]{}%
+\providecommand \@@endlink[0]{}%
+\providecommand \url  [0]{\begingroup\@sanitize@url \@url }%
+\providecommand \@url [1]{\endgroup\@href {#1}{\urlprefix }}%
+\providecommand \urlprefix  [0]{URL }%
+\providecommand \Eprint [0]{\href }%
+\providecommand \doibase [0]{http://dx.doi.org/}%
+\providecommand \selectlanguage [0]{\@gobble}%
+\providecommand \bibinfo  [0]{\@secondoftwo}%
+\providecommand \bibfield  [0]{\@secondoftwo}%
+\providecommand \translation [1]{[#1]}%
+\providecommand \BibitemOpen [0]{}%
+\providecommand \bibitemStop [0]{}%
+\providecommand \bibitemNoStop [0]{.\EOS\space}%
+\providecommand \EOS [0]{\spacefactor3000\relax}%
+\providecommand \BibitemShut  [1]{\csname bibitem#1\endcsname}%
+\let\auto@bib@innerbib\@empty
+%</preamble>
+\bibitem [{\citenamefont {{Hertz}}(1887)}]{1Hertz887}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {H.}~\bibnamefont {{Hertz}}},\ }\href {\doibase 10.1002/andp.18872670827} {\bibfield  {journal} {\bibinfo  {journal} {Annalen der Physik}\ }\textbf {\bibinfo {volume} {267}},\ \bibinfo {pages} {983} (\bibinfo {year} {1887})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{Einstein}}(1905)}]{Einstein1905}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {{Einstein}}},\ }\href {\doibase 10.1002/andp.19053220607} {\bibfield  {journal} {\bibinfo  {journal} {Annalen der Physik}\ }\textbf {\bibinfo {volume} {322}},\ \bibinfo {pages} {132} (\bibinfo {year} {1905})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{Klassen}}(2011)}]{Klassen2011}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {{Klassen}}},\ }\href {\doibase 10.1007/s11191-009-9214-6} {\bibfield  {journal} {\bibinfo  {journal} {Science \& Education}\ }\textbf {\bibinfo {volume} {20}},\ \bibinfo {pages} {719} (\bibinfo {year} {2011})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {of~Physics}(2024)}]{MITPhotoelectricEffect}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.~D.}\ \bibnamefont {of~Physics}},\ }\href {https://web.mit.edu/8.13/www/JLExperiments/JLExp005.pdf} {\enquote {\bibinfo {title} {The photoelectric effect},}\ } (\bibinfo {year} {2024})\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{Millikan}}(1916)}]{Millikan1916}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {R.~A.}\ \bibnamefont {{Millikan}}},\ }\href {\doibase 10.1103/PhysRev.7.355} {\bibfield  {journal} {\bibinfo  {journal} {Physical Review}\ }\textbf {\bibinfo {volume} {7}},\ \bibinfo {pages} {355} (\bibinfo {year} {1916})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Quinn}\ and\ \citenamefont {Roberts}(1965)}]{Quinn1964}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.~M.}\ \bibnamefont {Quinn}}\ and\ \bibinfo {author} {\bibfnamefont {M.~W.}\ \bibnamefont {Roberts}},\ }\href {\doibase 10.1039/TF9656101775} {\bibfield  {journal} {\bibinfo  {journal} {Trans. Faraday Soc.}\ }\textbf {\bibinfo {volume} {61}},\ \bibinfo {pages} {1775} (\bibinfo {year} {1965})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{Wong}}\ \emph {et~al.}(2011)\citenamefont {{Wong}}, \citenamefont {{Lee}}, \citenamefont {{Shenghan}}, \citenamefont {{Xuezhou}}, \citenamefont {{Qi}},\ and\ \citenamefont {{Kit}}}]{Wong2011}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {{Wong}}}, \bibinfo {author} {\bibfnamefont {P.}~\bibnamefont {{Lee}}}, \bibinfo {author} {\bibfnamefont {G.}~\bibnamefont {{Shenghan}}}, \bibinfo {author} {\bibfnamefont {W.}~\bibnamefont {{Xuezhou}}}, \bibinfo {author} {\bibfnamefont {H.~Y.}\ \bibnamefont {{Qi}}}, \ and\ \bibinfo {author} {\bibfnamefont {F.~S.}\ \bibnamefont {{Kit}}},\ }\href {\doibase 10.1088/0143-0807/32/4/018} {\bibfield  {journal} {\bibinfo  {journal} {European Journal of Physics}\ }\textbf {\bibinfo {volume} {32}},\ \bibinfo {pages} {1059} (\bibinfo {year} {2011})}\BibitemShut {NoStop}%
+\end{thebibliography}%
