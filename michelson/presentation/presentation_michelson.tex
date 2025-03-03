@@ -1,7 +1,7 @@
 \documentclass[aspectratio = 169]{beamer}
 \usetheme{CambridgeUS}
 \usecolortheme{beaver}
-
+\usepackage{tikz}
 \usepackage{graphicx}  
 \usepackage{amsmath, amssymb}
 \usepackage{hyperref}
@@ -12,6 +12,14 @@
 \date{\today}
 
 \begin{document}
+
+% \AtBeginSection[]
+% {
+%     \begin{frame}
+%         \frametitle{Outline}
+%         \tableofcontents[currentsection,currentsubsection]
+%     \end{frame}
+% }
 
 % Title Slide
 \begin{frame}
@@ -24,12 +32,12 @@
 \end{frame}
 
 % Introduction Slide
-\section{Introduction}
-\begin{frame}{Introduction}
+\section{The History of Michelson Interferometer}
+\begin{frame}{The History of Michelson Interferometer}
     \begin{itemize}
-        \item Light exhibits interference when two waves overlap.
-        \item The Michelson interferometer, designed by Albert Michelson, measures the wavelength of light.
-        \item Historically, it disproved the existence of the "luminiferous aether" and contributed to relativity.
+        % \item Light exhibits interference when two waves overlap.
+        \item The Michelson interferometer is designed by Albert Michelson.
+        \item Historically, it disproved the existence of the "luminiferous aether" and contributed to the discovery of relativity.
         \item Interferometers are used in:
         \begin{itemize}
             \item Precision measurements
@@ -39,7 +47,7 @@
 \end{frame}
 
 % Theory Slide
-\section{Theory}
+\section{Theoretical background: Interference of Light}
 \begin{frame}{Interference of Light Waves}
     \begin{itemize}
         \item The interference pattern depends on the phase difference:
@@ -55,21 +63,94 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Visibility of the Interference Pattern}
+\begin{frame}{Interference of Light Waves}
+\begin{columns}
+    \column{0.5\textwidth}
+    \begin{itemize}
+        \item The interference pattern depends on the phase difference:
+        \[
+        \Delta \phi = 2\pi \frac{\Delta x}{\lambda}
+        \]
+        \item Intensity of interference:
+        \[
+        I = I_0 \cos^2(\Delta \phi)
+        \]
+        \item Maximum interference: $\Delta \phi = 2\pi n$
+        \item Minimum interference: $\Delta \phi = (2n+1)\pi$
+    \end{itemize}
+
+    \column{0.5\textwidth}
+
+    \begin{figure}
+        \centering
+        % ---------------------- Constructive Interference ----------------------
+        \begin{tikzpicture}[scale=0.5]
+            % Axes
+            \draw[->] (-0.5,0) -- (4.5,0) node[below]{$x$};
+            % \draw[->] (0,-2) -- (0,2) node[left]{Amplitude};
+            \draw[->] (0,-2) -- (0,2);
+
+            % Wave 1
+            \draw[samples=100,domain=0:4] 
+                plot(\x,{sin(2*180*\x/2)}) 
+                node[right] {};
+            % Wave 2 (in phase with wave 1)
+            \draw[dashed,samples=100,domain=0:4] 
+                plot(\x,{0.9*sin(2*180*\x/2)}) 
+                node[right] {};
+            % Sum (constructive)
+            \draw[thick,red,samples=100,domain=0:4] 
+                plot(\x,{2*sin(2*180*\x/2)}) 
+                node[right] {};
+            
+            \node at (2,2.5) {Constructive Interference};
+        \end{tikzpicture}
+
+        \vskip1em  % Vertical space between the two plots
+
+        % ---------------------- Destructive Interference ----------------------
+        \begin{tikzpicture}[scale=0.5]
+            % Axes
+            \draw[->] (-0.5,0) -- (4.5,0) node[below]{$x$};
+            % \draw[->] (0,-2) -- (0,2) node[left]{Amplitude};
+            \draw[->] (0,-2) -- (0,2);
+
+            % Wave 1
+            \draw[samples=100,domain=0:4] 
+                plot(\x,{sin(2*180*\x/2)}) 
+                node[right] {};
+            % Wave 2 (out of phase by pi)
+            \draw[dashed,samples=100,domain=0:4] 
+                plot(\x,{-sin(2*180*\x/2)}) 
+                node[right] {};
+            % Sum (destructive)
+            \draw[thick,red,samples=100,domain=0:4] 
+                plot(\x,{sin(2*180*\x/2) + (-sin(2*180*\x/2))}) 
+                node[right] {};
+
+            \node at (2,2.5) {Destructive Interference};
+        \end{tikzpicture}
+
+        \caption{Solid/dash lines: individual waves. Red lines: resultant waves}
+    \end{figure}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Visibility of the Interference Pattern Measures how Resolved the Pattern is}
     \begin{itemize}
         \item Visibility measures how well the pattern is resolved:
         \[
         V = \frac{I_{\text{max}} - I_{\text{min}}}{I_{\text{max}} + I_{\text{min}}}
         \]
         \item Ideal case: $V = 1$
-        \item Low visibility $\Rightarrow$ poor alignment or coherence issues.
+        \item Low visibility $\Rightarrow$ poor alignment or coherence issues
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Piezoelectric Transducer for Path Difference}
+\begin{frame}{Piezoelectric Transducer Controls the Path Difference}
     \begin{itemize}
         \item A piezoelectric transducer moves a mirror in response to voltage.
-        \item This changes the path length $\Delta x$, altering the interference pattern.
+        \item This changes the path length $\Delta x$ proportional to voltage.
         \item The wavelength of light is found using:
         \[
         \lambda = 4 \Delta V \times \frac{\Delta L}{V}
@@ -78,43 +159,56 @@
 \end{frame}
 
 % Experimental Setup Slide
-\section{Experimental Setup}
+\section{Experimental Setup: the Interferometer}
 \begin{frame}{Michelson Interferometer Setup}
-    \begin{itemize}
+  \begin{columns}
+    % Left column
+    \column{0.5\textwidth}
+      \begin{itemize}
         \item Light source: laser
         \item 50/50 beam splitter splits the light into two paths.
         \item One mirror is stationary, the other mounted on a piezoelectric transducer.
         \item Detector: photodiode (voltage output proportional to intensity).
         \item Signal generator applies a triangular voltage to move the mirror.
-    \end{itemize}
+      \end{itemize}
+
+    % Right column
+    \column{0.5\textwidth}
+      \begin{figure}
+          \centering
+          \includegraphics[width=0.8\textwidth]{fig/michelson_setup.png}
+          \caption{Schematic of the Michelson interferometer. Adapted from \cite{MITOpticalInterferometry2023}.}
+      \end{figure} 
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Experimental Setup - Schematic}
-    \centering
-    \includegraphics[width=0.7\textwidth]{fig/michelson_setup.png}
-    \caption{Schematic of the Michelson interferometer. Adapted from \cite{MITOpticalInterferometry2023}.}
-\end{frame}
-
-% Data Analysis Slide
-\section{Data Analysis}
-\begin{frame}{Data Processing}
+\section{Data Analysis: Detection of Minima and Maxima}
+\begin{frame}{Data Processing and Interference Pattern Visibility}
+\begin{columns}
+    \column{0.5\textwidth}
     \begin{itemize}
         \item Voltage signals recorded from signal generator and photodiode.
         \item Used \texttt{findpeak} in \texttt{SciPy} to locate primary maxima and minima.
         \item Applied \texttt{KMeans} clustering (\texttt{SciKit-Learn}) to group voltage values.
-        \item Measured $\Delta V$ between consecutive maxima and minima.
+        % \item Measured $\Delta V$ between consecutive maxima and minima.
     \end{itemize}
-\end{frame}
+    
+    \column{0.5\textwidth}
+        \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{fig/Primary_Maxima_Minima.png}
+    \caption{Voltage at primary maxima and minima.}
+    \end{figure}
+\end{columns}
 
-\begin{frame}{Interference Pattern Visibility}
-    \centering
-    \includegraphics[width=0.7\textwidth]{fig/Intensity.png}
-    \caption{Voltage output of photodiode corresponding to maxima and minima.}
 \end{frame}
 
 % Results Slide
-\section{Results}
-\begin{frame}{Visibility Measurement}
+\section{Results: Visibility and Wavelength of the Laser}
+
+\begin{frame}{Visibility $0.179\pm 0.001$ Not Perfect but Significant}
+\begin{columns}
+    \column{0.5\textwidth}
     \begin{itemize}
         \item Maximum voltage: $(1.592\pm0.002)\text{ V}$
         \item Minimum voltage: $(1.110\pm0.002)\text{ V}$
@@ -124,9 +218,20 @@
         \]
         \item Imperfect alignment likely lowered visibility.
     \end{itemize}
+    
+    \column{0.5\textwidth}
+        \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{fig/Intensity.png}
+        \caption{Voltage output of photodiode corresponding to maxima and minima.}
+    \end{figure}
+\end{columns}
+
 \end{frame}
 
-\begin{frame}{Wavelength Measurement}
+\begin{frame}{Wavelength $601\pm37(\text{sys})\pm10(\text{stat})\text{nm}$ Matches the Color of the Laser}
+\begin{columns}
+    \column{0.5\textwidth}
     \begin{itemize}
         \item Measured voltage difference between peaks: $(3.192 \pm 0.055) \text{ V}$
         \item Calculated wavelength:
@@ -135,33 +240,32 @@
         \]
         \item Matches expected wavelength of the orange laser.
     \end{itemize}
-\end{frame}
-
-\begin{frame}{Voltage Data at Peaks}
-    \centering
-    \includegraphics[width=0.7\textwidth]{fig/Primary_Maxima_Minima.png}
+    \column{0.5\textwidth}
+        \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{fig/Primary_Maxima_Minima.png}
     \caption{Voltage at primary maxima and minima.}
+    \end{figure}
+\end{columns}
 \end{frame}
 
 % Uncertainty Analysis Slide
-\section{Uncertainty Analysis}
-\begin{frame}{Sources of Uncertainty}
+\begin{frame}{Uncertainty Dominated by Calibration of the Piezoelectric}
     \begin{itemize}
-        \item **Systematic error**: Calibration of the piezoelectric device
+        \item \textbf{Systematic error}: Calibration of the piezoelectric device
         \[
         \delta \lambda = 37 \text{ nm}
         \]
-        \item **Statistical error**: Peak detection noise
+        \item \textbf{Statistical error}: Peak detection noise
         \[
         \delta \lambda = 10 \text{ nm}
         \]
-        \item **Total error dominated by systematic effects.**
     \end{itemize}
 \end{frame}
 
 % Conclusion Slide
 \section{Conclusion}
-\begin{frame}{Conclusion}
+\begin{frame}{Conclusion and Future Improvements}
     \begin{itemize}
         \item Successfully measured the wavelength of an orange laser:
         \[
@@ -179,11 +283,7 @@
 
 % Acknowledgments Slide
 \begin{frame}{Acknowledgments}
-    \begin{itemize}
-        \item Special thanks to J. Lewis, M. Bohdan, and V. Tran for assistance.
-        \item Thanks to the MIT 8.13 teaching team for guidance.
-        \item Supported by the MIT Department of Physics.
-    \end{itemize}
+Special thanks to J. Lewis, M. Bohdan, and V. Tran for assistance. Thanks to the MIT 8.13 teaching team for guidance. 
 \end{frame}
 
 % References Slide
