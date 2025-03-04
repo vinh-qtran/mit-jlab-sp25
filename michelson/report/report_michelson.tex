@@ -92,7 +92,18 @@ The applied voltage altered the path difference $\Delta x$. We recorded the sign
 \end{figure}
 
 \section{Data Analysis}
-We obtained the voltages of signal generator and photodiode against time from the output of the oscilloscope. We tabulated the voltage of the signal generator and the voltage of the photodiode. We then used the \texttt{findpeak} function of \texttt{SciPy} to find the primary maxima and minima of the photodiode voltage. In order to filter out the secondary maxima and minima that occurs when the triangular input voltage changes direction, we chose the prominence of the peaks to be $0.4$. 
+We obtained the voltages of signal generator and photodiode against time from the output of the oscilloscope. We tabulated the voltage of the signal generator and the voltage of the photodiode. We repeated the measurement 5 times to reduce the statistical uncertainty.
+
+The data is shown in fig \ref{fig:raw_data}. 
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{fig/raw_data.png}
+    \caption{The raw data of the signal generator voltage and the photodiode voltage. The error bars come from the resolution of the oscilloscope. }
+    \label{fig:raw_data}
+\end{figure*}
+
+
+We then used the \texttt{findpeak} function of \texttt{SciPy} to find the primary maxima and minima of the photodiode voltage. In order to filter out the secondary maxima and minima that occurs when the triangular input voltage changes direction, we chose the prominence of the peaks to be $0.4$. 
 
 We acknowledge that the choice of peak prominence is an arbitrary choice; some primary maxima and minima might have been missed, particularly in regions of lower visibility. We will discuss the impact of this choice in the results section.
 
