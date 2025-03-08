@@ -21,7 +21,6 @@ import numpy as np
 '''
 Fitter Classes
 '''
-
 class NoUncertaintyLinearFitter(fitting.BaseFitter):
     def __init__(self,x,y,initial_guess):
         super().__init__(x,y,np.ones_like(y))
@@ -105,7 +104,6 @@ gaussian_fitter_classes = {
 '''
 Base MCA Data Class
 '''
-
 class MCAData:
     time_idx = 9
     data_idx = 12
@@ -310,6 +308,7 @@ class MCAData:
             fitting_bins: 1D array, bin indices of the fitting region
             fitted_counts: 1D array, counts of the gaussian-approximated peak(s)
         '''
+
         fitting_idx = np.arange(lower_idx,upper_idx+1)
 
         fitting_bins = bins[fitting_idx]
@@ -328,9 +327,6 @@ class MCAData:
         peak_sigma_err = fitting_result['e_params'][n_gaussian:2*n_gaussian] if fitting_result['e_params'] is not None else np.array([np.nan]*n_gaussian)
 
         fitted_counts = fitter._get_model(fitting_bins,fitting_result['params']) * count_normalizing_factor
-
-        if n_gaussian == 1:
-            peak_mu = bound_mu(peak_mu,initial_guess)
 
         return peak_mu, peak_mu_err, peak_sigma, peak_sigma_err, fitting_bins, fitted_counts
     
@@ -391,13 +387,73 @@ class MCAData:
         # Fit
         fitter_class = GaussianPoissFitter if poisson_statistic else GaussianFitter
         return self._fit_peaks(bins,counts,lower_idx,upper_idx,fitter_class,initial_guess,poisson_statistic=poisson_statistic)
+    
+    def _get_peak_fwhm_counts(self,
+                              bins,counts,count_time,
+                              kdes,kernel_bw,
+                              clear_peaks_idx,clear_valleys_idx,
+                              peak_mu_bin,n_MC=1000):
+        '''
+        Get the counts within the FWHM of a peak.
+
+        Input:
+            bins: 1D array, bin indices
+            counts: 1D array, counts
+            count_time: float, count time
+            kdes: 1D array, smoothed density estimations
+            kdes_err: 1D array, error of the smoothed density estimations
+            clear_peaks_idx: 1D array, indices of the clear peaks
+            clear_valleys_idx: 1D array, indices of the clear valleys
+            peak_mu_bin: int, bin of the peak
+            n_MC: int, number of Monte Carlo simulations
+
+        Output:
+            peak_fwhm_counts: float, counts within the FWHM of the peak
+            peak_fwhm_counts_err: float, error of the counts within the FWHM of the peak
+        '''
+
+        peak_mu_idx = clear_peaks_idx[np.argmin(np.abs(bins[clear_peaks_idx] - peak_mu_bin))]
+        peak_mu_bin = bins[peak_mu_idx]
+        peak_mu_kde = kdes[peak_mu_idx]
+
+        fwhm_lower_idx, fwhm_upper_idx = self._get_fitting_boundaries(bins,kdes,clear_peaks_idx,clear_valleys_idx,
+                                                                      peak_mu_bin,peak_mu_bin,
+                                                                      threshold=peak_mu_kde/2,outward=True)
+
+        def _get_counts(lower_idx,upper_idx):
+            if lower_idx and upper_idx:
+                fwhm_counts = np.sum(counts[lower_idx:upper_idx+1])
+                return fwhm_counts, np.sqrt(fwhm_counts)
+
+            return None, None
+
+        if n_MC:
+            peak_fwhm_counts = np.array([])
+            peak_fwhm_counts_err = np.array([])
+
+            for i in range(n_MC):
+                lower_idx = fwhm_lower_idx + int(np.random.normal(0,kernel_bw))
+                upper_idx = fwhm_upper_idx + int(np.random.normal(0,kernel_bw))
+
+                fwhm_counts, fwhm_counts_err = _get_counts(lower_idx,upper_idx)
+
+                if fwhm_counts is not None:
+                    peak_fwhm_counts = np.append(peak_fwhm_counts,fwhm_counts)
+                    peak_fwhm_counts_err = np.append(peak_fwhm_counts_err,fwhm_counts_err)
+
+            peak_fwhm_rate = np.sum(peak_fwhm_counts/peak_fwhm_counts_err**2) / np.sum(1/peak_fwhm_counts_err**2) / count_time
+            peak_fwhm_rate_err = np.sqrt(np.var(peak_fwhm_counts) + 1/np.sum(1/peak_fwhm_counts_err**2)) / count_time
+
+            return peak_fwhm_rate, peak_fwhm_rate_err
+        
+        return _get_counts(fwhm_lower_idx, fwhm_upper_idx)
 
 
 ####################################################################################################################
 
 '''
 MCA Calibration Class
-'''                 
+'''
 class MCACalibration(MCAData):
     def __init__(self,
                  na_22_data_file,ba_133_data_file,kernel_bw=5,
@@ -406,6 +462,7 @@ class MCACalibration(MCAData):
                  ba_133_peak_ratios=[[0.3,0.1,1],[1],[0.2,0.4,1]],
                  cs_137_energy=661.7,cs_137_approx_line_bin=None,
                  non_calib_energies=[276.40]):
+        
         self.na_22_energy = na_22_energy
         self.ba_133_energies = ba_133_energies
         self.cs_137_energy = cs_137_energy
@@ -511,16 +568,17 @@ class MCACalibration(MCAData):
         self.calib_bins_err = self.calib_bins_err[sorting_order][mask]
         self.calib_energies = self.calib_energies[sorting_order][mask]
 
-        # scaler_bayes_gaussian = fitting.BayesianGaussian(self.calib_energies/self.calib_bins)
-        # self.energy_scaler, self.energy_scaler_err = scaler_bayes_gaussian.mu, scaler_bayes_gaussian.sigma
-        # self.energy_scaler_mse = np.mean((self.calib_energies - self.calib_bins*self.energy_scaler)**2/self.calib_energies**2)
-
         linear_fitter = NoUncertaintyLinearFitter(self.calib_bins,self.calib_energies,initial_guess=[np.mean(self.calib_energies/self.calib_bins),0])
         self.energy_scaler, self.energy_offset, self.energy_scaler_err, self.energy_offset_err = linear_fitter.fit()
 
+
+'''
+MCA Compton Scattering Class
+'''
 class MCACompton(MCAData):
     def __init__(self,data_base='30_0304.Spe',data_dir='data/2025-03-04/',kernel_bw=5,):
-        self.scatter_angle = data_base[:2]
+
+        self.scatter_angle = np.deg2rad(float(data_base[:2]))
 
         self.kernel_bw = kernel_bw
 
@@ -529,7 +587,7 @@ class MCACompton(MCAData):
         for detector in ['recoil','scatter']:
             peak_mu_count, peak_mu_count_err, peak_sigma_count, peak_sigma_count_err, \
             peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
-            fitting_bins, fitted_counts = self._peak_analysis(detector)
+            peak_fwhm_rate, peak_fwhm_rate_err, _, _ = self._peak_analysis(detector)
 
             self.__setattr__(detector+'_peak_mu_count',peak_mu_count)
             self.__setattr__(detector+'_peak_mu_count_err',peak_mu_count_err)
@@ -539,8 +597,8 @@ class MCACompton(MCAData):
             self.__setattr__(detector+'_peak_mu_energy_err',peak_mu_energy_err)
             self.__setattr__(detector+'_peak_sigma_energy',peak_sigma_energy)
             self.__setattr__(detector+'_peak_sigma_energy_err',peak_sigma_energy_err)
-            self.__setattr__(detector+'_fitting_bins',fitting_bins)
-            self.__setattr__(detector+'_fitted_counts',fitted_counts)
+            self.__setattr__(detector+'_peak_fwhm_rate',peak_fwhm_rate)
+            self.__setattr__(detector+'_peak_fwhm_rate_err',peak_fwhm_rate_err)
 
     def _read_data_and_calibrate(self,data_base,data_dir):
         '''
@@ -567,7 +625,32 @@ class MCACompton(MCAData):
             self.__setattr__(detector+'_energy_offset',calibration.energy_offset)
             self.__setattr__(detector+'_energy_scaler_err',calibration.energy_scaler_err)
             self.__setattr__(detector+'_energy_offset_err',calibration.energy_offset_err)
+    
+    def _bin_to_energy(self,bins,bins_err,detector):
+        '''
+        Convert bins to energies.
 
+        Input:
+            bins: 1D array, bin numbers
+            bins_err: 1D array, error of the bin numbers
+            detector: string, detector type
+
+        Output:
+            energy: 1D array, energies
+            energy_err: 1D array, error of the energies
+        '''
+
+        energy_scaler = self.__getattribute__(f'{detector}_energy_scaler')
+        energy_offset = self.__getattribute__(f'{detector}_energy_offset')
+        energy_scaler_err = self.__getattribute__(f'{detector}_energy_scaler_err')
+        energy_offset_err = self.__getattribute__(f'{detector}_energy_offset_err')
+
+        energy = bins * energy_scaler + energy_offset
+        energy_err = np.sqrt(
+            ((bins_err/bins)**2 + (energy_scaler_err/energy_scaler)**2) * (bins*energy_scaler)**2 + energy_offset_err**2
+        )
+
+        return energy, energy_err
 
     def _peak_analysis(self,detector):
         '''
@@ -585,38 +668,36 @@ class MCACompton(MCAData):
             peak_mu_energy_err: float, error of the mean of the gaussian-approximated peak in energy
             peak_sigma_energy: float, standard deviation of the gaussian-approximated peak in energy
             peak_sigma_energy_err: float, error of the standard deviation of the gaussian-approximated peak in energy
-            fitting_bins: 1D array, bin indices of the fitting region
+            peak_fwhm_rate: float, FWHM of the peak in count per second
+            peak_fwhm_rate_err: float, error of the FWHM of the peak in count per second
+            fitting_bins: 1D array, bin numbers of the fitting region
             fitted_counts: 1D array, counts of the gaussian-approximated peak
         '''
+
         data_file = self.__getattribute__(f'{detector}_data_file')
-        energy_scaler = self.__getattribute__(f'{detector}_energy_scaler')
-        energy_offset = self.__getattribute__(f'{detector}_energy_offset')
-        energy_scaler_err = self.__getattribute__(f'{detector}_energy_scaler_err')
-        energy_offset_err = self.__getattribute__(f'{detector}_energy_offset_err')
 
         # Read data
-        bins, counts, _, _ = self._read_data(data_file)
+        bins, counts, count_time, _ = self._read_data(data_file)
         bins, kdes, kdes_err = self._kde_smooth_data(bins,counts,self.kernel_bw)
 
         # Find peaks and valleys
         clear_peaks_idx, clear_valleys_idx = self._find_peaks_and_valleys(bins,kdes,kdes_err)
         
         # Fit peak
-        peak_mu_count, peak_mu_count_err, peak_sigma_count, peak_sigma_count_err, fitting_bins, fitted_counts = \
+        peak_mu_bin, peak_mu_bin_err, peak_sigma_count, peak_sigma_count_err, fitting_bins, fitted_counts,  = \
         self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,
                               bins[clear_peaks_idx[0]],threshold_ratio=1/3,
                               poisson_statistic=True,background_poly_order=1)
         
-        peak_mu_energy = peak_mu_count * energy_scaler +  energy_offset
-        peak_mu_energy_err = np.sqrt(
-            ((peak_mu_count_err/peak_mu_count)**2 + (energy_scaler_err/energy_scaler)**2)/(peak_mu_count*energy_scaler)**2 + (energy_offset/energy_offset_err)**2
-        )
+        peak_mu_energy, peak_mu_energy_err = self._bin_to_energy(peak_mu_bin,peak_mu_bin_err,detector)
+        peak_sigma_energy, peak_sigma_energy_err = self._bin_to_energy(peak_sigma_count,peak_sigma_count_err,detector)
 
-        peak_sigma_energy = peak_sigma_count * energy_scaler +  energy_offset
-        peak_sigma_energy_err = np.sqrt(
-            ((peak_sigma_count_err/peak_sigma_count)**2 + (energy_scaler_err/energy_scaler)**2)/(peak_sigma_count*energy_scaler)**2 + (energy_offset/energy_offset_err)**2
-        )
+        # Get FWHM
+        peak_fwhm_rate, peak_fwhm_rate_err = self._get_peak_fwhm_counts(bins,counts,count_time,
+                                                                        kdes,self.kernel_bw,
+                                                                        clear_peaks_idx,clear_valleys_idx,
+                                                                        peak_mu_bin,n_MC=1000)
 
-        return peak_mu_count, peak_mu_count_err, peak_sigma_count, peak_sigma_count_err, \
+        return peak_mu_bin, peak_mu_bin_err, peak_sigma_count, peak_sigma_count_err, \
                peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
-               fitting_bins, fitted_counts
+               peak_fwhm_rate, peak_fwhm_rate_err, fitting_bins, fitted_counts
