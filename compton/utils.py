@@ -22,6 +22,10 @@ import numpy as np
 Fitter Classes
 '''
 class NoUncertaintyLinearFitter(fitting.BaseFitter):
+    '''
+    Fitter class for linear fitting without uncertainties.
+    '''
+
     def __init__(self,x,y,initial_guess):
         super().__init__(x,y,np.ones_like(y))
 
@@ -46,6 +50,10 @@ class NoUncertaintyLinearFitter(fitting.BaseFitter):
         return a, b, a_err, b_err
 
 class GaussianFitter(fitting.BaseFitter):
+    '''
+    Gaussian fitter class.
+    '''
+
     def __init__(self,x,y,yerr,initial_guess):
         super().__init__(x,y,yerr)
 
@@ -59,6 +67,10 @@ class GaussianFitter(fitting.BaseFitter):
         return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + np.polyval(poly_params,x)
     
 class GaussianPoissFitter(fitting.BasePoissonFitter):
+    '''
+    Gaussian fitter class with Poisson statistics.
+    '''
+
     def __init__(self,x,y,yerr,initial_guess):
         super().__init__(x,y)
 
@@ -72,6 +84,10 @@ class GaussianPoissFitter(fitting.BasePoissonFitter):
         return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + np.polyval(poly_params,x)
 
 class DoubleGaussianFitter(GaussianFitter):
+    '''
+    Gaussian fitter class for double peaks.
+    '''
+
     def __init__(self,x,y,yerr,initial_guess):
         super().__init__(x,y,yerr,initial_guess)
 
@@ -82,6 +98,10 @@ class DoubleGaussianFitter(GaussianFitter):
                np.polyval(poly_params,x)
     
 class TripleGaussianFitter(GaussianFitter):
+    '''
+    Gaussian fitter class for triple peaks.
+    '''
+
     def __init__(self,x,y,yerr,initial_guess):
         super().__init__(x,y,yerr,initial_guess)
 
@@ -171,7 +191,7 @@ class MCAData:
         Find the peaks and valleys in the smoothed data on the prinple of first derivative, with statistical error considered.
 
         Input:
-            bins: 1D array, bin indices
+            bins: 1D array, bin numbers
             kdes: 1D array, smoothed density estimations
             kdes_err: 1D array, error of the smoothed density estimations
 
@@ -234,7 +254,7 @@ class MCAData:
         Get the fitting boundaries of a (or multiple) peak(s).
 
         Input:
-            bins: 1D array, bin indices
+            bins: 1D array, bin numbers
             kdes: 1D array, smoothed density estimations
             clear_valleys_idx: 1D array, indices of the clear valleys
             lower_feature_bin: float, lower bound of the feature
@@ -291,7 +311,7 @@ class MCAData:
         Fit features and return the mean(s) and error(s) of the gaussian-approximated peak(s).
 
         Input:
-            bins: 1D array, bin indices
+            bins: 1D array, bin numbers
             counts: 1D array, counts
             lower_idx: int, lower boundary of the fitting region
             upper_idx: int, upper boundary of the fitting region
@@ -305,7 +325,7 @@ class MCAData:
             peak_mu_err: 1D array, error of the mean of the gaussian-approximated peak(s)
             peak_sigma: 1D array, standard deviation of the gaussian-approximated peak(s)
             peak_sigma_err: 1D array, error of the standard deviation of the gaussian-approximated peak(s)
-            fitting_bins: 1D array, bin indices of the fitting region
+            fitting_bins: 1D array, bin numbers of the fitting region
             fitted_counts: 1D array, counts of the gaussian-approximated peak(s)
         '''
 
@@ -339,7 +359,7 @@ class MCAData:
         Fit a single peak and return the mean and error of the gaussian-approximated peak if the approximated peak bin is provided.
 
         Input:
-            bins: 1D array, bin indices
+            bins: 1D array, bin numbers
             counts: 1D array, counts
             kdes: 1D array, smoothed density estimations
             clear_peaks_idx: 1D array, indices of the clear peaks
@@ -354,7 +374,7 @@ class MCAData:
             peak_mu_err: 1D array, error of the mean of the gaussian-approximated peak
             peak_sigma: 1D array, standard deviation of the gaussian-approximated peak
             peak_sigma_err: 1D array, error of the standard deviation of the gaussian-approximated peak
-            fitting_bins: 1D array, bin indices of the fitting region
+            fitting_bins: 1D array, bin numbers of the fitting region
             fitted_counts: 1D array, counts of the gaussian-approximated peak
         '''
 
@@ -397,7 +417,7 @@ class MCAData:
         Get the counts within the FWHM of a peak.
 
         Input:
-            bins: 1D array, bin indices
+            bins: 1D array, bin numbers
             counts: 1D array, counts
             count_time: float, count time
             kdes: 1D array, smoothed density estimations
@@ -455,6 +475,10 @@ class MCAData:
 MCA Calibration Class
 '''
 class MCACalibration(MCAData):
+    '''
+    Calibration class for MCA data.
+    '''
+
     def __init__(self,
                  na_22_data_file,ba_133_data_file,kernel_bw=5,
                  na_22_energy=511,na_22_approx_line_bin=1400,
@@ -507,6 +531,26 @@ class MCACalibration(MCAData):
                           ba_133_data_file,kernel_bw,
                           ba_133_energies,ba_133_peak_ratios,
                           cs_137_approx_line_bin):
+        '''
+        Fit the peaks of Ba-133 and Cs-137 and return the mean and error of the gaussian-approximated peaks.
+
+        Input:
+            ba_133_data_file: string, path to the .Spe file of Ba-133
+            ba_133_energies: list of lists, energies of the peaks of Ba-133
+            ba_133_peak_ratios: list of lists, peak ratios of the peaks of Ba-133
+            cs_137_approx_line_bin: int, approximate bin of the 661.7eV feature
+            kernel_bw: float, bandwidth of the kernel
+
+        Output:
+            ba_133_peaks_mu: list of 1D arrays, means of the gaussian-approximated peaks
+            ba_133_peaks_mu_err: list of 1D arrays, errors of the means of the gaussian-approximated peaks
+            ba_133_fitting_bins: list of 1D arrays, bin numbers of the fitting regions
+            ba_133_fitted_counts: list of 1D arrays, counts of the gaussian-approximated peaks
+            cs_137_peak_mu: float, mean of the gaussian-approximated peak
+            cs_137_peak_mu_err: float, error of the mean of the gaussian-approximated peak
+            cs_137_fitting_bins: 1D array, bin numbers of the fitting region
+            cs_137_fitted_counts: 1D array, counts of the gaussian-approximated peak
+        '''
 
         # Read data
         bins, counts, _, _ = self._read_data(ba_133_data_file)
@@ -554,6 +598,18 @@ class MCACalibration(MCAData):
     def _get_calib_stats(self,non_calib_energies):
         '''
         Get the calibration statistics.
+
+        Input:
+            non_calib_energies: list of floats, energies of the non-calibration peaks
+
+        Attributes:
+            calib_bins: 1D array, bin numbers of the calibration peaks
+            calib_bins_err: 1D array, error of the bin numbers of the calibration peaks
+            calib_energies: 1D array, energies of the calibration peaks
+            energy_scaler: float, energy scaler
+            energy_offset: float, energy offset
+            energy_scaler_err: float, error of the energy scaler
+            energy_offset_err: float, error of the energy offset
         '''
 
         self.calib_bins = np.concatenate([self.na_22_peak_mu] + self.ba_133_peaks_mu + [self.cs_137_peak_mu])
@@ -576,6 +632,9 @@ class MCACalibration(MCAData):
 MCA Compton Scattering Class
 '''
 class MCACompton(MCAData):
+    '''
+    Compton scattering class for MCA data.
+    '''
     def __init__(self,data_base='30_0304.Spe',data_dir='data/2025-03-04/',kernel_bw=5,):
 
         self.scatter_angle = np.deg2rad(float(data_base[:2]))
@@ -607,6 +666,16 @@ class MCACompton(MCAData):
         Input:
             data_base: string, base name of the data files
             data_dir: string, path to the data directory
+
+        Attributes:
+            for each of "recoil" and "scatter" detectors:
+                (detector)_data_file: string, path to the data file
+                (detector)_na_calibration_data_file: string, path to the Na-22 calibration data file
+                (detector)_ba_calibration_data_file: string, path to the Ba-133 calibration data file
+                (detector)_energy_scaler: float, energy scaler
+                (detector)_energy_offset: float, energy offset
+                (detector)_energy_scaler_err: float, error of the energy scaler
+                (detector)_energy_offset_err: float, error of the energy offset
         '''
 
         for detector in ['recoil','scatter']:
