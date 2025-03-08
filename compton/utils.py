@@ -21,16 +21,30 @@ import numpy as np
 '''
 Fitter Classes
 '''
-def bound_mu(mu,initial_guess,n_bound=1):
-    mu0, sigma0, _, *_ = initial_guess
 
-    upper_bound = mu0 + n_bound*sigma0
-    lower_bound = mu0 - n_bound*sigma0
+class NoUncertaintyLinearFitter(fitting.BaseFitter):
+    def __init__(self,x,y,initial_guess):
+        super().__init__(x,y,np.ones_like(y))
 
-    return np.clip(mu,lower_bound,upper_bound)
+        self.initial_guess = initial_guess
 
-class LinearFitter(fitting.BaseFitter):
-    pass
+    def _get_initial_guess(self):
+        return self.initial_guess
+    
+    def _get_model(self,x,params):
+        a, b = params
+        return a*x + b
+    
+    def fit(self):
+        a, b = super().fit()['params']
+
+        a_s = (self.y - b) / self.x
+        b_s = self.y - a * self.x
+
+        a_err = np.std(a_s)
+        b_err = np.std(b_s)
+
+        return a, b, a_err, b_err
 
 class GaussianFitter(fitting.BaseFitter):
     def __init__(self,x,y,yerr,initial_guess):
@@ -43,7 +57,6 @@ class GaussianFitter(fitting.BaseFitter):
 
     def _get_model(self,x,params):
         mu, sigma, A, *poly_params = params
-        mu = bound_mu(mu,self.initial_guess)
         return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + np.polyval(poly_params,x)
     
 class GaussianPoissFitter(fitting.BasePoissonFitter):
@@ -57,7 +70,6 @@ class GaussianPoissFitter(fitting.BasePoissonFitter):
     
     def _get_model(self,x,params):
         mu, sigma, A, *poly_params = params
-        mu = bound_mu(mu,self.initial_guess)
         return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + np.polyval(poly_params,x)
 
 class DoubleGaussianFitter(GaussianFitter):
@@ -499,9 +511,12 @@ class MCACalibration(MCAData):
         self.calib_bins_err = self.calib_bins_err[sorting_order][mask]
         self.calib_energies = self.calib_energies[sorting_order][mask]
 
-        scaler_bayes_gaussian = fitting.BayesianGaussian(self.calib_energies/self.calib_bins)
-        self.energy_scaler, self.energy_scaler_err = scaler_bayes_gaussian.mu, scaler_bayes_gaussian.sigma
-        self.energy_scaler_mse = np.mean((self.calib_energies - self.calib_bins*self.energy_scaler)**2/self.calib_energies**2)
+        # scaler_bayes_gaussian = fitting.BayesianGaussian(self.calib_energies/self.calib_bins)
+        # self.energy_scaler, self.energy_scaler_err = scaler_bayes_gaussian.mu, scaler_bayes_gaussian.sigma
+        # self.energy_scaler_mse = np.mean((self.calib_energies - self.calib_bins*self.energy_scaler)**2/self.calib_energies**2)
+
+        linear_fitter = NoUncertaintyLinearFitter(self.calib_bins,self.calib_energies,initial_guess=[np.mean(self.calib_energies/self.calib_bins),0])
+        self.energy_scaler, self.energy_offset, self.energy_scaler_err, self.energy_offset_err = linear_fitter.fit()
 
 class MCACompton(MCAData):
     def __init__(self,data_base='30_0304.Spe',data_dir='data/2025-03-04/',kernel_bw=5,):
@@ -549,12 +564,35 @@ class MCACompton(MCAData):
                 kernel_bw = self.kernel_bw,
             )
             self.__setattr__(detector+'_energy_scaler',calibration.energy_scaler)
+            self.__setattr__(detector+'_energy_offset',calibration.energy_offset)
             self.__setattr__(detector+'_energy_scaler_err',calibration.energy_scaler_err)
+            self.__setattr__(detector+'_energy_offset_err',calibration.energy_offset_err)
+
 
     def _peak_analysis(self,detector):
+        '''
+        Analyze the peaks of the Compton scattering features.
+
+        Input:
+            detector: string, detector type
+
+        Output:
+            peak_mu_count: float, mean of the gaussian-approximated peak
+            peak_mu_count_err: float, error of the mean of the gaussian-approximated peak
+            peak_sigma_count: float, standard deviation of the gaussian-approximated peak
+            peak_sigma_count_err: float, error of the standard deviation of the gaussian-approximated peak
+            peak_mu_energy: float, mean of the gaussian-approximated peak in energy
+            peak_mu_energy_err: float, error of the mean of the gaussian-approximated peak in energy
+            peak_sigma_energy: float, standard deviation of the gaussian-approximated peak in energy
+            peak_sigma_energy_err: float, error of the standard deviation of the gaussian-approximated peak in energy
+            fitting_bins: 1D array, bin indices of the fitting region
+            fitted_counts: 1D array, counts of the gaussian-approximated peak
+        '''
         data_file = self.__getattribute__(f'{detector}_data_file')
         energy_scaler = self.__getattribute__(f'{detector}_energy_scaler')
+        energy_offset = self.__getattribute__(f'{detector}_energy_offset')
         energy_scaler_err = self.__getattribute__(f'{detector}_energy_scaler_err')
+        energy_offset_err = self.__getattribute__(f'{detector}_energy_offset_err')
 
         # Read data
         bins, counts, _, _ = self._read_data(data_file)
@@ -569,11 +607,15 @@ class MCACompton(MCAData):
                               bins[clear_peaks_idx[0]],threshold_ratio=1/3,
                               poisson_statistic=True,background_poly_order=1)
         
-        peak_mu_energy = peak_mu_count * energy_scaler
-        peak_mu_energy_err = np.sqrt((peak_mu_count_err/peak_mu_count)**2 + (energy_scaler_err/energy_scaler)**2) * peak_mu_energy
+        peak_mu_energy = peak_mu_count * energy_scaler +  energy_offset
+        peak_mu_energy_err = np.sqrt(
+            ((peak_mu_count_err/peak_mu_count)**2 + (energy_scaler_err/energy_scaler)**2)/(peak_mu_count*energy_scaler)**2 + (energy_offset/energy_offset_err)**2
+        )
 
-        peak_sigma_energy = peak_sigma_count * energy_scaler
-        peak_sigma_energy_err = np.sqrt((peak_sigma_count_err/peak_sigma_count)**2 + (energy_scaler_err/energy_scaler)**2) * peak_sigma_energy
+        peak_sigma_energy = peak_sigma_count * energy_scaler +  energy_offset
+        peak_sigma_energy_err = np.sqrt(
+            ((peak_sigma_count_err/peak_sigma_count)**2 + (energy_scaler_err/energy_scaler)**2)/(peak_sigma_count*energy_scaler)**2 + (energy_offset/energy_offset_err)**2
+        )
 
         return peak_mu_count, peak_mu_count_err, peak_sigma_count, peak_sigma_count_err, \
                peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
