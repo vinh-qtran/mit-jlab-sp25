@@ -1,7 +1,7 @@
 import numpy as np
 
 from scipy.optimize import minimize, least_squares
-from scipy.stats import chi2, f
+from scipy.stats import poisson, chi2, f
 
 from matplotlib import pyplot as plt
 
@@ -79,6 +79,15 @@ class BaseFitter:
             params = self.fit()['params']
 
         return x, self._get_model(x, params)
+    
+class BasePoissonFitter(BaseFitter):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def _get_residuals(self, params):
+        yhat = self._get_model(self.x,params)
+        return - 2*poisson.logpmf(self.y, yhat) - np.log(2*np.pi*self.y)
     
 class BaseUniformMonteCarloFitter():
     def __init__(self,

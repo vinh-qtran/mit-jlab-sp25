@@ -10,8 +10,82 @@ repo_root = subprocess.run(
 sys.path.append(repo_root)
 
 from modules import fitting
+import importlib
+importlib.reload(fitting)
 
 import numpy as np
+
+
+####################################################################################################################
+
+'''
+Fitter Classes
+'''
+def bound_mu(mu,initial_guess,n_bound=1):
+    mu0, sigma0, _, *_ = initial_guess
+
+    upper_bound = mu0 + n_bound*sigma0
+    lower_bound = mu0 - n_bound*sigma0
+
+    return np.clip(mu,lower_bound,upper_bound)
+
+class LinearFitter(fitting.BaseFitter):
+    pass
+
+class GaussianFitter(fitting.BaseFitter):
+    def __init__(self,x,y,yerr,initial_guess):
+        super().__init__(x,y,yerr)
+
+        self.initial_guess = initial_guess
+
+    def _get_initial_guess(self):
+        return self.initial_guess
+
+    def _get_model(self,x,params):
+        mu, sigma, A, *poly_params = params
+        mu = bound_mu(mu,self.initial_guess)
+        return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + np.polyval(poly_params,x)
+    
+class GaussianPoissFitter(fitting.BasePoissonFitter):
+    def __init__(self,x,y,yerr,initial_guess):
+        super().__init__(x,y)
+
+        self.initial_guess = initial_guess
+
+    def _get_initial_guess(self):
+        return self.initial_guess
+    
+    def _get_model(self,x,params):
+        mu, sigma, A, *poly_params = params
+        mu = bound_mu(mu,self.initial_guess)
+        return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + np.polyval(poly_params,x)
+
+class DoubleGaussianFitter(GaussianFitter):
+    def __init__(self,x,y,yerr,initial_guess):
+        super().__init__(x,y,yerr,initial_guess)
+
+    def _get_model(self,x,params):
+        mu1, mu2, sigma1, sigma2, A1, A2, *poly_params = params
+        return A1 / np.sqrt(2*np.pi) / sigma1 * np.exp(-1/2 * ((x - mu1) / sigma1)**2) + \
+               A2 / np.sqrt(2*np.pi) / sigma2 * np.exp(-1/2 * ((x - mu2) / sigma2)**2) + \
+               np.polyval(poly_params,x)
+    
+class TripleGaussianFitter(GaussianFitter):
+    def __init__(self,x,y,yerr,initial_guess):
+        super().__init__(x,y,yerr,initial_guess)
+
+    def _get_model(self,x,params):
+        mu1, mu2, mu3, sigma1, sigma2, sigma3, A1, A2, A3, *poly_params = params
+        return A1 / np.sqrt(2*np.pi) / sigma1 * np.exp(-1/2 * ((x - mu1) / sigma1)**2) + \
+               A2 / np.sqrt(2*np.pi) / sigma2 * np.exp(-1/2 * ((x - mu2) / sigma2)**2) + \
+               A3 / np.sqrt(2*np.pi) / sigma3 * np.exp(-1/2 * ((x - mu3) / sigma3)**2) + \
+               np.polyval(poly_params,x)
+    
+gaussian_fitter_classes = {
+    1 : GaussianFitter,
+    2 : DoubleGaussianFitter,
+    3 : TripleGaussianFitter,
+}
 
 
 ####################################################################################################################
@@ -142,9 +216,10 @@ class MCAData:
             clear_peaks_idx.pop(0)
         return clear_peaks_idx, clear_valleys_idx
 
-    def _get_fitting_boundaries(self,bins,kdes,clear_valleys_idx,
+    def _get_fitting_boundaries(self,bins,kdes,clear_peaks_idx,clear_valleys_idx,
                                 lower_feature_bin,upper_feature_bin,
-                                threshold=None,threshold_ratio=1):
+                                threshold=None,threshold_ratio=1,
+                                outward=False):
         '''
         Get the fitting boundaries of a (or multiple) peak(s).
 
@@ -155,67 +230,79 @@ class MCAData:
             lower_feature_bin: float, lower bound of the feature
             upper_feature_bin: float, upper bound of the feature
             threshold: float, threshold of the peak
+            threshold_ratio: float, ratio of the threshold
+            outward: bool, whether to fit outward
 
         Output:
             lower_idx: int, lower boundary of the fitting region
             upper_idx: int, upper boundary of the fitting region
         '''
 
-        # Get the closest valleys to the feature
-        clear_valleys_bins = bins[clear_valleys_idx]
-        clear_valleys_arange = np.arange(len(clear_valleys_idx))
+        # Get the closest peaks and valleys to the feature
+        def _find_closest_extremum(feature_bin,clear_extrema_idx,left=True):
+            clear_extrema_bins = bins[clear_extrema_idx]
+            clear_extrema_arange = np.arange(len(clear_extrema_idx))
+                                             
+            if left:
+                return clear_extrema_idx[np.max(clear_extrema_arange[clear_extrema_bins <= feature_bin])]
+            return clear_extrema_idx[np.min(clear_extrema_arange[clear_extrema_bins >= feature_bin])]
+            
+        lower_peak_idx = _find_closest_extremum(lower_feature_bin,clear_peaks_idx,left=False)
+        upper_peak_idx = _find_closest_extremum(upper_feature_bin,clear_peaks_idx,left=True)
         
-        lower_valley_idx = clear_valleys_idx[np.max(clear_valleys_arange[clear_valleys_bins < lower_feature_bin])]
-        upper_valley_idx = clear_valleys_idx[np.min(clear_valleys_arange[clear_valleys_bins > upper_feature_bin])]
+        lower_valley_idx = _find_closest_extremum(lower_feature_bin,clear_valleys_idx,left=True)
+        upper_valley_idx = _find_closest_extremum(upper_feature_bin,clear_valleys_idx,left=False)
 
         # Get the fitting region boundaries, satisfying the threshold
-        if threshold is None:
+        if not threshold:
             threshold = max(kdes[lower_valley_idx],kdes[upper_valley_idx]) * threshold_ratio
 
-        def _get_boundary(valley_idx,upper=False):
+        def _get_boundary(start_idx,end_idx):
             '''
             Helper function to get the boundary of the fitting region.
             '''
-
-            if kdes[valley_idx] >= threshold:
-                return valley_idx
+            sign = -1 if outward else 1
             
-            for i in range(upper_valley_idx - lower_valley_idx):
-                i = upper_valley_idx - i if upper else lower_valley_idx + i
-
-                if kdes[i] > threshold:
+            for i in range(start_idx,end_idx,1 if start_idx < end_idx else -1):
+                if sign*kdes[i] > sign*threshold:
                     return i
 
             return None
-
-        lower_idx = _get_boundary(lower_valley_idx,upper=False)
-        upper_idx = _get_boundary(upper_valley_idx,upper=True)
+        
+        lower_idx = _get_boundary(lower_peak_idx,lower_valley_idx) if outward else _get_boundary(lower_valley_idx,lower_peak_idx)
+        upper_idx = _get_boundary(upper_peak_idx,upper_valley_idx) if outward else _get_boundary(upper_valley_idx,upper_peak_idx)
 
         return lower_idx, upper_idx
     
     def _fit_peaks(self,bins,counts,lower_idx,upper_idx,
-                   fitter_class,initial_guess,n_gaussian=1):
+                   fitter_class,initial_guess,n_gaussian=1,
+                   poisson_statistic=False):
         '''
         Fit features and return the mean(s) and error(s) of the gaussian-approximated peak(s).
 
         Input:
             bins: 1D array, bin indices
             counts: 1D array, counts
-            fitting_idx: 1D array, indices of the fitting region
+            lower_idx: int, lower boundary of the fitting region
+            upper_idx: int, upper boundary of the fitting region
             fitter_class: class, fitter class
             initial_guess: 1D array, initial guess of the gaussian parameters
+            n_gaussian: int, number of gaussian peaks
+            poisson_statistic: bool, whether to consider poisson statistics
 
         Output:
-            peak_mu: float, mean of the gaussian-approximated peak(s)
-            peak_mu_err: float, error of the mean of the gaussian-approximated peak(s)
+            peak_mu: 1D array, mean of the gaussian-approximated peak(s)
+            peak_mu_err: 1D array, error of the mean of the gaussian-approximated peak(s)
+            peak_sigma: 1D array, standard deviation of the gaussian-approximated peak(s)
+            peak_sigma_err: 1D array, error of the standard deviation of the gaussian-approximated peak(s)
             fitting_bins: 1D array, bin indices of the fitting region
-            gaussian_counts: 1D array, counts of the gaussian-approximated peak(s)
+            fitted_counts: 1D array, counts of the gaussian-approximated peak(s)
         '''
         fitting_idx = np.arange(lower_idx,upper_idx+1)
 
         fitting_bins = bins[fitting_idx]
 
-        count_normalizing_factor = np.sum(counts) * (bins[1] - bins[0])
+        count_normalizing_factor = 1 if poisson_statistic else np.sum(counts) * (bins[1] - bins[0])
         fitting_counts = counts[fitting_idx] / count_normalizing_factor
         fitting_counts_err = np.sqrt(counts)[fitting_idx] / count_normalizing_factor
 
@@ -224,15 +311,22 @@ class MCAData:
 
         peak_mu = fitting_result['params'][:n_gaussian]
         peak_mu_err = fitting_result['e_params'][:n_gaussian] if fitting_result['e_params'] is not None else np.array([np.nan]*n_gaussian)
+
+        peak_sigma = fitting_result['params'][n_gaussian:2*n_gaussian]
+        peak_sigma_err = fitting_result['e_params'][n_gaussian:2*n_gaussian] if fitting_result['e_params'] is not None else np.array([np.nan]*n_gaussian)
+
         fitted_counts = fitter._get_model(fitting_bins,fitting_result['params']) * count_normalizing_factor
 
-        return peak_mu, peak_mu_err, fitting_bins, fitted_counts
+        if n_gaussian == 1:
+            peak_mu = bound_mu(peak_mu,initial_guess)
+
+        return peak_mu, peak_mu_err, peak_sigma, peak_sigma_err, fitting_bins, fitted_counts
     
     def _fit_single_peak(self,
                          bins,counts,kdes,
                          clear_peaks_idx,clear_valleys_idx,
-                         approx_line_bin=None,
-                         threshold_ratio=1/3):
+                         approx_line_bin=None,threshold_ratio=1/3,
+                         poisson_statistic=False,background_poly_order=0):
         '''
         Fit a single peak and return the mean and error of the gaussian-approximated peak if the approximated peak bin is provided.
 
@@ -243,15 +337,21 @@ class MCAData:
             clear_peaks_idx: 1D array, indices of the clear peaks
             clear_valleys_idx: 1D array, indices of the clear valleys
             approx_line_bin: int, approximate bin of the peak
+            threshold_ratio: float, ratio of the threshold
+            poisson_statistic: bool, whether to consider poisson statistics
+            background_poly_order: int, order of the polynomial background
 
         Output:
-            peak_mu: float, mean of the gaussian-approximated peak
-            peak_mu_err: float, error of the mean of the gaussian-approximated peak
+            peak_mu: 1D array, mean of the gaussian-approximated peak
+            peak_mu_err: 1D array, error of the mean of the gaussian-approximated peak
+            peak_sigma: 1D array, standard deviation of the gaussian-approximated peak
+            peak_sigma_err: 1D array, error of the standard deviation of the gaussian-approximated peak
             fitting_bins: 1D array, bin indices of the fitting region
-            gaussian_counts: 1D array, counts of the gaussian-approximated peak
+            fitted_counts: 1D array, counts of the gaussian-approximated peak
         '''
+
         if approx_line_bin is None:
-            return np.array([np.nan]), np.array([np.nan]), np.array([]), np.array([])
+            return np.array([np.nan]), np.array([np.nan]), np.array([np.nan]), np.array([np.nan]), np.array([]), np.array([]), 
 
         # Find the fitting region
         approx_peak_idx = clear_peaks_idx[
@@ -259,76 +359,26 @@ class MCAData:
         ]
         approx_peak_bin = bins[approx_peak_idx]
         approx_peak_kde = kdes[approx_peak_idx]
+        approx_peak_count = counts[approx_peak_idx]
 
-        lower_idx, upper_idx = self._get_fitting_boundaries(bins,kdes,clear_valleys_idx,
+        lower_idx, upper_idx = self._get_fitting_boundaries(bins,kdes,clear_peaks_idx,clear_valleys_idx,
                                                             approx_peak_bin,approx_peak_bin,
-                                                            threshold=approx_peak_kde*threshold_ratio)
+                                                            threshold=approx_peak_kde*threshold_ratio,
+                                                            outward=True)
         
         # Get Gaussian initial guess
         mu_guess = approx_peak_bin
-        sigma_guess = (bins[upper_idx] - bins[lower_idx]) / 4
+        sigma_guess = (bins[upper_idx] - bins[lower_idx]) / 2
         A_guess = approx_peak_kde * sigma_guess * np.sqrt(2*np.pi)
-        c_guess = 0
+        if poisson_statistic:
+            A_guess *= approx_peak_count / approx_peak_kde
+        poly_params_guess = [0] * (background_poly_order + 1)
 
-        initial_guess = [mu_guess,sigma_guess,A_guess,c_guess]
+        initial_guess = [mu_guess,sigma_guess,A_guess,*poly_params_guess]
 
         # Fit
-        return self._fit_peaks(bins,counts,lower_idx,upper_idx,GaussianFitter,initial_guess)
-
-
-####################################################################################################################
-
-'''
-Fitter Classes
-'''
-class LinearFitter(fitting.BaseFitter):
-    pass
-
-class GaussianFitter(fitting.BaseFitter):
-    def __init__(self,x,y,yerr,initial_guess,no_baseline=False):
-        self.x = x
-        self.y = y
-        self.yerr = yerr
-
-        super().__init__(x,y,yerr)
-
-        self.initial_guess = initial_guess
-
-        self.no_baseline = no_baseline
-
-    def _get_initial_guess(self):
-        return self.initial_guess
-
-    def _get_model(self,x,params):
-        mu, sigma, A, c = params
-        if self.no_baseline:
-            c = 0
-        return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + c
-
-class DoubleGaussianFitter(GaussianFitter):
-    def __init__(self,x,y,yerr,initial_guess):
-        super().__init__(x,y,yerr,initial_guess)
-
-    def _get_model(self,x,params):
-        mu1, mu2, sigma1, sigma2, A1, A2, c = params
-        return A1 / np.sqrt(2*np.pi) / sigma1 * np.exp(-1/2 * ((x - mu1) / sigma1)**2) + \
-               A2 / np.sqrt(2*np.pi) / sigma2 * np.exp(-1/2 * ((x - mu2) / sigma2)**2) + c
-    
-class TripleGaussianFitter(GaussianFitter):
-    def __init__(self,x,y,yerr,initial_guess):
-        super().__init__(x,y,yerr,initial_guess)
-
-    def _get_model(self,x,params):
-        mu1, mu2, mu3, sigma1, sigma2, sigma3, A1, A2, A3, c = params
-        return A1 / np.sqrt(2*np.pi) / sigma1 * np.exp(-1/2 * ((x - mu1) / sigma1)**2) + \
-               A2 / np.sqrt(2*np.pi) / sigma2 * np.exp(-1/2 * ((x - mu2) / sigma2)**2) + \
-               A3 / np.sqrt(2*np.pi) / sigma3 * np.exp(-1/2 * ((x - mu3) / sigma3)**2) + c
-    
-gaussian_fitter_classes = {
-    1 : GaussianFitter,
-    2 : DoubleGaussianFitter,
-    3 : TripleGaussianFitter,
-}
+        fitter_class = GaussianPoissFitter if poisson_statistic else GaussianFitter
+        return self._fit_peaks(bins,counts,lower_idx,upper_idx,fitter_class,initial_guess,poisson_statistic=poisson_statistic)
 
 
 ####################################################################################################################
@@ -348,7 +398,7 @@ class MCACalibration(MCAData):
         self.ba_133_energies = ba_133_energies
         self.cs_137_energy = cs_137_energy
 
-        self.na_22_peak_mu, self.na_22_peak_mu_err, self.na_22_fitting_bins, self.na_22_fitted_counts = self._fit_na_22_peak(na_22_data_file,kernel_bw,na_22_approx_line_bin)
+        self.na_22_peak_mu, self.na_22_peak_mu_err, _, _, self.na_22_fitting_bins, self.na_22_fitted_counts = self._fit_na_22_peak(na_22_data_file,kernel_bw,na_22_approx_line_bin)
 
         self.ba_133_peaks_mu, self.ba_133_peaks_mu_err, self.ba_133_fitting_bins, self.ba_133_fitted_counts, \
         self.cs_137_peak_mu, self.cs_137_peak_mu_err, self.cs_137_fitting_bins, self.cs_137_fitted_counts = self._fit_ba_133_peaks(ba_133_data_file,kernel_bw,ba_133_energies,ba_133_peak_ratios,cs_137_approx_line_bin)
@@ -406,20 +456,20 @@ class MCACalibration(MCAData):
             # Find the fitting region
             approx_peaks_idx = self.na_22_peak_mu / self.na_22_energy * np.array(bundled_energies)
 
-            lower_idx, upper_idx = self._get_fitting_boundaries(bins,kdes,clear_valleys_idx,
+            lower_idx, upper_idx = self._get_fitting_boundaries(bins,kdes,clear_peaks_idx,clear_valleys_idx,
                                                                 approx_peaks_idx[0],approx_peaks_idx[-1])
 
             n_gaussian = len(bundled_energies)
             # Get Gaussian initial guess
             mu_guess = approx_peaks_idx
-            sigma_guess = (bins[upper_idx] - bins[lower_idx]) / 8
+            sigma_guess = (bins[upper_idx] - bins[lower_idx]) / 3 / n_gaussian
             A_guess = kdes[np.argmin(np.abs(bins - approx_peaks_idx[np.argmax(peak_ratios)]))] * sigma_guess * np.sqrt(2*np.pi) * np.array(peak_ratios)
             c_guess = 0
 
             initial_guess = [*mu_guess] + [sigma_guess]*n_gaussian + [*A_guess,c_guess]
 
             # Fit
-            peaks_mu, peaks_mu_err, fitting_bins, fitted_counts = self._fit_peaks(bins,counts,lower_idx,upper_idx,gaussian_fitter_classes[n_gaussian],initial_guess,n_gaussian=n_gaussian)
+            peaks_mu, peaks_mu_err, _, _, fitting_bins, fitted_counts = self._fit_peaks(bins,counts,lower_idx,upper_idx,gaussian_fitter_classes[n_gaussian],initial_guess,n_gaussian=n_gaussian)
 
             ba_133_peaks_mu.append(peaks_mu)
             ba_133_peaks_mu_err.append(peaks_mu_err)
@@ -427,7 +477,7 @@ class MCACalibration(MCAData):
             ba_133_fitted_counts.append(fitted_counts)
 
         # Fit peaks of Cs-137 (if the approximate line is provided)
-        cs_137_peak_mu, cs_137_peak_mu_err, cs_137_fitting_bins, cs_137_fitted_counts = self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,cs_137_approx_line_bin)
+        cs_137_peak_mu, cs_137_peak_mu_err, _, _, cs_137_fitting_bins, cs_137_fitted_counts = self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,cs_137_approx_line_bin)
 
         return ba_133_peaks_mu, ba_133_peaks_mu_err, ba_133_fitting_bins, ba_133_fitted_counts, \
                cs_137_peak_mu, cs_137_peak_mu_err, cs_137_fitting_bins, cs_137_fitted_counts
@@ -453,6 +503,78 @@ class MCACalibration(MCAData):
         self.energy_scaler, self.energy_scaler_err = scaler_bayes_gaussian.mu, scaler_bayes_gaussian.sigma
         self.energy_scaler_mse = np.mean((self.calib_energies - self.calib_bins*self.energy_scaler)**2/self.calib_energies**2)
 
-class MCACompton(MCACalibration):
-    def __init__(self,data_file):
-        pass
+class MCACompton(MCAData):
+    def __init__(self,data_base='30_0304.Spe',data_dir='data/2025-03-04/',kernel_bw=5,):
+        self.scatter_angle = data_base[:2]
+
+        self.kernel_bw = kernel_bw
+
+        self._read_data_and_calibrate(data_base,data_dir)
+
+        for detector in ['recoil','scatter']:
+            peak_mu_count, peak_mu_count_err, peak_sigma_count, peak_sigma_count_err, \
+            peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
+            fitting_bins, fitted_counts = self._peak_analysis(detector)
+
+            self.__setattr__(detector+'_peak_mu_count',peak_mu_count)
+            self.__setattr__(detector+'_peak_mu_count_err',peak_mu_count_err)
+            self.__setattr__(detector+'_peak_sigma_count',peak_sigma_count)
+            self.__setattr__(detector+'_peak_sigma_count_err',peak_sigma_count_err)
+            self.__setattr__(detector+'_peak_mu_energy',peak_mu_energy)
+            self.__setattr__(detector+'_peak_mu_energy_err',peak_mu_energy_err)
+            self.__setattr__(detector+'_peak_sigma_energy',peak_sigma_energy)
+            self.__setattr__(detector+'_peak_sigma_energy_err',peak_sigma_energy_err)
+            self.__setattr__(detector+'_fitting_bins',fitting_bins)
+            self.__setattr__(detector+'_fitted_counts',fitted_counts)
+
+    def _read_data_and_calibrate(self,data_base,data_dir):
+        '''
+        Read data and calibration files and calibrate the energy scaler.
+
+        Input:
+            data_base: string, base name of the data files
+            data_dir: string, path to the data directory
+        '''
+
+        for detector in ['recoil','scatter']:
+            # Get data and calibration files
+            self.__setattr__(detector+'_data_file',os.path.join(data_dir,detector+'_'+data_base))
+            for calib_type in ['na','ba']:
+                self.__setattr__(detector+'_'+calib_type+'_calibration_data_file',os.path.join(data_dir,f'Calibration_{detector}_{calib_type}'+data_base[-9:]))
+            
+            # Calibrate the energy scaler
+            calibration = MCACalibration(
+                na_22_data_file = self.__getattribute__(f'{detector}_na_calibration_data_file'),
+                ba_133_data_file = self.__getattribute__(f'{detector}_ba_calibration_data_file'),
+                kernel_bw = self.kernel_bw,
+            )
+            self.__setattr__(detector+'_energy_scaler',calibration.energy_scaler)
+            self.__setattr__(detector+'_energy_scaler_err',calibration.energy_scaler_err)
+
+    def _peak_analysis(self,detector):
+        data_file = self.__getattribute__(f'{detector}_data_file')
+        energy_scaler = self.__getattribute__(f'{detector}_energy_scaler')
+        energy_scaler_err = self.__getattribute__(f'{detector}_energy_scaler_err')
+
+        # Read data
+        bins, counts, _, _ = self._read_data(data_file)
+        bins, kdes, kdes_err = self._kde_smooth_data(bins,counts,self.kernel_bw)
+
+        # Find peaks and valleys
+        clear_peaks_idx, clear_valleys_idx = self._find_peaks_and_valleys(bins,kdes,kdes_err)
+        
+        # Fit peak
+        peak_mu_count, peak_mu_count_err, peak_sigma_count, peak_sigma_count_err, fitting_bins, fitted_counts = \
+        self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,
+                              bins[clear_peaks_idx[0]],threshold_ratio=1/3,
+                              poisson_statistic=True,background_poly_order=1)
+        
+        peak_mu_energy = peak_mu_count * energy_scaler
+        peak_mu_energy_err = np.sqrt((peak_mu_count_err/peak_mu_count)**2 + (energy_scaler_err/energy_scaler)**2) * peak_mu_energy
+
+        peak_sigma_energy = peak_sigma_count * energy_scaler
+        peak_sigma_energy_err = np.sqrt((peak_sigma_count_err/peak_sigma_count)**2 + (energy_scaler_err/energy_scaler)**2) * peak_sigma_energy
+
+        return peak_mu_count, peak_mu_count_err, peak_sigma_count, peak_sigma_count_err, \
+               peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
+               fitting_bins, fitted_counts
