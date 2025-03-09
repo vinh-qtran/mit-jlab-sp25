@@ -71,11 +71,11 @@ class BaseFitter:
             'message': result.message,
         }
     
-    def model_interpolation(self, x=None, params=None):
+    def model_interpolation(self, x=None, params=None, extend=0.2):
         if x is None:
             x_range = self.x.max() - self.x.min()
-            x = np.linspace(self.x.min() - 0.2*x_range, 
-                            self.x.max() + 0.2*x_range,
+            x = np.linspace(self.x.min() - extend*x_range, 
+                            self.x.max() + extend*x_range,
                             1000)
 
         if params is None:
