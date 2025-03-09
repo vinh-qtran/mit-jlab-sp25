@@ -64,7 +64,7 @@ class GaussianFitter(fitting.BaseFitter):
 
     def _get_model(self,x,params):
         mu, sigma, A, *poly_params = params
-        return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + np.polyval(poly_params,x)
+        return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - np.abs(mu)) / sigma)**2) + np.polyval(poly_params,x)
     
 class GaussianPoissFitter(fitting.BasePoissonFitter):
     '''
@@ -81,7 +81,7 @@ class GaussianPoissFitter(fitting.BasePoissonFitter):
     
     def _get_model(self,x,params):
         mu, sigma, A, *poly_params = params
-        return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - mu) / sigma)**2) + np.polyval(poly_params,x)
+        return A / np.sqrt(2*np.pi) / sigma * np.exp(-1/2 * ((x - np.abs(mu)) / sigma)**2) + np.polyval(poly_params,x)
 
 class DoubleGaussianFitter(GaussianFitter):
     '''
@@ -93,8 +93,8 @@ class DoubleGaussianFitter(GaussianFitter):
 
     def _get_model(self,x,params):
         mu1, mu2, sigma1, sigma2, A1, A2, *poly_params = params
-        return A1 / np.sqrt(2*np.pi) / sigma1 * np.exp(-1/2 * ((x - mu1) / sigma1)**2) + \
-               A2 / np.sqrt(2*np.pi) / sigma2 * np.exp(-1/2 * ((x - mu2) / sigma2)**2) + \
+        return A1 / np.sqrt(2*np.pi) / sigma1 * np.exp(-1/2 * ((x - np.abs(mu1)) / sigma1)**2) + \
+               A2 / np.sqrt(2*np.pi) / sigma2 * np.exp(-1/2 * ((x - np.abs(mu2)) / sigma2)**2) + \
                np.polyval(poly_params,x)
     
 class TripleGaussianFitter(GaussianFitter):
@@ -107,9 +107,9 @@ class TripleGaussianFitter(GaussianFitter):
 
     def _get_model(self,x,params):
         mu1, mu2, mu3, sigma1, sigma2, sigma3, A1, A2, A3, *poly_params = params
-        return A1 / np.sqrt(2*np.pi) / sigma1 * np.exp(-1/2 * ((x - mu1) / sigma1)**2) + \
-               A2 / np.sqrt(2*np.pi) / sigma2 * np.exp(-1/2 * ((x - mu2) / sigma2)**2) + \
-               A3 / np.sqrt(2*np.pi) / sigma3 * np.exp(-1/2 * ((x - mu3) / sigma3)**2) + \
+        return A1 / np.sqrt(2*np.pi) / sigma1 * np.exp(-1/2 * ((x - np.abs(mu1)) / sigma1)**2) + \
+               A2 / np.sqrt(2*np.pi) / sigma2 * np.exp(-1/2 * ((x - np.abs(mu2)) / sigma2)**2) + \
+               A3 / np.sqrt(2*np.pi) / sigma3 * np.exp(-1/2 * ((x - np.abs(mu3)) / sigma3)**2) + \
                np.polyval(poly_params,x)
     
 gaussian_fitter_classes = {
@@ -347,8 +347,7 @@ class MCAData:
         peak_sigma_err = fitting_result['e_params'][n_gaussian:2*n_gaussian] if fitting_result['e_params'] is not None else np.array([np.nan]*n_gaussian)
 
         fitted_counts = fitter._get_model(fitting_bins,fitting_result['params']) * count_normalizing_factor
-
-        return peak_mu, peak_mu_err, peak_sigma, peak_sigma_err, fitting_bins, fitted_counts
+        return np.abs(peak_mu), peak_mu_err, peak_sigma, peak_sigma_err, fitting_bins, fitted_counts
     
     def _fit_single_peak(self,
                          bins,counts,kdes,
@@ -432,6 +431,7 @@ class MCAData:
             peak_fwhm_counts_err: float, error of the counts within the FWHM of the peak
         '''
 
+        # Find the fwhm region
         peak_mu_idx = clear_peaks_idx[np.argmin(np.abs(bins[clear_peaks_idx] - peak_mu_bin))]
         peak_mu_bin = bins[peak_mu_idx]
         peak_mu_kde = kdes[peak_mu_idx]
@@ -440,7 +440,15 @@ class MCAData:
                                                                       peak_mu_bin,peak_mu_bin,
                                                                       threshold=peak_mu_kde/2,outward=True)
 
-        def _get_counts(lower_idx,upper_idx):
+        threshold_err = (
+            np.std(kdes[fwhm_lower_idx-kernel_bw:fwhm_lower_idx+kernel_bw+1]) + np.std(kdes[fwhm_upper_idx-kernel_bw:fwhm_upper_idx+kernel_bw+1])
+        ) / 2
+        # Get the counts within the fwhm region
+        def _get_counts(threshold):
+            lower_idx, upper_idx = self._get_fitting_boundaries(bins,kdes,clear_peaks_idx,clear_valleys_idx,
+                                                                peak_mu_bin,peak_mu_bin,
+                                                                threshold=threshold,outward=True)
+
             if lower_idx and upper_idx:
                 fwhm_counts = np.sum(counts[lower_idx:upper_idx+1])
                 return fwhm_counts, np.sqrt(fwhm_counts)
@@ -452,10 +460,8 @@ class MCAData:
             peak_fwhm_counts_err = np.array([])
 
             for i in range(n_MC):
-                lower_idx = fwhm_lower_idx + int(np.random.normal(0,kernel_bw))
-                upper_idx = fwhm_upper_idx + int(np.random.normal(0,kernel_bw))
-
-                fwhm_counts, fwhm_counts_err = _get_counts(lower_idx,upper_idx)
+                threshold = np.random.normal(peak_mu_kde/2,threshold_err)
+                fwhm_counts, fwhm_counts_err = _get_counts(threshold)
 
                 if fwhm_counts is not None:
                     peak_fwhm_counts = np.append(peak_fwhm_counts,fwhm_counts)
@@ -483,7 +489,7 @@ class MCACalibration(MCAData):
                  na_22_data_file,ba_133_data_file,kernel_bw=5,
                  na_22_energy=511,na_22_approx_line_bin=1400,
                  ba_133_energies=[[53.15,79.60,81.00],[160.61],[276.40,302.85,356.01]],
-                 ba_133_peak_ratios=[[0.3,0.1,1],[1],[0.2,0.4,1]],
+                 ba_133_peak_ratios=[[0.3,0.3,1],[1],[0.2,0.4,1]],
                  cs_137_energy=661.7,cs_137_approx_line_bin=None,
                  non_calib_energies=[276.40]):
         
@@ -491,10 +497,12 @@ class MCACalibration(MCAData):
         self.ba_133_energies = ba_133_energies
         self.cs_137_energy = cs_137_energy
 
-        self.na_22_peak_mu, self.na_22_peak_mu_err, _, _, self.na_22_fitting_bins, self.na_22_fitted_counts = self._fit_na_22_peak(na_22_data_file,kernel_bw,na_22_approx_line_bin)
+        self.na_22_peak_mu, self.na_22_peak_mu_err, _, _, self.na_22_fitting_bins, self.na_22_fitted_counts = \
+        self._fit_na_22_peak(na_22_data_file,kernel_bw,na_22_approx_line_bin)
 
         self.ba_133_peaks_mu, self.ba_133_peaks_mu_err, self.ba_133_fitting_bins, self.ba_133_fitted_counts, \
-        self.cs_137_peak_mu, self.cs_137_peak_mu_err, self.cs_137_fitting_bins, self.cs_137_fitted_counts = self._fit_ba_133_peaks(ba_133_data_file,kernel_bw,ba_133_energies,ba_133_peak_ratios,cs_137_approx_line_bin)
+        self.cs_137_peak_mu, self.cs_137_peak_mu_err, self.cs_137_fitting_bins, self.cs_137_fitted_counts, self.cs_137_peak_sigma = \
+        self._fit_ba_133_peaks(ba_133_data_file,kernel_bw,ba_133_energies,ba_133_peak_ratios,cs_137_approx_line_bin)
 
         non_calib_energies = non_calib_energies if cs_137_approx_line_bin is not None else non_calib_energies + [cs_137_energy]
         self._get_calib_stats(non_calib_energies)
@@ -582,7 +590,9 @@ class MCACalibration(MCAData):
             initial_guess = [*mu_guess] + [sigma_guess]*n_gaussian + [*A_guess,c_guess]
 
             # Fit
-            peaks_mu, peaks_mu_err, _, _, fitting_bins, fitted_counts = self._fit_peaks(bins,counts,lower_idx,upper_idx,gaussian_fitter_classes[n_gaussian],initial_guess,n_gaussian=n_gaussian)
+            peaks_mu, peaks_mu_err, _, _, fitting_bins, fitted_counts = self._fit_peaks(bins,counts,lower_idx,upper_idx,
+                                                                                        gaussian_fitter_classes[n_gaussian],
+                                                                                        initial_guess,n_gaussian=n_gaussian)
 
             ba_133_peaks_mu.append(peaks_mu)
             ba_133_peaks_mu_err.append(peaks_mu_err)
@@ -590,10 +600,13 @@ class MCACalibration(MCAData):
             ba_133_fitted_counts.append(fitted_counts)
 
         # Fit peaks of Cs-137 (if the approximate line is provided)
-        cs_137_peak_mu, cs_137_peak_mu_err, _, _, cs_137_fitting_bins, cs_137_fitted_counts = self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,cs_137_approx_line_bin)
+        cs_137_peak_mu, cs_137_peak_mu_err, cs_137_peak_sigma, _, \
+        cs_137_fitting_bins, cs_137_fitted_counts = self._fit_single_peak(bins,counts,kdes,
+                                                                          clear_peaks_idx,clear_valleys_idx,
+                                                                          cs_137_approx_line_bin)
 
         return ba_133_peaks_mu, ba_133_peaks_mu_err, ba_133_fitting_bins, ba_133_fitted_counts, \
-               cs_137_peak_mu, cs_137_peak_mu_err, cs_137_fitting_bins, cs_137_fitted_counts
+               cs_137_peak_mu, cs_137_peak_mu_err, cs_137_fitting_bins, cs_137_fitted_counts, cs_137_peak_sigma
     
     def _get_calib_stats(self,non_calib_energies):
         '''
@@ -612,10 +625,12 @@ class MCACalibration(MCAData):
             energy_offset_err: float, error of the energy offset
         '''
 
+        # Get calibration statistics
         self.calib_bins = np.concatenate([self.na_22_peak_mu] + self.ba_133_peaks_mu + [self.cs_137_peak_mu])
         self.calib_bins_err = np.concatenate([self.na_22_peak_mu_err] + self.ba_133_peaks_mu_err + [self.cs_137_peak_mu_err])
         self.calib_energies = np.concatenate([np.array([self.na_22_energy])] + self.ba_133_energies + [np.array([self.cs_137_energy])])
 
+        # Remove non-calibration peaks
         sorting_order = np.argsort(self.calib_energies)
         mask = np.ones(self.calib_bins.size,dtype=bool)
         for energy in non_calib_energies:
@@ -624,6 +639,7 @@ class MCACalibration(MCAData):
         self.calib_bins_err = self.calib_bins_err[sorting_order][mask]
         self.calib_energies = self.calib_energies[sorting_order][mask]
 
+        # Calibrate the energy scaler and offset
         linear_fitter = NoUncertaintyLinearFitter(self.calib_bins,self.calib_energies,initial_guess=[np.mean(self.calib_energies/self.calib_bins),0])
         self.energy_scaler, self.energy_offset, self.energy_scaler_err, self.energy_offset_err = linear_fitter.fit()
 
@@ -637,27 +653,28 @@ class MCACompton(MCAData):
     '''
     def __init__(self,data_base='30_0304.Spe',data_dir='data/2025-03-04/',kernel_bw=5,):
 
-        self.scatter_angle = np.deg2rad(float(data_base[:2]))
+        self.scatter_angle = np.deg2rad(float(data_base[:-9]))
 
         self.kernel_bw = kernel_bw
 
         self._read_data_and_calibrate(data_base,data_dir)
 
         for detector in ['recoil','scatter']:
-            peak_mu_count, peak_mu_count_err, peak_sigma_count, peak_sigma_count_err, \
+            peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
             peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
-            peak_fwhm_rate, peak_fwhm_rate_err, _, _ = self._peak_analysis(detector)
+            peak_fwhm_rate, peak_fwhm_rate_err, _, _, peak_mu_bin_deviation = self._peak_analysis(detector)
 
-            self.__setattr__(detector+'_peak_mu_count',peak_mu_count)
-            self.__setattr__(detector+'_peak_mu_count_err',peak_mu_count_err)
-            self.__setattr__(detector+'_peak_sigma_count',peak_sigma_count)
-            self.__setattr__(detector+'_peak_sigma_count_err',peak_sigma_count_err)
+            self.__setattr__(detector+'_peak_mu_bin',peak_mu_bin)
+            self.__setattr__(detector+'_peak_mu_bin_err',peak_mu_bin_err)
+            self.__setattr__(detector+'_peak_sigma_bin',peak_sigma_bin)
+            self.__setattr__(detector+'_peak_sigma_bin_err',peak_sigma_bin_err)
             self.__setattr__(detector+'_peak_mu_energy',peak_mu_energy)
             self.__setattr__(detector+'_peak_mu_energy_err',peak_mu_energy_err)
             self.__setattr__(detector+'_peak_sigma_energy',peak_sigma_energy)
             self.__setattr__(detector+'_peak_sigma_energy_err',peak_sigma_energy_err)
             self.__setattr__(detector+'_peak_fwhm_rate',peak_fwhm_rate)
             self.__setattr__(detector+'_peak_fwhm_rate_err',peak_fwhm_rate_err)
+            self.__setattr__(detector+'_peak_mu_bin_deviation',peak_mu_bin_deviation)
 
     def _read_data_and_calibrate(self,data_base,data_dir):
         '''
@@ -688,12 +705,15 @@ class MCACompton(MCAData):
             calibration = MCACalibration(
                 na_22_data_file = self.__getattribute__(f'{detector}_na_calibration_data_file'),
                 ba_133_data_file = self.__getattribute__(f'{detector}_ba_calibration_data_file'),
-                kernel_bw = self.kernel_bw,
+                kernel_bw = self.kernel_bw,cs_137_approx_line_bin=1800 if detector == 'recoil' else None
             )
             self.__setattr__(detector+'_energy_scaler',calibration.energy_scaler)
             self.__setattr__(detector+'_energy_offset',calibration.energy_offset)
             self.__setattr__(detector+'_energy_scaler_err',calibration.energy_scaler_err)
             self.__setattr__(detector+'_energy_offset_err',calibration.energy_offset_err)
+
+            if detector == 'recoil':
+                self.cs_137_peak_width = (calibration.cs_137_peak_sigma / (calibration.cs_137_peak_mu + calibration.energy_offset/calibration.energy_scaler))[0] * 2
     
     def _bin_to_energy(self,bins,bins_err,detector):
         '''
@@ -731,8 +751,8 @@ class MCACompton(MCAData):
         Output:
             peak_mu_count: float, mean of the gaussian-approximated peak
             peak_mu_count_err: float, error of the mean of the gaussian-approximated peak
-            peak_sigma_count: float, standard deviation of the gaussian-approximated peak
-            peak_sigma_count_err: float, error of the standard deviation of the gaussian-approximated peak
+            peak_sigma_bin: float, standard deviation of the gaussian-approximated peak
+            peak_sigma_bin_err: float, error of the standard deviation of the gaussian-approximated peak
             peak_mu_energy: float, mean of the gaussian-approximated peak in energy
             peak_mu_energy_err: float, error of the mean of the gaussian-approximated peak in energy
             peak_sigma_energy: float, standard deviation of the gaussian-approximated peak in energy
@@ -741,6 +761,7 @@ class MCACompton(MCAData):
             peak_fwhm_rate_err: float, error of the FWHM of the peak in count per second
             fitting_bins: 1D array, bin numbers of the fitting region
             fitted_counts: 1D array, counts of the gaussian-approximated peak
+            peak_mu_bin_deviation: float, deviation of the mean of the gaussian-approximated peak from the feature bin
         '''
 
         data_file = self.__getattribute__(f'{detector}_data_file')
@@ -753,13 +774,15 @@ class MCACompton(MCAData):
         clear_peaks_idx, clear_valleys_idx = self._find_peaks_and_valleys(bins,kdes,kdes_err)
         
         # Fit peak
-        peak_mu_bin, peak_mu_bin_err, peak_sigma_count, peak_sigma_count_err, fitting_bins, fitted_counts,  = \
+        peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, fitting_bins, fitted_counts,  = \
         self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,
-                              bins[clear_peaks_idx[0]],threshold_ratio=1/3,
-                              poisson_statistic=True,background_poly_order=1)
+                              bins[clear_peaks_idx[0]],threshold_ratio=1/2,
+                              poisson_statistic=True,background_poly_order=-1)
+        
+        peak_mu_bin_deviation = peak_mu_bin - bins[clear_peaks_idx[0]]
         
         peak_mu_energy, peak_mu_energy_err = self._bin_to_energy(peak_mu_bin,peak_mu_bin_err,detector)
-        peak_sigma_energy, peak_sigma_energy_err = self._bin_to_energy(peak_sigma_count,peak_sigma_count_err,detector)
+        peak_sigma_energy, peak_sigma_energy_err = self._bin_to_energy(peak_sigma_bin,peak_sigma_bin_err,detector)
 
         # Get FWHM
         peak_fwhm_rate, peak_fwhm_rate_err = self._get_peak_fwhm_counts(bins,counts,count_time,
@@ -767,6 +790,6 @@ class MCACompton(MCAData):
                                                                         clear_peaks_idx,clear_valleys_idx,
                                                                         peak_mu_bin,n_MC=1000)
 
-        return peak_mu_bin, peak_mu_bin_err, peak_sigma_count, peak_sigma_count_err, \
+        return peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
                peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
-               peak_fwhm_rate, peak_fwhm_rate_err, fitting_bins, fitted_counts
+               peak_fwhm_rate, peak_fwhm_rate_err, fitting_bins, fitted_counts, peak_mu_bin_deviation

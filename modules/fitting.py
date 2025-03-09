@@ -42,10 +42,10 @@ class BaseFitter:
     def _get_initial_guess(self):
         raise NotImplementedError("Not implemented in base class.")
     
-    def fit(self):
+    def fit(self,bounds=(-np.inf,np.inf)):
         initial_guess = self._get_initial_guess()
         result = least_squares(
-            self._get_residuals, initial_guess
+            self._get_residuals, initial_guess, bounds=bounds
         )
 
         chisqr = self._get_chisqr(result.x)
@@ -73,7 +73,10 @@ class BaseFitter:
     
     def model_interpolation(self, x=None, params=None):
         if x is None:
-            x = np.linspace(self.x.min(), self.x.max(), 1000)
+            x_range = self.x.max() - self.x.min()
+            x = np.linspace(self.x.min() - 0.2*x_range, 
+                            self.x.max() + 0.2*x_range,
+                            1000)
 
         if params is None:
             params = self.fit()['params']
@@ -82,8 +85,10 @@ class BaseFitter:
     
 class BasePoissonFitter(BaseFitter):
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        mask = y > 0
+
+        self.x = x[mask]
+        self.y = y[mask]
 
     def _get_residuals(self, params):
         yhat = self._get_model(self.x,params)
