@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.22)  9 MAR 2025 01:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.22)  9 MAR 2025 01:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -410,22 +410,12 @@ Overfull \hbox (3.9028pt too wide) in paragraph at lines 86--87
  [][] 
  []
 
-<Figures/scattering_rate.png, id=48, 722.7pt x 397.485pt>
-File: Figures/scattering_rate.png Graphic file (type png)
-<use Figures/scattering_rate.png>
-Package pdftex.def Info: Figures/scattering_rate.png  used on input line 93.
-(pdftex.def)             Requested size: 249.9028pt x 137.44785pt.
-
-Overfull \hbox (3.9028pt too wide) in paragraph at lines 93--94
- [][] 
- []
-
 (./vinh.bbl
 
 Package natbib Warning: Empty `thebibliography' environment on input line 52.
 
 )
-<Figures/energy_calibration.png, id=50, 722.7pt x 722.7pt>
+<Figures/energy_calibration.png, id=49, 722.7pt x 722.7pt>
 File: Figures/energy_calibration.png Graphic file (type png)
 <use Figures/energy_calibration.png>
 Package pdftex.def Info: Figures/energy_calibration.png  used on input line 124.
@@ -435,7 +425,7 @@ Overfull \hbox (3.9028pt too wide) in paragraph at lines 124--125
  [][] 
  []
 
-[1{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2 <./Figures/energy_angle_dependency.png> <./Figures/scattering_rate.png> <./Figures/energy_calibration.png>] (./vinh.aux)
+[1{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2 <./Figures/energy_angle_dependency.png> <./Figures/energy_calibration.png>] (./vinh.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -444,18 +434,18 @@ Package rerunfilecheck Info: File `vinh.out' has not changed.
 (rerunfilecheck)             Checksum: 238283EEFB9D6CE151AE0AC5BEE54E11;1275.
  ) 
 Here is how much of TeX's memory you used:
- 12150 strings out of 474116
- 181054 string characters out of 5743681
+ 12141 strings out of 474116
+ 180788 string characters out of 5743681
  1943187 words of memory out of 5000000
- 34339 multiletter control sequences out of 15000+600000
+ 34331 multiletter control sequences out of 15000+600000
  567995 words of font info for 72 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,9n,79p,409b,515s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on vinh.pdf (2 pages, 367552 bytes).
+Output written on vinh.pdf (2 pages, 334832 bytes).
 PDF statistics:
- 115 PDF objects out of 1000 (max. 8388607)
- 87 compressed objects within 1 object stream
- 17 named destinations out of 1000 (max. 500000)
- 96 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 112 PDF objects out of 1000 (max. 8388607)
+ 86 compressed objects within 1 object stream
+ 16 named destinations out of 1000 (max. 500000)
+ 91 words of extra memory for PDF output out of 10000 (max. 10000000)
 

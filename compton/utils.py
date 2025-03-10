@@ -413,7 +413,7 @@ class MCAData:
                               clear_peaks_idx,clear_valleys_idx,
                               peak_mu_bin,n_MC=1000):
         '''
-        Get the counts within the FWHM of a peak.
+        Get the counts within the FWHM of a peak. Perform Monte Carlo simulations of the counts, propagating from the uncertainty of the FWHM, if n_MC is provided.
 
         Input:
             bins: 1D array, bin numbers
@@ -441,8 +441,13 @@ class MCAData:
                                                                       threshold=peak_mu_kde/2,outward=True)
 
         threshold_err = (
-            np.std(kdes[fwhm_lower_idx-kernel_bw:fwhm_lower_idx+kernel_bw+1]) + np.std(kdes[fwhm_upper_idx-kernel_bw:fwhm_upper_idx+kernel_bw+1])
-        ) / 2
+            np.std(counts[fwhm_lower_idx-kernel_bw:fwhm_lower_idx+kernel_bw+1]) + np.std(counts[fwhm_upper_idx-kernel_bw:fwhm_upper_idx+kernel_bw+1])
+        ) / 2 / np.sum(counts) / (bins[1] - bins[0])
+
+        idx_width = fwhm_upper_idx - fwhm_lower_idx
+        lower_idx_lim = max(0,fwhm_lower_idx - idx_width/2)
+        upper_idx_lim = min(bins.size-1,fwhm_upper_idx + idx_width/2)
+
         # Get the counts within the fwhm region
         def _get_counts(threshold):
             lower_idx, upper_idx = self._get_fitting_boundaries(bins,kdes,clear_peaks_idx,clear_valleys_idx,
@@ -450,6 +455,8 @@ class MCAData:
                                                                 threshold=threshold,outward=True)
 
             if lower_idx and upper_idx:
+                if lower_idx < lower_idx_lim or upper_idx > upper_idx_lim:
+                    return None, None
                 fwhm_counts = np.sum(counts[lower_idx:upper_idx+1])
                 return fwhm_counts, np.sqrt(fwhm_counts)
 
@@ -715,7 +722,7 @@ class MCACompton(MCAData):
             if detector == 'recoil':
                 self.cs_137_peak_width = (calibration.cs_137_peak_sigma / (calibration.cs_137_peak_mu + calibration.energy_offset/calibration.energy_scaler))[0] * 2
     
-    def _bin_to_energy(self,bins,bins_err,detector):
+    def _bin_to_energy(self,bins,bins_err,detector,no_offset=False):
         '''
         Convert bins to energies.
 
@@ -733,6 +740,10 @@ class MCACompton(MCAData):
         energy_offset = self.__getattribute__(f'{detector}_energy_offset')
         energy_scaler_err = self.__getattribute__(f'{detector}_energy_scaler_err')
         energy_offset_err = self.__getattribute__(f'{detector}_energy_offset_err')
+
+        if no_offset:
+            energy_offset = 0
+            energy_offset_err = 0
 
         energy = bins * energy_scaler + energy_offset
         energy_err = np.sqrt(
@@ -782,7 +793,7 @@ class MCACompton(MCAData):
         peak_mu_bin_deviation = peak_mu_bin - bins[clear_peaks_idx[0]]
         
         peak_mu_energy, peak_mu_energy_err = self._bin_to_energy(peak_mu_bin,peak_mu_bin_err,detector)
-        peak_sigma_energy, peak_sigma_energy_err = self._bin_to_energy(peak_sigma_bin,peak_sigma_bin_err,detector)
+        peak_sigma_energy, peak_sigma_energy_err = self._bin_to_energy(peak_sigma_bin,peak_sigma_bin_err,detector,no_offset=True)
 
         # Get FWHM
         peak_fwhm_rate, peak_fwhm_rate_err = self._get_peak_fwhm_counts(bins,counts,count_time,
