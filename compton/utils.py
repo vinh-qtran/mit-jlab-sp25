@@ -498,7 +498,7 @@ class MCACalibration(MCAData):
                  ba_133_energies=[[53.15,79.60,81.00],[160.61],[276.40,302.85,356.01]],
                  ba_133_peak_ratios=[[0.3,0.3,1],[1],[0.2,0.4,1]],
                  cs_137_energy=661.7,cs_137_approx_line_bin=None,
-                 non_calib_energies=[276.40]):
+                 non_calib_energies=[],macthing_tolerance=0.05):
         
         self.na_22_energy = na_22_energy
         self.ba_133_energies = ba_133_energies
@@ -511,8 +511,9 @@ class MCACalibration(MCAData):
         self.cs_137_peak_mu, self.cs_137_peak_mu_err, self.cs_137_fitting_bins, self.cs_137_fitted_counts, self.cs_137_peak_sigma = \
         self._fit_ba_133_peaks(ba_133_data_file,kernel_bw,ba_133_energies,ba_133_peak_ratios,cs_137_approx_line_bin)
 
-        non_calib_energies = non_calib_energies if cs_137_approx_line_bin is not None else non_calib_energies + [cs_137_energy]
-        self._get_calib_stats(non_calib_energies)
+        self.non_calib_energies = non_calib_energies if cs_137_approx_line_bin is not None else non_calib_energies + [cs_137_energy]
+        self.matching_tolerance = macthing_tolerance
+        self._get_calib_stats(self.non_calib_energies,self.matching_tolerance)
 
     def _fit_na_22_peak(self,
                         na_22_data_file,kernel_bw,
@@ -615,7 +616,29 @@ class MCACalibration(MCAData):
         return ba_133_peaks_mu, ba_133_peaks_mu_err, ba_133_fitting_bins, ba_133_fitted_counts, \
                cs_137_peak_mu, cs_137_peak_mu_err, cs_137_fitting_bins, cs_137_fitted_counts, cs_137_peak_sigma
     
-    def _get_calib_stats(self,non_calib_energies):
+    def _rematch_calib_peaks(self,calib_energies,calib_bins,matching_tolerance):
+        nan_mask = ~np.isnan(calib_bins)
+        calib_energies = calib_energies[nan_mask]
+        calib_bins = calib_bins[nan_mask]
+
+        approx_reconstructed_energies = np.median(calib_energies/calib_bins) * calib_bins
+
+        matched_energies = np.array([])
+        matched_bins = np.array([])
+
+        for i,energy in enumerate(calib_energies):
+            if not calib_bins[i]:
+                continue
+
+            matched_idx = np.argmin(np.abs(approx_reconstructed_energies - energy))
+
+            if np.abs(approx_reconstructed_energies[matched_idx] - energy)/energy < matching_tolerance:
+                matched_energies = np.append(matched_energies,energy)
+                matched_bins = np.append(matched_bins,calib_bins[matched_idx])
+
+        return matched_energies, matched_bins
+    
+    def _get_calib_stats(self,non_calib_energies,matching_tolerance):
         '''
         Get the calibration statistics.
 
@@ -634,17 +657,17 @@ class MCACalibration(MCAData):
 
         # Get calibration statistics
         self.calib_bins = np.concatenate([self.na_22_peak_mu] + self.ba_133_peaks_mu + [self.cs_137_peak_mu])
-        self.calib_bins_err = np.concatenate([self.na_22_peak_mu_err] + self.ba_133_peaks_mu_err + [self.cs_137_peak_mu_err])
         self.calib_energies = np.concatenate([np.array([self.na_22_energy])] + self.ba_133_energies + [np.array([self.cs_137_energy])])
 
+        # Match the calibration peaks
+        self.calib_energies, self.calib_bins = self._rematch_calib_peaks(self.calib_energies,self.calib_bins,matching_tolerance)
+
         # Remove non-calibration peaks
-        sorting_order = np.argsort(self.calib_energies)
         mask = np.ones(self.calib_bins.size,dtype=bool)
         for energy in non_calib_energies:
-            mask[self.calib_energies[sorting_order] == energy] = False
-        self.calib_bins = self.calib_bins[sorting_order][mask]
-        self.calib_bins_err = self.calib_bins_err[sorting_order][mask]
-        self.calib_energies = self.calib_energies[sorting_order][mask]
+            mask[self.calib_energies == energy] = False
+        self.calib_bins = self.calib_bins[mask]
+        self.calib_energies = self.calib_energies[mask]
 
         # Calibrate the energy scaler and offset
         linear_fitter = NoUncertaintyLinearFitter(self.calib_bins,self.calib_energies,initial_guess=[np.mean(self.calib_energies/self.calib_bins),0])
@@ -658,15 +681,19 @@ class MCACompton(MCAData):
     '''
     Compton scattering class for MCA data.
     '''
-    def __init__(self,data_base='30_0304.Spe',data_dir='data/2025-03-04/',kernel_bw=5,):
-
-        self.scatter_angle = np.deg2rad(float(data_base[:-9]))
-
+    def __init__(self,data_base='30_0304.Spe',data_dir='data/2025-03-04/',kernel_bw=5,
+                 detectors=['recoil','scatter'],peak_idx=0,thredshold_ratio=1/2):
         self.kernel_bw = kernel_bw
+        self.detectors = detectors
+        self.peak_idx = peak_idx
+        self.thredshold_ratio = thredshold_ratio
+
+        if 'recoil' in detectors or 'scatter' in detectors:
+            self.scatter_angle = np.deg2rad(float(data_base[:-9]))
 
         self._read_data_and_calibrate(data_base,data_dir)
 
-        for detector in ['recoil','scatter']:
+        for detector in self.detectors:
             peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
             peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
             peak_fwhm_rate, peak_fwhm_rate_err, _, _, peak_mu_bin_deviation = self._peak_analysis(detector)
@@ -702,7 +729,7 @@ class MCACompton(MCAData):
                 (detector)_energy_offset_err: float, error of the energy offset
         '''
 
-        for detector in ['recoil','scatter']:
+        for detector in self.detectors:
             # Get data and calibration files
             self.__setattr__(detector+'_data_file',os.path.join(data_dir,detector+'_'+data_base))
             for calib_type in ['na','ba']:
@@ -787,10 +814,10 @@ class MCACompton(MCAData):
         # Fit peak
         peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, fitting_bins, fitted_counts,  = \
         self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,
-                              bins[clear_peaks_idx[0]],threshold_ratio=1/2,
-                              poisson_statistic=True,background_poly_order=-1)
+                              bins[clear_peaks_idx[self.peak_idx]],threshold_ratio=self.thredshold_ratio,
+                              poisson_statistic=self.peak_idx==0,background_poly_order=-1)
         
-        peak_mu_bin_deviation = peak_mu_bin - bins[clear_peaks_idx[0]]
+        peak_mu_bin_deviation = peak_mu_bin - bins[clear_peaks_idx[self.peak_idx]]
         
         peak_mu_energy, peak_mu_energy_err = self._bin_to_energy(peak_mu_bin,peak_mu_bin_err,detector)
         peak_sigma_energy, peak_sigma_energy_err = self._bin_to_energy(peak_sigma_bin,peak_sigma_bin_err,detector,no_offset=True)
@@ -805,157 +832,3 @@ class MCACompton(MCAData):
                peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
                peak_fwhm_rate, peak_fwhm_rate_err, fitting_bins, fitted_counts, peak_mu_bin_deviation
     
-
-'''
-MCA Attenuation Class
-'''
-class MCAAttenuation(MCAData):
-    '''
-    Compton scattering class for MCA data.
-    '''
-    def __init__(self,data_base='0.Spe',data_dir='data/2025-03-11/',kernel_bw=5, non_calib_energies=[276.40,302.85]):
-
-        self.kernel_bw = kernel_bw
-
-        self.non_calib_energies = non_calib_energies
-
-        self._read_data_and_calibrate(data_base,data_dir)
-
-        detector = 'attenuation'
-        peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
-        peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
-        peak_fwhm_rate, peak_fwhm_rate_err, _, _, peak_mu_bin_deviation = self._peak_analysis(detector)
-
-        self.__setattr__(detector+'_peak_mu_bin',peak_mu_bin)
-        self.__setattr__(detector+'_peak_mu_bin_err',peak_mu_bin_err)
-        self.__setattr__(detector+'_peak_sigma_bin',peak_sigma_bin)
-        self.__setattr__(detector+'_peak_sigma_bin_err',peak_sigma_bin_err)
-        self.__setattr__(detector+'_peak_mu_energy',peak_mu_energy)
-        self.__setattr__(detector+'_peak_mu_energy_err',peak_mu_energy_err)
-        self.__setattr__(detector+'_peak_sigma_energy',peak_sigma_energy)
-        self.__setattr__(detector+'_peak_sigma_energy_err',peak_sigma_energy_err)
-        self.__setattr__(detector+'_peak_fwhm_rate',peak_fwhm_rate)
-        self.__setattr__(detector+'_peak_fwhm_rate_err',peak_fwhm_rate_err)
-        self.__setattr__(detector+'_peak_mu_bin_deviation',peak_mu_bin_deviation)
-
-
-    def _read_data_and_calibrate(self,data_base,data_dir):
-        '''
-        Read data and calibration files and calibrate the energy scaler.
-
-        Input:
-            data_base: string, base name of the data files
-            data_dir: string, path to the data directory
-
-        Attributes:
-            for the attenuation detector:
-                (detector)_data_file: string, path to the data file
-                (detector)_na_calibration_data_file: string, path to the Na-22 calibration data file
-                (detector)_ba_calibration_data_file: string, path to the Ba-133 calibration data file
-                (detector)_energy_scaler: float, energy scaler
-                (detector)_energy_offset: float, energy offset
-                (detector)_energy_scaler_err: float, error of the energy scaler
-                (detector)_energy_offset_err: float, error of the energy offset
-        '''
-
-        detector = 'attenuation'
-        # Get data and calibration files
-        self.__setattr__(detector+'_data_file',os.path.join(data_dir,detector+'_'+data_base))
-        for calib_type in ['na','ba']:
-            self.__setattr__(detector+'_'+calib_type+'_calibration_data_file',os.path.join(data_dir,f'Calibration_{detector}_{calib_type}'+data_base[-9:]))
-        
-        # Calibrate the energy scaler
-        calibration = MCACalibration(
-            na_22_data_file = self.__getattribute__(f'{detector}_na_calibration_data_file'),
-            ba_133_data_file = self.__getattribute__(f'{detector}_ba_calibration_data_file'),
-            kernel_bw = self.kernel_bw,cs_137_approx_line_bin=1800,non_calib_energies=self.non_calib_energies)
-        self.__setattr__(detector+'_energy_scaler',calibration.energy_scaler)
-        self.__setattr__(detector+'_energy_offset',calibration.energy_offset)
-        self.__setattr__(detector+'_energy_scaler_err',calibration.energy_scaler_err)
-        self.__setattr__(detector+'_energy_offset_err',calibration.energy_offset_err)
-
-    
-    def _bin_to_energy(self,bins,bins_err,detector,no_offset=False):
-        '''
-        Convert bins to energies.
-
-        Input:
-            bins: 1D array, bin numbers
-            bins_err: 1D array, error of the bin numbers
-            detector: string, detector type
-
-        Output:
-            energy: 1D array, energies
-            energy_err: 1D array, error of the energies
-        '''
-
-        energy_scaler = self.__getattribute__(f'{detector}_energy_scaler')
-        energy_offset = self.__getattribute__(f'{detector}_energy_offset')
-        energy_scaler_err = self.__getattribute__(f'{detector}_energy_scaler_err')
-        energy_offset_err = self.__getattribute__(f'{detector}_energy_offset_err')
-
-        if no_offset:
-            energy_offset = 0
-            energy_offset_err = 0
-
-        energy = bins * energy_scaler + energy_offset
-        energy_err = np.sqrt(
-            ((bins_err/bins)**2 + (energy_scaler_err/energy_scaler)**2) * (bins*energy_scaler)**2 + energy_offset_err**2
-        )
-
-        return energy, energy_err
-
-    def _peak_analysis(self,detector):
-        '''
-        Analyze the peaks of the Compton scattering features.
-
-        Input:
-            detector: string, detector type
-
-        Output:
-            peak_mu_count: float, mean of the gaussian-approximated peak
-            peak_mu_count_err: float, error of the mean of the gaussian-approximated peak
-            peak_sigma_bin: float, standard deviation of the gaussian-approximated peak
-            peak_sigma_bin_err: float, error of the standard deviation of the gaussian-approximated peak
-            peak_mu_energy: float, mean of the gaussian-approximated peak in energy
-            peak_mu_energy_err: float, error of the mean of the gaussian-approximated peak in energy
-            peak_sigma_energy: float, standard deviation of the gaussian-approximated peak in energy
-            peak_sigma_energy_err: float, error of the standard deviation of the gaussian-approximated peak in energy
-            peak_fwhm_rate: float, FWHM of the peak in count per second
-            peak_fwhm_rate_err: float, error of the FWHM of the peak in count per second
-            fitting_bins: 1D array, bin numbers of the fitting region
-            fitted_counts: 1D array, counts of the gaussian-approximated peak
-            peak_mu_bin_deviation: float, deviation of the mean of the gaussian-approximated peak from the feature bin
-        '''
-
-        data_file = self.__getattribute__(f'{detector}_data_file')
-
-        # Read data
-        bins, counts, count_time, _ = self._read_data(data_file)
-        bins, kdes, kdes_err = self._kde_smooth_data(bins,counts,self.kernel_bw)
-
-        # Find peaks and valleys
-        clear_peaks_idx, clear_valleys_idx = self._find_peaks_and_valleys(bins,kdes,kdes_err)
-        
-        # Fit peak
-        peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, fitting_bins, fitted_counts,  = \
-        self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,
-                              bins[clear_peaks_idx[-1]],threshold_ratio=1/4,
-                              poisson_statistic=False,background_poly_order=-1)
-        
-        
-        peak_mu_bin_deviation = peak_mu_bin - bins[clear_peaks_idx[-1]]
-        
-        peak_mu_energy, peak_mu_energy_err = self._bin_to_energy(peak_mu_bin,peak_mu_bin_err,detector)
-        peak_sigma_energy, peak_sigma_energy_err = self._bin_to_energy(peak_sigma_bin,peak_sigma_bin_err,detector,no_offset=True)
-
-        # Get FWHM
-        peak_fwhm_rate, peak_fwhm_rate_err = self._get_peak_fwhm_counts(bins,counts,count_time,
-                                                                        kdes,self.kernel_bw,
-                                                                        clear_peaks_idx,clear_valleys_idx,
-                                                                        peak_mu_bin,n_MC=1000)
-
-
-        return peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
-               peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
-               peak_fwhm_rate, peak_fwhm_rate_err, fitting_bins, fitted_counts, peak_mu_bin_deviation
