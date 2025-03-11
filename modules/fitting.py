@@ -63,6 +63,7 @@ class BaseFitter:
             'e_params': e_params,
 
             'chisqr': self._get_chisqr(result.x),
+            'reduced_chisqr': self._get_chisqr(result.x) / (len(self.x) - len(result.x)),
             'alpha': alpha,
 
             'cov': cov,
@@ -246,19 +247,20 @@ class ChowPolynomial:
 # ANALYSIS TOOLS
 
 class NSigma:
-    def __init__(self,params,cov,range=3,resolution=100):
-        self.cov = cov
-        if self.cov is None:
+    def __init__(self,params,cov,par0_idx=0,par1_idx=1,range=3,resolution=100):
+        if cov is None:
             raise ValueError("Covariance matrix is not available.")
-        if self.cov.shape[0] != self.cov.shape[1]:
+        if cov.shape[0] != cov.shape[1]:
             raise ValueError("Covariance matrix is not square.")
-        if self.cov.shape[0] != len(params):
+        if cov.shape[0] != len(params):
             raise ValueError("Covariance matrix does not match parameter length.")
-        if self.cov.shape[0] != 2:
-            raise ValueError("Only 2D parameter space is supported.")
         
-        self.params = params
-        self.e_params = np.sqrt(np.diagonal(self.cov))
+        mask = [par0_idx,par1_idx]
+
+        self.cov_inv = np.linalg.inv(cov)[mask][:,mask]
+
+        self.params = params[mask]
+        self.e_params = np.sqrt(np.diagonal(np.linalg.inv(self.cov_inv)))
 
         self.range = range
         self.resolution = resolution
@@ -275,24 +277,24 @@ class NSigma:
 
         return par0, par1, delta_par0, delta_par1
     
-    def _get_Nsigma(self,i_delta_par0,i_delta_par1):
-        sig_squared = np.dot(np.dot([i_delta_par0, i_delta_par1], np.linalg.inv(self.cov)),
+    def _get_n_sigma(self,i_delta_par0,i_delta_par1):
+        sig_squared = np.dot(np.dot([i_delta_par0, i_delta_par1], self.cov_inv),
                              [i_delta_par0, i_delta_par1])
         return np.sqrt(sig_squared)
     
-    def get_Nsigma(self):
+    def get_n_sigma_grids(self):
         par0, par1, delta_par0, delta_par1 = self._get_par_and_delta_par()
 
         par0_grid, par1_grid = np.meshgrid(par0,par1)
         n_sigma_grid = np.array([
-            [self._get_Nsigma(i_delta_par0,i_delta_par1) for i_delta_par0 in delta_par0]
+            [self._get_n_sigma(i_delta_par0,i_delta_par1) for i_delta_par0 in delta_par0]
             for i_delta_par1 in delta_par1
         ])
 
         return par0_grid, par1_grid, n_sigma_grid
     
     def show_n_sigma(self,fig,ax,par0_scaler=1,par1_scaler=1,cb_loc='top'):
-        par0_grid, par1_grid, n_sigma_grid = self.get_Nsigma()
+        par0_grid, par1_grid, n_sigma_grid = self.get_n_sigma_grids()
         par0_grid *= par0_scaler
         par1_grid *= par1_scaler
 

@@ -720,7 +720,7 @@ class MCACompton(MCAData):
             self.__setattr__(detector+'_energy_offset_err',calibration.energy_offset_err)
 
             if detector == 'recoil':
-                self.cs_137_peak_width = (calibration.cs_137_peak_sigma / (calibration.cs_137_peak_mu + calibration.energy_offset/calibration.energy_scaler))[0] * 2
+                self.original_peak_width_ratio = (calibration.cs_137_peak_sigma / (calibration.cs_137_peak_mu + calibration.energy_offset/calibration.energy_scaler))[0] * 2
     
     def _bin_to_energy(self,bins,bins_err,detector,no_offset=False):
         '''
