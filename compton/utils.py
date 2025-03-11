@@ -804,3 +804,158 @@ class MCACompton(MCAData):
         return peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
                peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
                peak_fwhm_rate, peak_fwhm_rate_err, fitting_bins, fitted_counts, peak_mu_bin_deviation
+    
+
+'''
+MCA Attenuation Class
+'''
+class MCAAttenuation(MCAData):
+    '''
+    Compton scattering class for MCA data.
+    '''
+    def __init__(self,data_base='0.Spe',data_dir='data/2025-03-11/',kernel_bw=5, non_calib_energies=[276.40,302.85]):
+
+        self.kernel_bw = kernel_bw
+
+        self.non_calib_energies = non_calib_energies
+
+        self._read_data_and_calibrate(data_base,data_dir)
+
+        detector = 'attenuation'
+        peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
+        peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
+        peak_fwhm_rate, peak_fwhm_rate_err, _, _, peak_mu_bin_deviation = self._peak_analysis(detector)
+
+        self.__setattr__(detector+'_peak_mu_bin',peak_mu_bin)
+        self.__setattr__(detector+'_peak_mu_bin_err',peak_mu_bin_err)
+        self.__setattr__(detector+'_peak_sigma_bin',peak_sigma_bin)
+        self.__setattr__(detector+'_peak_sigma_bin_err',peak_sigma_bin_err)
+        self.__setattr__(detector+'_peak_mu_energy',peak_mu_energy)
+        self.__setattr__(detector+'_peak_mu_energy_err',peak_mu_energy_err)
+        self.__setattr__(detector+'_peak_sigma_energy',peak_sigma_energy)
+        self.__setattr__(detector+'_peak_sigma_energy_err',peak_sigma_energy_err)
+        self.__setattr__(detector+'_peak_fwhm_rate',peak_fwhm_rate)
+        self.__setattr__(detector+'_peak_fwhm_rate_err',peak_fwhm_rate_err)
+        self.__setattr__(detector+'_peak_mu_bin_deviation',peak_mu_bin_deviation)
+
+
+    def _read_data_and_calibrate(self,data_base,data_dir):
+        '''
+        Read data and calibration files and calibrate the energy scaler.
+
+        Input:
+            data_base: string, base name of the data files
+            data_dir: string, path to the data directory
+
+        Attributes:
+            for the attenuation detector:
+                (detector)_data_file: string, path to the data file
+                (detector)_na_calibration_data_file: string, path to the Na-22 calibration data file
+                (detector)_ba_calibration_data_file: string, path to the Ba-133 calibration data file
+                (detector)_energy_scaler: float, energy scaler
+                (detector)_energy_offset: float, energy offset
+                (detector)_energy_scaler_err: float, error of the energy scaler
+                (detector)_energy_offset_err: float, error of the energy offset
+        '''
+
+        detector = 'attenuation'
+        # Get data and calibration files
+        self.__setattr__(detector+'_data_file',os.path.join(data_dir,detector+'_'+data_base))
+        for calib_type in ['na','ba']:
+            self.__setattr__(detector+'_'+calib_type+'_calibration_data_file',os.path.join(data_dir,f'Calibration_{detector}_{calib_type}'+data_base[-9:]))
+        
+        # Calibrate the energy scaler
+        calibration = MCACalibration(
+            na_22_data_file = self.__getattribute__(f'{detector}_na_calibration_data_file'),
+            ba_133_data_file = self.__getattribute__(f'{detector}_ba_calibration_data_file'),
+            kernel_bw = self.kernel_bw,cs_137_approx_line_bin=1800,non_calib_energies=self.non_calib_energies)
+        self.__setattr__(detector+'_energy_scaler',calibration.energy_scaler)
+        self.__setattr__(detector+'_energy_offset',calibration.energy_offset)
+        self.__setattr__(detector+'_energy_scaler_err',calibration.energy_scaler_err)
+        self.__setattr__(detector+'_energy_offset_err',calibration.energy_offset_err)
+
+    
+    def _bin_to_energy(self,bins,bins_err,detector,no_offset=False):
+        '''
+        Convert bins to energies.
+
+        Input:
+            bins: 1D array, bin numbers
+            bins_err: 1D array, error of the bin numbers
+            detector: string, detector type
+
+        Output:
+            energy: 1D array, energies
+            energy_err: 1D array, error of the energies
+        '''
+
+        energy_scaler = self.__getattribute__(f'{detector}_energy_scaler')
+        energy_offset = self.__getattribute__(f'{detector}_energy_offset')
+        energy_scaler_err = self.__getattribute__(f'{detector}_energy_scaler_err')
+        energy_offset_err = self.__getattribute__(f'{detector}_energy_offset_err')
+
+        if no_offset:
+            energy_offset = 0
+            energy_offset_err = 0
+
+        energy = bins * energy_scaler + energy_offset
+        energy_err = np.sqrt(
+            ((bins_err/bins)**2 + (energy_scaler_err/energy_scaler)**2) * (bins*energy_scaler)**2 + energy_offset_err**2
+        )
+
+        return energy, energy_err
+
+    def _peak_analysis(self,detector):
+        '''
+        Analyze the peaks of the Compton scattering features.
+
+        Input:
+            detector: string, detector type
+
+        Output:
+            peak_mu_count: float, mean of the gaussian-approximated peak
+            peak_mu_count_err: float, error of the mean of the gaussian-approximated peak
+            peak_sigma_bin: float, standard deviation of the gaussian-approximated peak
+            peak_sigma_bin_err: float, error of the standard deviation of the gaussian-approximated peak
+            peak_mu_energy: float, mean of the gaussian-approximated peak in energy
+            peak_mu_energy_err: float, error of the mean of the gaussian-approximated peak in energy
+            peak_sigma_energy: float, standard deviation of the gaussian-approximated peak in energy
+            peak_sigma_energy_err: float, error of the standard deviation of the gaussian-approximated peak in energy
+            peak_fwhm_rate: float, FWHM of the peak in count per second
+            peak_fwhm_rate_err: float, error of the FWHM of the peak in count per second
+            fitting_bins: 1D array, bin numbers of the fitting region
+            fitted_counts: 1D array, counts of the gaussian-approximated peak
+            peak_mu_bin_deviation: float, deviation of the mean of the gaussian-approximated peak from the feature bin
+        '''
+
+        data_file = self.__getattribute__(f'{detector}_data_file')
+
+        # Read data
+        bins, counts, count_time, _ = self._read_data(data_file)
+        bins, kdes, kdes_err = self._kde_smooth_data(bins,counts,self.kernel_bw)
+
+        # Find peaks and valleys
+        clear_peaks_idx, clear_valleys_idx = self._find_peaks_and_valleys(bins,kdes,kdes_err)
+        
+        # Fit peak
+        peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, fitting_bins, fitted_counts,  = \
+        self._fit_single_peak(bins,counts,kdes,clear_peaks_idx,clear_valleys_idx,
+                              bins[clear_peaks_idx[-1]],threshold_ratio=1/4,
+                              poisson_statistic=False,background_poly_order=-1)
+        
+        
+        peak_mu_bin_deviation = peak_mu_bin - bins[clear_peaks_idx[-1]]
+        
+        peak_mu_energy, peak_mu_energy_err = self._bin_to_energy(peak_mu_bin,peak_mu_bin_err,detector)
+        peak_sigma_energy, peak_sigma_energy_err = self._bin_to_energy(peak_sigma_bin,peak_sigma_bin_err,detector,no_offset=True)
+
+        # Get FWHM
+        peak_fwhm_rate, peak_fwhm_rate_err = self._get_peak_fwhm_counts(bins,counts,count_time,
+                                                                        kdes,self.kernel_bw,
+                                                                        clear_peaks_idx,clear_valleys_idx,
+                                                                        peak_mu_bin,n_MC=1000)
+
+
+        return peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
+               peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
+               peak_fwhm_rate, peak_fwhm_rate_err, fitting_bins, fitted_counts, peak_mu_bin_deviation
