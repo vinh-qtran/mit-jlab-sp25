@@ -636,6 +636,16 @@ INPUT ./fig/michelson_setup.png
 INPUT fig/michelson_setup.png
 INPUT ./fig/michelson_setup.png
 INPUT ./fig/michelson_setup.png
+INPUT ./fig/raw_data.png
+INPUT ./fig/raw_data.png
+INPUT fig/raw_data.png
+INPUT ./fig/raw_data.png
+INPUT ./fig/raw_data.png
+INPUT ./fig/single_raw_data.png
+INPUT ./fig/single_raw_data.png
+INPUT fig/single_raw_data.png
+INPUT ./fig/single_raw_data.png
+INPUT ./fig/single_raw_data.png
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
 INPUT ./fig/Intensity.png
 INPUT ./fig/Intensity.png
