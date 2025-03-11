@@ -308,10 +308,10 @@ INPUT ./Figures/scattering_rate.png
 INPUT ./Figures/scattering_rate.png
 INPUT ./Figures/scattering_rate.png
 INPUT ./Figures/scattering_rate.png
+INPUT /usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT ./vinh.bbl
 INPUT ./vinh.bbl
 INPUT vinh.bbl
-INPUT /usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT ./Figures/energy_calibration.png
 INPUT ./Figures/energy_calibration.png
 INPUT ./Figures/energy_calibration.png

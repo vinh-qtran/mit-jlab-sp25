@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.22)  11 MAR 2025 14:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.22)  11 MAR 2025 15:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -588,38 +588,44 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 35.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<Figures/energy_angle_dependency.png, id=76, 722.7pt x 578.16pt>
+<Figures/energy_angle_dependency.png, id=77, 722.7pt x 578.16pt>
 File: Figures/energy_angle_dependency.png Graphic file (type png)
 <use Figures/energy_angle_dependency.png>
-Package pdftex.def Info: Figures/energy_angle_dependency.png  used on input line 155.
+Package pdftex.def Info: Figures/energy_angle_dependency.png  used on input line 161.
 (pdftex.def)             Requested size: 249.9028pt x 199.92415pt.
 
-Overfull \hbox (3.9028pt too wide) in paragraph at lines 155--156
+Overfull \hbox (3.9028pt too wide) in paragraph at lines 161--162
  [][] 
  []
 
-<Figures/scattering_rate.png, id=78, 722.7pt x 433.62pt>
+<Figures/scattering_rate.png, id=79, 722.7pt x 433.62pt>
 File: Figures/scattering_rate.png Graphic file (type png)
 <use Figures/scattering_rate.png>
-Package pdftex.def Info: Figures/scattering_rate.png  used on input line 167.
+Package pdftex.def Info: Figures/scattering_rate.png  used on input line 173.
 (pdftex.def)             Requested size: 249.9028pt x 149.94312pt.
 
-Overfull \hbox (3.9028pt too wide) in paragraph at lines 167--168
+Overfull \hbox (3.9028pt too wide) in paragraph at lines 173--174
  [][] 
  []
 
-(./vinh.bbl [1{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+[1{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
-Package natbib Warning: Empty `thebibliography' environment on input line 52.
+LaTeX Warning: A float is stuck (cannot be placed) on input line 190.
 
-)
-<Figures/energy_calibration.png, id=105, 722.7pt x 722.7pt>
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 190.
+
+
+Class revtex4-1 Warning: Deferred float stuck during \clearpage processing.
+
+(./vinh.bbl)
+<Figures/energy_calibration.png, id=110, 722.7pt x 722.7pt>
 File: Figures/energy_calibration.png Graphic file (type png)
 <use Figures/energy_calibration.png>
-Package pdftex.def Info: Figures/energy_calibration.png  used on input line 200.
+Package pdftex.def Info: Figures/energy_calibration.png  used on input line 206.
 (pdftex.def)             Requested size: 249.9028pt x 249.9052pt.
 
-Overfull \hbox (3.9028pt too wide) in paragraph at lines 200--201
+Overfull \hbox (3.9028pt too wide) in paragraph at lines 206--207
  [][] 
  []
 
@@ -632,18 +638,18 @@ Package rerunfilecheck Info: File `vinh.out' has not changed.
 (rerunfilecheck)             Checksum: E4284323B3A971A2DF9A45512BEB9DCD;2371.
  ) 
 Here is how much of TeX's memory you used:
- 22763 strings out of 474116
- 420197 string characters out of 5743681
- 1968187 words of memory out of 5000000
- 44719 multiletter control sequences out of 15000+600000
+ 22770 strings out of 474116
+ 420229 string characters out of 5743681
+ 1958187 words of memory out of 5000000
+ 44724 multiletter control sequences out of 15000+600000
  570890 words of font info for 83 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,10n,87p,522b,785s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,10n,87p,522b,797s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on vinh.pdf (3 pages, 441475 bytes).
+Output written on vinh.pdf (3 pages, 444924 bytes).
 PDF statistics:
- 196 PDF objects out of 1000 (max. 8388607)
- 150 compressed objects within 2 object streams
- 28 named destinations out of 1000 (max. 500000)
+ 200 PDF objects out of 1000 (max. 8388607)
+ 154 compressed objects within 2 object streams
+ 30 named destinations out of 1000 (max. 500000)
  156 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -50,7 +50,8 @@
 
 \begin{figure}[h]
     \centering
-    \begin{tikzpicture}[scale=1.5,>=stealth]
+    \vspace{-0.75cm} % Adjust this value as needed to reduce extra space above the figure
+    \begin{tikzpicture}[scale=1.5,>=stealth, baseline={(0,0)}]
         % Draw the incident photon arrow (from left to the vertex)
         \draw[decorate, decoration={snake, amplitude=0.5mm, segment length=4mm}, thick, ->] (-2,0) -- (0,0) node[midway, above, inner sep=5] {$\gamma$};
     
@@ -73,7 +74,7 @@
         % Mark the scattering angle theta (double arc from horizontal to electron arrow)
         \draw (0.4,0) arc (0:30:0.4);
         \node at (0.6,0.15) {$\theta$};
-    \end{tikzpicture}       
+    \end{tikzpicture}
     \caption{Compton scattering of a photon by an electron. $\gamma$ and $\gamma'$ are the incident and scattered photons. $e^-$ is the recoil electron initially at rest. $\theta$ and $\phi$ are the scattering and recoil angles, respectively.}
     \label{fig:scattering}
 \end{figure}
@@ -96,7 +97,12 @@ with $\theta$ being the scattering angle, i.e. the angle between the initial and
 \subsection{Differential cross section}
 \label{ssec:differential_cross_section}
 
-
+In the classical regime, the cross section of Compton scattering can be approximated by the Thomson formula for elastic collisions~\citep{Jackson1975}, given by
+\begin{equation}
+    \label{eq:thomson_cross_section}
+    \frac{d\sigma}{d\Omega} = \left( \frac{e^2}{4 \pi \epsilon_0 m_e c^2} \right) \frac{1 + \cos^2{\theta}}{2},
+\end{equation}
+with $e$ being the electron charge and $\epsilon_0$ the vacuum permittivity.
 
 \subsection{Total cross section \& Attenuation}
 \label{ssec:total_cross_section}

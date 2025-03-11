@@ -1,15 +1,15 @@
 # Fdb version 4
-["bibtex vinh"] 1741714557.191 "vinh.aux" "vinh.bbl" "vinh" 1741716060.43183 0
+["bibtex vinh"] 1741720917.60466 "vinh.aux" "vinh.bbl" "vinh" 1741720922.607 0
   "./ref.bib" 1741711514.0439 1859 abe46217cf172d47bc20e6f5c295b28b ""
-  "./vinhNotes.bib" 1741716059.7915 103 48ad29797468f16e2853d8797278d7af ""
+  "./vinhNotes.bib" 1741720922.12711 103 48ad29797468f16e2853d8797278d7af ""
   "/usr/local/texlive/2024/texmf-dist/bibtex/bst/revtex4-1/apsrev4-1.bst" 1602107945 71515 e333383ed72bf24aa6de7e8cabb55f84 ""
-  "vinh.aux" 1741716059.79055 4523 6d5510db2fbaed04cad786bf4f522c0c "pdflatex"
+  "vinh.aux" 1741720922.12595 4656 5c79f07c0bedb37e8082002312c62644 "pdflatex"
   (generated)
   "vinh.bbl"
   "vinh.blg"
   (rewritten before read)
-["pdflatex"] 1741716058.15168 "/Users/vinhtran/Data/MIT Classes/Spring 2025/8.13/mit-jlab-sp25/compton/report/vinh.tex" "vinh.pdf" "vinh" 1741716060.43203 0
-  "/Users/vinhtran/Data/MIT Classes/Spring 2025/8.13/mit-jlab-sp25/compton/report/vinh.tex" 1741714574.3225 6562 40a38ccb4c8562bb56066a72399bc0fd ""
+["pdflatex"] 1741720921.11081 "/Users/vinhtran/Data/MIT Classes/Spring 2025/8.13/mit-jlab-sp25/compton/report/vinh.tex" "vinh.pdf" "vinh" 1741720922.60723 0
+  "/Users/vinhtran/Data/MIT Classes/Spring 2025/8.13/mit-jlab-sp25/compton/report/vinh.tex" 1741720920.8675 7081 5bfe6fc4c9ad5f1ab855f8372e9f1734 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm" 1246382020 1124 14ccf5552bc7f77ca02a8a402bea8bfb ""
@@ -196,13 +196,13 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1729643308.19649 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1729643272 8221429 7501df06e1e507facf6b2eb48d842354 ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "Figures/energy_angle_dependency.png" 1741671341.43138 87923 cab91422195132a5ab771022d18da86d ""
-  "Figures/energy_calibration.png" 1741716057.2034 179513 cfb85d0f05433e6826c93e4eabd86bd6 ""
-  "Figures/scattering_rate.png" 1741671618.14992 72147 8f207ca22b3da66b026da9a2069e997f ""
-  "vinh.aux" 1741716059.79055 4523 6d5510db2fbaed04cad786bf4f522c0c "pdflatex"
-  "vinh.bbl" 1741714557.29764 1981 2371da0eeaa9c49fd2eddf057334b8bb "bibtex vinh"
-  "vinh.out" 1741716059.79132 2371 e4284323b3a971a2df9a45512beb9dcd "pdflatex"
-  "vinh.tex" 1741714574.3225 6562 40a38ccb4c8562bb56066a72399bc0fd ""
+  "Figures/energy_angle_dependency.png" 1741716712.82958 87923 cab91422195132a5ab771022d18da86d ""
+  "Figures/energy_calibration.png" 1741716706.59387 178702 fdc150a303dbf580cf22158fe1f3a381 ""
+  "Figures/scattering_rate.png" 1741716713.1592 71809 5911bbb2250791d4bd5e962bb8441d78 ""
+  "vinh.aux" 1741720922.12595 4656 5c79f07c0bedb37e8082002312c62644 "pdflatex"
+  "vinh.bbl" 1741720917.72851 2370 fb274a9e9fc6e741569554cac2245726 "bibtex vinh"
+  "vinh.out" 1741720922.12678 2371 e4284323b3a971a2df9a45512beb9dcd "pdflatex"
+  "vinh.tex" 1741720920.8675 7081 5bfe6fc4c9ad5f1ab855f8372e9f1734 ""
   (generated)
   "vinh.aux"
   "vinh.log"
