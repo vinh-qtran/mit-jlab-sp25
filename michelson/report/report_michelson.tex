@@ -13,7 +13,7 @@
                                         % all others.
                                         % usage: \url{http://web.mit.edu/8.13}
 
-\setlength{\parskip}{5pt}
+\setlength{\parskip}{2pt}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % And now, begin the document...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,11 +44,12 @@ The Michelson interferometer is based on the principle of interference of waves.
 \begin{equation}
 \Delta \phi = 2\pi \frac{\Delta x}{\lambda}
 \end{equation}
-where $\Delta x$ is the path difference between the two waves. The interference pattern is given by
-\begin{equation}
-    I = I_0 \cos^2(\Delta \phi)
-\end{equation}
-where $I_0$ is the intensity of the light source.
+where $\Delta x$ is the path difference between the two waves. 
+% The interference pattern is given by
+% \begin{equation}
+%     I = I_0 \cos^2(\Delta \phi)
+% \end{equation}
+% where $I_0$ is the total intensity of the light source.
 
 The interference pattern has \textit{primary maxima} when $\Delta \phi = 2\pi n$ and \textit{primary minima} when $\Delta \phi = (2n+1)\pi$, where $n$ is an integer. 
 
@@ -84,7 +85,7 @@ The experiment was conducted using the Michelson interferometer setup at MIT Jun
 The detector is a photodiode. The voltage output of photodiode is proportional to the intensity of the light on the detector. We used a signal generator to apply a triangular voltage of amplitude of $10 \text{ V}$ and frequency of $10 \text{ Hz}$ to the piezoelectric transducer. The schematic of the setup is shown in Fig. \ref{fig:set_up}.
 
 The applied voltage altered the path difference $\Delta x$. We recorded the signal generator voltage and the photodiode voltage. 
-\begin{figure}[h]
+\begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{fig/michelson_setup.png}
     \caption{The set up of the Michelson interferometer. The figure is reproduced from \cite{MITOpticalInterferometry2023}. The light source is a laser. The beam splitter is a 50/50 beam splitter. The mirror to the right of the beam splitter is mounted on a piezoelectric transducer. The other mirror is stationary. The detector is a photodiode. The signal generator applies a triangular voltage to the piezoelectric transducer to change the path length.}
@@ -95,10 +96,11 @@ The applied voltage altered the path difference $\Delta x$. We recorded the sign
 We obtained the voltages of signal generator and photodiode against time from the output of the oscilloscope. We tabulated the voltage of the signal generator and the voltage of the photodiode. We repeated the measurement 5 times to reduce the statistical uncertainty.
 
 The data is shown in fig \ref{fig:raw_data}. 
-\begin{figure*}[h]
+\begin{figure*}
     \centering
     \includegraphics[width=0.9\textwidth]{fig/raw_data.png}
-    \caption{The raw data of the signal generator voltage and the photodiode voltage. The error bars come from the resolution of the oscilloscope. }
+    \includegraphics[width = 0.9\textwidth]{fig/single_raw_data.png}
+    \caption{The raw data of the signal generator voltage and the photodiode voltage. The error bars come from the resolution of the oscilloscope. The second plot is the detailed view of one run of the data.}
     \label{fig:raw_data}
 \end{figure*}
 
@@ -114,7 +116,7 @@ To cluster different bands of the signal generator voltage and identify neighbor
 \subsection{Visibility of the Interference Pattern}
 
 Figure \ref{fig:intensity} shows the photodiode intensity at different voltages. The average maximum voltage is found to be $(1.592\pm0.002(\text{stat})) \text{ V}$ and the average minimum voltage is found to be $(1.110\pm0.002(\text{stat})) \text{ V}$. The visibility of the interference pattern is found to be $0.179\pm0.001(\text{stat})$.
-\begin{figure}[h]
+\begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{fig/Intensity.png}
     \caption{The voltage output of the photodiodes that correspond to primary maxima and minima. The blue triangles represent the primary maxima and the green squares represent the primary minima. We can see that the primary maxima and minima correspond to approximately constant photodiode voltage (constant intensity). The error bars are negligible due to the resolution of the oscilloscope.}
@@ -127,7 +129,7 @@ Figure \ref{fig:intensity} shows that some primary minima and maxima were missed
 
 
 \subsubsection{Uncertainty of Visibility}
-The uncertainty of the visiblity comes from the statistical uncertainty of the maximum and minimum voltage, calculated in the standard way of $\sigma/\sqrt{N}$. We then used the usual formula of error propagation to find the uncertainty of the visibility. The uncertainty of the visibility is found to be $0.001$. 
+The uncertainty of the visiblity comes from the statistical uncertainty of the maximum and minimum voltage, calculated in the standard method of $\sigma/\sqrt{N}$. We then used the usual formula of error propagation to find the uncertainty of the visibility. The uncertainty of the visibility is found to be $0.001$. 
 
 The systematic uncertainty in visibility primarily arises from photodiode calibration and oscilloscope resolution, though these contributions are negligible compared to statistical uncertainty. We did not explicitly include the systematic uncertainty of the visibility into the final result.
 

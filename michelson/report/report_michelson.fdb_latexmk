@@ -1,15 +1,15 @@
 # Fdb version 4
-["bibtex report_michelson"] 1740597577 "report_michelson.aux" "report_michelson.bbl" "report_michelson" 1740597579 0
-  "./report_michelsonNotes.bib" 1740597577 0 d41d8cd98f00b204e9800998ecf8427e ""
+["bibtex report_michelson"] 1741715453 "report_michelson.aux" "report_michelson.bbl" "report_michelson" 1741715457 0
+  "./report_michelsonNotes.bib" 1741715454 0 d41d8cd98f00b204e9800998ecf8427e ""
   "./report_michelson_ref.bib" 1740596382 1032 f99cd247f32a61dc5d692dab6baf05d5 ""
   "/usr/local/texlive/2023/texmf-dist/bibtex/bst/base/abbrv.bst" 1292289607 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "report_michelson.aux" 1740597578 7127 4a5732d4cc9a05be72ad508f303bf10b "pdflatex"
+  "report_michelson.aux" 1741715457 7671 ccd40c137869673cc0b0110211e30072 "pdflatex"
   (generated)
   "report_michelson.bbl"
   "report_michelson.blg"
   (rewritten before read)
-["pdflatex"] 1740597577 "/Users/yongao/Desktop/8.13/mit-jlab-sp25/michelson/report/report_michelson.tex" "report_michelson.pdf" "report_michelson" 1740597579 0
-  "/Users/yongao/Desktop/8.13/mit-jlab-sp25/michelson/report/report_michelson.tex" 1740597575 14950 b38524103c6fd944bf6fc7fb59901c48 ""
+["pdflatex"] 1741715453 "/Users/yongao/Desktop/8.13/mit-jlab-sp25/michelson/report/report_michelson.tex" "report_michelson.pdf" "report_michelson" 1741715457 0
+  "/Users/yongao/Desktop/8.13/mit-jlab-sp25/michelson/report/report_michelson.tex" 1741715449 15496 cf3905bd3a54e0491e0da30af670be59 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -114,13 +114,15 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1693271708 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1693271629 7883453 a01431d5d781e0b0b460ca05cd748b25 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "fig/Intensity.png" 1740516965 107600 7287e40750f1194b7081323bb3484ab1 ""
-  "fig/Primary_Maxima_Minima.png" 1740515509 116947 d8a71009c9814b60c7b18c26fc4a4a27 ""
+  "fig/Intensity.png" 1741123607 111089 805766427b63954fac7710b443d3d9df ""
+  "fig/Primary_Maxima_Minima.png" 1741123573 127287 16749911962256b6405ddae81aa41361 ""
   "fig/michelson_setup.png" 1740514319 55305 01fead387848ee6f9665b5c4494d9f95 ""
-  "report_michelson.aux" 1740597578 7127 4a5732d4cc9a05be72ad508f303bf10b "pdflatex"
-  "report_michelson.bbl" 1740597577 791 fef5461f376373830043f9c902f43b1f "bibtex report_michelson"
-  "report_michelson.out" 1740597578 2974 dca438451ec196b2183264745880f675 "pdflatex"
-  "report_michelson.tex" 1740597575 14950 b38524103c6fd944bf6fc7fb59901c48 ""
+  "fig/raw_data.png" 1741123557 674635 a5c818e28e84f59bdfa682e90a2eddb5 ""
+  "fig/single_raw_data.png" 1741123560 355428 5ad8a984e7f72f9a7957aa00fdec591f ""
+  "report_michelson.aux" 1741715457 7671 ccd40c137869673cc0b0110211e30072 "pdflatex"
+  "report_michelson.bbl" 1741715453 791 fef5461f376373830043f9c902f43b1f "bibtex report_michelson"
+  "report_michelson.out" 1741715457 2974 dca438451ec196b2183264745880f675 "pdflatex"
+  "report_michelson.tex" 1741715449 15496 cf3905bd3a54e0491e0da30af670be59 ""
   (generated)
   "report_michelson.aux"
   "report_michelson.log"

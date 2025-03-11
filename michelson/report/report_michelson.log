@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.28)  26 FEB 2025 14:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.28)  11 MAR 2025 13:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -374,55 +374,63 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 <fig/michelson_setup.png, id=112, 837.1275pt x 672.5125pt>
 File: fig/michelson_setup.png Graphic file (type png)
 <use fig/michelson_setup.png>
-Package pdftex.def Info: fig/michelson_setup.png  used on input line 89.
+Package pdftex.def Info: fig/michelson_setup.png  used on input line 90.
 (pdftex.def)             Requested size: 229.49844pt x 184.36171pt.
-<fig/Intensity.png, id=118, 509.0217pt x 402.0621pt>
+<fig/raw_data.png, id=117, 1084.05pt x 433.62pt>
+File: fig/raw_data.png Graphic file (type png)
+<use fig/raw_data.png>
+Package pdftex.def Info: fig/raw_data.png  used on input line 101.
+(pdftex.def)             Requested size: 458.99689pt x 183.60126pt.
+<fig/single_raw_data.png, id=118, 1084.05pt x 433.62pt>
+File: fig/single_raw_data.png Graphic file (type png)
+<use fig/single_raw_data.png>
+Package pdftex.def Info: fig/single_raw_data.png  used on input line 102.
+(pdftex.def)             Requested size: 458.99689pt x 183.60126pt.
+<fig/Intensity.png, id=121, 509.0217pt x 402.0621pt>
 File: fig/Intensity.png Graphic file (type png)
 <use fig/Intensity.png>
-Package pdftex.def Info: fig/Intensity.png  used on input line 108.
+Package pdftex.def Info: fig/Intensity.png  used on input line 121.
 (pdftex.def)             Requested size: 229.49844pt x 181.27596pt.
+ [2 <./fig/michelson_setup.png>]
+<fig/Primary_Maxima_Minima.png, id=134, 515.526pt x 402.0621pt>
+File: fig/Primary_Maxima_Minima.png Graphic file (type png)
+<use fig/Primary_Maxima_Minima.png>
+Package pdftex.def Info: fig/Primary_Maxima_Minima.png  used on input line 140.
+(pdftex.def)             Requested size: 229.49844pt x 178.98761pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[2 <./fig/michelson_setup.png>]
 
-LaTeX Warning: A float is stuck (cannot be placed) on input line 120.
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3 <./fig/raw_data.png> <./fig/single_raw_data.png>]
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 172.
 
 
-LaTeX Warning: A float is stuck (cannot be placed) on input line 120.
+LaTeX Warning: A float is stuck (cannot be placed) on input line 172.
 
 
 Class revtex4-1 Warning: Deferred float stuck during \clearpage processing.
 
-<fig/Primary_Maxima_Minima.png, id=131, 515.526pt x 402.0621pt>
-File: fig/Primary_Maxima_Minima.png Graphic file (type png)
-<use fig/Primary_Maxima_Minima.png>
-Package pdftex.def Info: fig/Primary_Maxima_Minima.png  used on input line 127.
-(pdftex.def)             Requested size: 229.49844pt x 178.98761pt.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[3 <./fig/Intensity.png> <./fig/Primary_Maxima_Minima.png>] (./report_michelson.bbl) [4] (./report_michelson.aux)
+(./report_michelson.bbl) [4 <./fig/Intensity.png> <./fig/Primary_Maxima_Minima.png>] (./report_michelson.aux)
 Package rerunfilecheck Info: File `report_michelson.out' has not changed.
 (rerunfilecheck)             Checksum: DCA438451EC196B2183264745880F675;2974.
  ) 
 Here is how much of TeX's memory you used:
- 11781 strings out of 476025
- 179596 string characters out of 5790017
- 1878388 words of memory out of 5000000
- 32044 multiletter control sequences out of 15000+600000
+ 11799 strings out of 476025
+ 179965 string characters out of 5790017
+ 1879388 words of memory out of 5000000
+ 32060 multiletter control sequences out of 15000+600000
  520403 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  71i,8n,76p,1040b,514s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on report_michelson.pdf (4 pages, 435416 bytes).
+Output written on report_michelson.pdf (4 pages, 1308633 bytes).
 PDF statistics:
- 229 PDF objects out of 1000 (max. 8388607)
- 181 compressed objects within 2 object streams
+ 234 PDF objects out of 1000 (max. 8388607)
+ 182 compressed objects within 2 object streams
  37 named destinations out of 1000 (max. 500000)
- 152 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 162 words of extra memory for PDF output out of 10000 (max. 10000000)
 
