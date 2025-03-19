@@ -1,33 +1,33 @@
+import os
+import sys
+import subprocess
+from pathlib import Path
+
+repo_root = subprocess.run(
+    ["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True
+).stdout.strip()
+
+sys.path.append(repo_root)
+
 import numpy as np
+import torch
+
 import pandas as pd
+
+from modules.nn import pca
+
+import importlib
+importlib.reload(pca)
 
 ##########################################################################################
 
-class FourLeptonReader:
+class FourLeptonsReader:
     def __init__(self,
-                 data_files,scalers,
-                 lepton_pT_cuts=[7,5],lepton_eta_cuts=[2.5,2.4],
-                 heavier_Z_cuts=[40,120],lighter_Z_cuts=[12,120],
-                 show_cut_info=True):
+                 data_files,scalers):
         self.data_files = data_files
         self.scalers = scalers
 
-        self.lepton_pT_cuts = lepton_pT_cuts
-        self.lepton_eta_cuts = lepton_eta_cuts
-
-        self.heavier_Z_cuts = heavier_Z_cuts
-        self.lighter_Z_cuts = lighter_Z_cuts
-
-        self.show_cut_info = show_cut_info
-
-        self.dfs = []
-        for file in data_files:
-            df = self._read_data(file)
-            df = self._conservation_cut(df)
-            df = self._leptons_cut(df)
-            df = self._Z_mass_cut(df)
-
-            self.dfs.append(df)
+        self.dfs = [self._read_data(file) for file in data_files]
 
     def _read_data(self,data_file):
         df = pd.read_csv(data_file)
@@ -44,24 +44,24 @@ class FourLeptonReader:
 
         return df
     
-    def _conservation_cut(self,df):
+    def _conservation_cut(self,df,show_cut_info=True):
         mask = np.sum(df[['PID1','PID2','PID3','PID4']],axis=1) == 0
 
-        if self.show_cut_info:
+        if show_cut_info:
             print(f' Conservation cut: {mask.sum()} events passed out of {len(mask)} ({100*mask.sum()/len(mask):.0f}%)')
 
         return df[mask]
     
-    def _leptons_cut(self,df):
+    def _leptons_cut(self,df,lepton_pT_cuts=[7,5],lepton_eta_cuts=[2.5,2.4],show_cut_info=True):
         def _single_lepton_cut(PID,pT,eta):
             electron_mask = np.logical_and(
                 np.abs(PID) == 11,
-                np.logical_and(pT > self.lepton_pT_cuts[0], np.abs(eta) < self.lepton_eta_cuts[0])
+                np.logical_and(pT > lepton_pT_cuts[0], np.abs(eta) < lepton_eta_cuts[0])
             )
 
             muon_mask = np.logical_and(
                 np.abs(PID) == 13,
-                np.logical_and(pT > self.lepton_pT_cuts[1], np.abs(eta) < self.lepton_eta_cuts[1])
+                np.logical_and(pT > lepton_pT_cuts[1], np.abs(eta) < lepton_eta_cuts[1])
             )
 
             return np.logical_or(electron_mask,muon_mask).to_numpy().reshape((-1,1))
@@ -70,12 +70,12 @@ class FourLeptonReader:
             _single_lepton_cut(df[f'PID{i+1}'],df[f'pT{i+1}'],df[f'eta{i+1}']) for i in range(4)
         ],axis=1).all(axis=1)
 
-        if self.show_cut_info:
+        if show_cut_info:
             print(f' Leptons cut: {mask.sum()} events passed out of {len(mask)} ({100*mask.sum()/len(mask):.0f}%)')
 
         return df[mask]
     
-    def _Z_mass_cut(self,df):
+    def _Z_mass_cut(self,df,heavier_Z_cuts=[40,120],lighter_Z_cuts=[12,120],show_cut_info=True):
         def _get_paired_Z_mass(paired_ids):
             return np.sqrt(
                 (df[f'E{paired_ids[0]}'] + df[f'E{paired_ids[1]}'])**2 - \
@@ -92,32 +92,47 @@ class FourLeptonReader:
             good_pair_mask = df['PID1'] + df[f'PID{i}'] == 0
 
             heavier_Z1_mask = np.logical_and(
-                np.logical_and(mZ1 > self.heavier_Z_cuts[0], mZ1 < self.heavier_Z_cuts[1]),
-                np.logical_and(mZ2 > self.lighter_Z_cuts[0], mZ2 < self.lighter_Z_cuts[1])
+                np.logical_and(mZ1 > heavier_Z_cuts[0], mZ1 < heavier_Z_cuts[1]),
+                np.logical_and(mZ2 > lighter_Z_cuts[0], mZ2 < lighter_Z_cuts[1])
             )
 
             lighter_Z1_mask = np.logical_and(
-                np.logical_and(mZ1 > self.lighter_Z_cuts[0], mZ1 < self.lighter_Z_cuts[1]),
-                np.logical_and(mZ2 > self.heavier_Z_cuts[0], mZ2 < self.heavier_Z_cuts[1])
+                np.logical_and(mZ1 > lighter_Z_cuts[0], mZ1 < lighter_Z_cuts[1]),
+                np.logical_and(mZ2 > heavier_Z_cuts[0], mZ2 < heavier_Z_cuts[1])
             )
 
             masks.append(np.logical_and(good_pair_mask,np.logical_or(heavier_Z1_mask,lighter_Z1_mask)).to_numpy().reshape((-1,1)))
 
         mask = np.concatenate(masks,axis=1).any(axis=1)
 
-        if self.show_cut_info:
+        if show_cut_info:
             print(f' Z cut: {mask.sum()} events passed out of {len(mask)} ({100*mask.sum()/len(mask):.0f}%)')
 
         return df[mask]
     
-    def get_m4l_histogram(self,m4l_bins=np.linspace(50,200,101)):
-        m4l_hist = np.zeros(len(m4l_bins)-1)
+    def apply_basic_cuts(self,dfs,
+                         lepton_pT_cuts=[7,5],lepton_eta_cuts=[2.5,2.4],
+                         heavier_Z_cuts=[40,120],lighter_Z_cuts=[12,120],
+                         show_cut_info=True):
+        reduced_dfs = []
 
-        for df,scaler in zip(self.dfs,self.scalers):
-            hist, _ = np.histogram(df['m4l'],bins=m4l_bins)
-            m4l_hist += hist * scaler
+        for df in dfs:
+            df = self._conservation_cut(df,show_cut_info)
+            df = self._leptons_cut(df,lepton_pT_cuts,lepton_eta_cuts,show_cut_info)
+            df = self._Z_mass_cut(df,heavier_Z_cuts,lighter_Z_cuts,show_cut_info)
 
-        return m4l_hist
+            reduced_dfs.append(df)
+
+        return reduced_dfs
+    
+    def get_histogram(self,dfs,params,bins):
+        total_hist = np.zeros(len(bins)-1)
+
+        for df,scaler in zip(dfs,self.scalers):
+            hist, _ = np.histogram(df[params],bins=bins)
+            total_hist += hist * scaler
+
+        return total_hist
     
 if __name__ == '__main__':
     pass
