@@ -18,19 +18,14 @@ from torch.utils.data import TensorDataset, random_split, DataLoader
 
 import pandas as pd
 
+import params
+
 import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 ##########################################################################################
 
 class FourLeptonsData:
-    field_indices = {
-        'PID1' : 0, 'E1' : 1, 'px1' : 2, 'py1' : 3, 'pz1' : 4, 'eta1' : 5, 'cos_phi1' : 6, 'sin_phi1' : 7,
-        'PID2' : 8, 'E2' : 9, 'px2' : 10, 'py2' : 11, 'pz2' : 12, 'eta2' : 13, 'cos_phi2' : 14, 'sin_phi2' : 15,
-        'PID3' : 16, 'E3' : 17, 'px3' : 18, 'py3' : 19, 'pz3' : 20, 'eta3' : 21, 'cos_phi3' : 22, 'sin_phi3' : 23,
-        'PID4' : 24, 'E4' : 25, 'px4' : 26, 'py4' : 27, 'pz4' : 28, 'eta4' : 29, 'cos_phi4' : 30, 'sin_phi4' : 31,
-    }
-
     def read_data(self,data_file):
         df = pd.read_csv(data_file)
 
@@ -38,25 +33,25 @@ class FourLeptonsData:
             df[f'cos_phi{i}'] = np.cos(df[f'phi{i}'])
             df[f'sin_phi{i}'] = np.sin(df[f'phi{i}'])
 
-        data = df[[field for field in self.field_indices.keys()]].to_numpy()
+        data = df[[field for field in params.field_indices.keys()]].to_numpy()
 
         return data
 
     def get_pT(self,data,id):
         return np.sqrt(
-            data[:,self.field_indices[f'px{id}']]**2 + data[:,self.field_indices[f'py{id}']]**2
+            data[:,params.field_indices[f'px{id}']]**2 + data[:,params.field_indices[f'py{id}']]**2
         )
 
     def get_m4l(self,data):
         return np.sqrt(
-            (data[:,self.field_indices['E1']] + data[:,self.field_indices['E2']] + data[:,self.field_indices['E3']] + data[:,self.field_indices['E4']])**2 - \
-            (data[:,self.field_indices['px1']] + data[:,self.field_indices['px2']] + data[:,self.field_indices['px3']] + data[:,self.field_indices['px4']])**2 - \
-            (data[:,self.field_indices['py1']] + data[:,self.field_indices['py2']] + data[:,self.field_indices['py3']] + data[:,self.field_indices['py4']])**2 - \
-            (data[:,self.field_indices['pz1']] + data[:,self.field_indices['pz2']] + data[:,self.field_indices['pz3']] + data[:,self.field_indices['pz4']])**2
+            (data[:,params.field_indices['E1']] + data[:,params.field_indices['E2']] + data[:,params.field_indices['E3']] + data[:,params.field_indices['E4']])**2 - \
+            (data[:,params.field_indices['px1']] + data[:,params.field_indices['px2']] + data[:,params.field_indices['px3']] + data[:,params.field_indices['px4']])**2 - \
+            (data[:,params.field_indices['py1']] + data[:,params.field_indices['py2']] + data[:,params.field_indices['py3']] + data[:,params.field_indices['py4']])**2 - \
+            (data[:,params.field_indices['pz1']] + data[:,params.field_indices['pz2']] + data[:,params.field_indices['pz3']] + data[:,params.field_indices['pz4']])**2
         )
     
     def _conservation_cut(self,data,show_cut_info=True):
-        mask = np.sum(data[:,[self.field_indices['PID1'],self.field_indices['PID2'],self.field_indices['PID3'],self.field_indices['PID4']]],axis=1) == 0
+        mask = np.sum(data[:,[params.field_indices['PID1'],params.field_indices['PID2'],params.field_indices['PID3'],params.field_indices['PID4']]],axis=1) == 0
 
         if show_cut_info:
             print(f' Conservation cut: {mask.sum()} events passed out of {len(mask)} ({100*mask.sum()/len(mask):.0f}%)')
@@ -67,12 +62,12 @@ class FourLeptonsData:
         masks = [
             np.logical_or(
                 np.logical_and(
-                    np.abs(data[:,self.field_indices[f'PID{i+1}']]) == 11,
-                    np.logical_and(self.get_pT(data,i+1) > lepton_pT_cuts[0], np.abs(data[:,self.field_indices[f'eta{i+1}']]) < lepton_eta_cuts[0])
+                    np.abs(data[:,params.field_indices[f'PID{i+1}']]) == 11,
+                    np.logical_and(self.get_pT(data,i+1) > lepton_pT_cuts[0], np.abs(data[:,params.field_indices[f'eta{i+1}']]) < lepton_eta_cuts[0])
                 ),
                 np.logical_and(
-                    np.abs(data[:,self.field_indices[f'PID{i+1}']]) == 13,
-                    np.logical_and(self.get_pT(data,i+1) > lepton_pT_cuts[1], np.abs(data[:,self.field_indices[f'eta{i+1}']]) < lepton_eta_cuts[1])
+                    np.abs(data[:,params.field_indices[f'PID{i+1}']]) == 13,
+                    np.logical_and(self.get_pT(data,i+1) > lepton_pT_cuts[1], np.abs(data[:,params.field_indices[f'eta{i+1}']]) < lepton_eta_cuts[1])
                 )
             ).reshape((-1,1)) for i in range(4)
         ]
@@ -87,10 +82,10 @@ class FourLeptonsData:
     def _Z_mass_cut(self,data,heavier_Z_cuts=[40,120],lighter_Z_cuts=[12,120],show_cut_info=True):
         def _get_paired_Z_mass(paired_ids):
             return np.sqrt(
-                (data[:,self.field_indices[f'E{paired_ids[0]}']] + data[:,self.field_indices[f'E{paired_ids[1]}']])**2 - \
-                (data[:,self.field_indices[f'px{paired_ids[0]}']] + data[:,self.field_indices[f'px{paired_ids[1]}']])**2 - \
-                (data[:,self.field_indices[f'py{paired_ids[0]}']] + data[:,self.field_indices[f'py{paired_ids[1]}']])**2 - \
-                (data[:,self.field_indices[f'pz{paired_ids[0]}']] + data[:,self.field_indices[f'pz{paired_ids[1]}']])**2
+                (data[:,params.field_indices[f'E{paired_ids[0]}']] + data[:,params.field_indices[f'E{paired_ids[1]}']])**2 - \
+                (data[:,params.field_indices[f'px{paired_ids[0]}']] + data[:,params.field_indices[f'px{paired_ids[1]}']])**2 - \
+                (data[:,params.field_indices[f'py{paired_ids[0]}']] + data[:,params.field_indices[f'py{paired_ids[1]}']])**2 - \
+                (data[:,params.field_indices[f'pz{paired_ids[0]}']] + data[:,params.field_indices[f'pz{paired_ids[1]}']])**2
             )
 
         masks = []
@@ -98,7 +93,7 @@ class FourLeptonsData:
             mZ1 = _get_paired_Z_mass([1,i])
             mZ2 = _get_paired_Z_mass([j for j in range(2,5) if j != i])
 
-            good_pair_mask = data[:,self.field_indices['PID1']] + data[:,self.field_indices[f'PID{i}']] == 0
+            good_pair_mask = data[:,params.field_indices['PID1']] + data[:,params.field_indices[f'PID{i}']] == 0
 
             heavier_Z1_mask = np.logical_and(
                 np.logical_and(mZ1 > heavier_Z_cuts[0], mZ1 < heavier_Z_cuts[1]),
@@ -141,49 +136,58 @@ class FourLeptonsData:
             if param == 'm4l':
                 hist, _ = np.histogram(self.get_m4l(data),bins=bins)
             else:
-                hist, _ = np.histogram(data[:,self.field_indices[param]],bins=bins)
+                hist, _ = np.histogram(data[:,params.field_indices[param]],bins=bins)
             total_hist += hist * scaler
 
         return total_hist
 
-    def get_training_data(self,all_data,data_labels,fields,
-                           balance_categories=True):
-        if len(all_data) != len(data_labels):
-            raise ValueError('Number of dataframes and label_sets must be the same')
-        
+class FourLeptonNN:
+    def _get_data_and_labels(self,all_data,data_labels,fields):
         data = np.concatenate([
-            data[:,[self.field_indices[field] for field in fields]] for data in all_data
+            data[:,[params.field_indices[field] for field in fields]] for data in all_data
         ],axis=0)
+
         labels = np.concatenate([
             np.array([label]*len(data)) for data,label in zip(all_data,data_labels)
         ],axis=0)
 
+        return data, labels
+
+    def _balance_categories(self,data,labels):
+        catergories = np.unique(labels)
+        N_sample = min([np.sum(labels == category) for category in catergories])
+
+        reduced_data = []
+        reduced_labels = []
+
+        for category in catergories:
+            indices = np.where(labels == category)[0]
+            reduced_indices = np.random.choice(indices,N_sample,replace=False)
+
+            reduced_data.append(data[reduced_indices])
+            reduced_labels.append(labels[reduced_indices])
+
+        return np.concatenate(reduced_data,axis=0), np.concatenate(reduced_labels,axis=0)
+
+    def get_training_data(self,all_data,data_labels,fields,
+                          balance_categories=True):
+        if len(all_data) != len(data_labels):
+            raise ValueError('Number of data and labels must be the same')
+        
+        data, labels = self._get_data_and_labels(all_data,data_labels,fields)
+
         if balance_categories:
-            catergories = np.unique(labels)
-            N_sample = min([np.sum(labels == category) for category in catergories])
-
-            reduced_data = []
-            reduced_labels = []
-
-            for category in catergories:
-                indices = np.where(labels == category)[0]
-                reduced_indices = np.random.choice(indices,N_sample,replace=False)
-
-                reduced_data.append(data[reduced_indices])
-                reduced_labels.append(labels[reduced_indices])
-
-            data = np.concatenate(reduced_data,axis=0)
-            labels = np.concatenate(reduced_labels,axis=0)
+            data, labels = self._balance_categories(data,labels)
 
         X = torch.tensor(data,dtype=torch.float32)
         Y = torch.tensor(labels,dtype=torch.float32)
 
         return X,Y
 
-    def get_dataloaders(self,X,Y,
-                         train_ratio=0.8,
-                         batch_size=2048,num_workers=8,
-                         seed=42):
+    def get_training_dataloaders(self,X,Y,
+                                 train_ratio=0.8,
+                                 batch_size=2048,num_workers=8,
+                                 seed=42):
         torch.manual_seed(seed)
 
         dataset = TensorDataset(X,Y)
@@ -206,6 +210,34 @@ class FourLeptonsData:
 
         return train_loader, val_loader, N_data, N_train, N_val
 
+    def apply_nn_cut(self,all_data,fields,
+                     model,batch_size=2048,num_workers=8,
+                     threshold=0.5,device='mps'):
+        reduced_data = []
+
+        for data in all_data:
+            observed_loader = DataLoader(
+                TensorDataset(torch.tensor(data[:,[params.field_indices[field] for field in fields]],dtype=torch.float32)),
+                batch_size=batch_size,num_workers=num_workers
+            )
+
+            model.to(device,dtype=torch.float32)
+
+            model.eval()
+            with torch.no_grad():
+                masks = []
+
+                for X in observed_loader:
+                    X = X[0].to(device)
+                    outputs = model(X).cpu().numpy().flatten()
+                    mask = outputs > threshold
+
+                    masks.append(mask)
+
+            reduced_data.append(data[np.concatenate(masks,axis=0)])
+
+        return reduced_data
+
 if __name__ == '__main__':
     higgs_mc = [
         '../HiggsTo4L/MC/higgs2011.csv',
@@ -223,11 +255,13 @@ if __name__ == '__main__':
     data_files = higgs_mc + zz_mc
 
     four_leptons_data = FourLeptonsData()
+    four_leptons_nn = FourLeptonNN()
     
     all_data = four_leptons_data.apply_basic_cuts([
         four_leptons_data.read_data(data_file) for data_file in data_files
     ])
-    X,Y = four_leptons_data.get_training_data(
+
+    X,Y = four_leptons_nn.get_training_data(
         all_data,
         data_labels = [1]*len(higgs_mc) + [0]*len(zz_mc),
         fields=[
@@ -237,7 +271,7 @@ if __name__ == '__main__':
             'E4','px4','py4','pz4','eta4','cos_phi4','sin_phi4',
         ]
     )
-    train_loader, val_loader, N_data, N_train, N_val = four_leptons_data.get_dataloaders(X,Y)
+    train_loader, val_loader, N_data, N_train, N_val = four_leptons_nn.get_dataloaders(X,Y)
     print(N_data,N_train,N_val)
     for x,y in train_loader:
         print(x.shape,y.shape)

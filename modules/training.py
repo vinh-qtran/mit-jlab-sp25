@@ -98,7 +98,7 @@ class SupervisedTraining:
                 current_P_detection += P_detection
                 current_P_false_alarm += P_false_alarm
 
-        return current_train_loss/len(self.trainloader), current_accuracy/len(self.trainloader), current_P_detection/len(self.trainloader), current_P_false_alarm/len(self.trainloader)
+        return current_train_loss/len(self.train_loader), current_accuracy/len(self.train_loader), current_P_detection/len(self.train_loader), current_P_false_alarm/len(self.train_loader)
     
     def _val_epoch(self):
         """
@@ -130,7 +130,7 @@ class SupervisedTraining:
                     current_P_detection += P_detection
                     current_P_false_alarm += P_false_alarm
 
-        return current_val_loss/len(self.valloader), current_accuracy/len(self.valloader), current_P_detection/len(self.valloader), current_P_false_alarm/len(self.valloader)
+        return current_val_loss/len(self.val_loader), current_accuracy/len(self.val_loader), current_P_detection/len(self.val_loader), current_P_false_alarm/len(self.val_loader)
 
     def _save_model(self, outpath):
         """
