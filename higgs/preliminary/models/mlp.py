@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-class FourLeptonMLP(nn.Module):
+class BaseMLP(nn.Module):
     def __init__(self,
                  input_dim : int,
                  hidden_dims : list,
@@ -12,7 +12,7 @@ class FourLeptonMLP(nn.Module):
                  activation = nn.ReLU(),
                  norm = nn.BatchNorm1d,
                  last_activation = nn.Identity()):
-        super(MLP, self).__init__()
+        super(BaseMLP, self).__init__()
 
         self.input_dim = input_dim
         self.hidden_dims = hidden_dims
