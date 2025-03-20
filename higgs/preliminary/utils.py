@@ -122,8 +122,10 @@ class FourLeptonsData:
 
         for data in all_data:
             data = self._conservation_cut(data,show_cut_info)
-            data = self._leptons_cut(data,lepton_pT_cuts,lepton_eta_cuts,show_cut_info)
-            data = self._Z_mass_cut(data,heavier_Z_cuts,lighter_Z_cuts,show_cut_info)
+            if lepton_pT_cuts is not None and lepton_eta_cuts is not None:
+                data = self._leptons_cut(data,lepton_pT_cuts,lepton_eta_cuts,show_cut_info)
+            if heavier_Z_cuts is not None and lighter_Z_cuts is not None:
+                data = self._Z_mass_cut(data,heavier_Z_cuts,lighter_Z_cuts,show_cut_info)
 
             reduced_data.append(data)
 
