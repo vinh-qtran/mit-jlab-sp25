@@ -56,6 +56,7 @@ scales_zz = [lumi11*xsecZZ411/nevtZZ4mu11, lumi11*xsecZZ2mu2e11/nevtZZ2mu2e11, l
 scales_dy = [lumi11*xsecDY1011/nevtDY1011, lumi11*xsecDY5011/nevtDY5011, \
              lumi12*xsecDY1012/nevtDY1012, lumi11*xsecDY5012/nevtDY5012]
 scales_tt = [lumi11*xsecTTBar11/nevtTTBar11, lumi12*xsecTTBar12/nevtTTBar12]
+scales_data = [1,1]
 
 # Field indices for the data
 field_indices = {
