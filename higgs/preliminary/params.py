@@ -56,3 +56,11 @@ scales_zz = [lumi11*xsecZZ411/nevtZZ4mu11, lumi11*xsecZZ2mu2e11/nevtZZ2mu2e11, l
 scales_dy = [lumi11*xsecDY1011/nevtDY1011, lumi11*xsecDY5011/nevtDY5011, \
              lumi12*xsecDY1012/nevtDY1012, lumi11*xsecDY5012/nevtDY5012]
 scales_tt = [lumi11*xsecTTBar11/nevtTTBar11, lumi12*xsecTTBar12/nevtTTBar12]
+
+# Field indices for the data
+field_indices = {
+    'PID1' : 0, 'E1' : 1, 'px1' : 2, 'py1' : 3, 'pz1' : 4, 'eta1' : 5, 'cos_phi1' : 6, 'sin_phi1' : 7,
+    'PID2' : 8, 'E2' : 9, 'px2' : 10, 'py2' : 11, 'pz2' : 12, 'eta2' : 13, 'cos_phi2' : 14, 'sin_phi2' : 15,
+    'PID3' : 16, 'E3' : 17, 'px3' : 18, 'py3' : 19, 'pz3' : 20, 'eta3' : 21, 'cos_phi3' : 22, 'sin_phi3' : 23,
+    'PID4' : 24, 'E4' : 25, 'px4' : 26, 'py4' : 27, 'pz4' : 28, 'eta4' : 29, 'cos_phi4' : 30, 'sin_phi4' : 31,
+}

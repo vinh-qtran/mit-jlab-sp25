@@ -17,8 +17,8 @@ class SupervisedTraining:
     def __init__(
             self,
             model : nn.Module,
-            trainloader : DataLoader,
-            valloader : DataLoader,
+            train_loader : DataLoader,
+            val_loader : DataLoader,
             num_epochs : int,
             lr : float,
             criterion=nn.MSELoss(),
@@ -40,8 +40,8 @@ class SupervisedTraining:
         self.num_epochs = num_epochs
         self.lr = lr
 
-        self.trainloader = trainloader
-        self.valloader = valloader
+        self.train_loader = train_loader
+        self.val_loader = val_loader
 
         self.is_classification = is_classification
         self.num_classes = num_classes
@@ -73,7 +73,7 @@ class SupervisedTraining:
         current_P_false_alarm = 0.0
 
         self.model.train()
-        for train_inputs, train_targets in self.trainloader:
+        for train_inputs, train_targets in self.train_loader:
             train_inputs = train_inputs.to(self.device)
             train_targets = train_targets.to(self.device)
 
@@ -112,7 +112,7 @@ class SupervisedTraining:
 
         self.model.eval()
         with torch.no_grad():
-            for val_inputs, val_targets in self.valloader:
+            for val_inputs, val_targets in self.val_loader:
                 val_inputs = val_inputs.to(self.device)
                 val_targets = val_targets.to(self.device)
 
