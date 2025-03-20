@@ -31,7 +31,7 @@ class FourLeptonsData:
         'PID4' : 24, 'E4' : 25, 'px4' : 26, 'py4' : 27, 'pz4' : 28, 'eta4' : 29, 'cos_phi4' : 30, 'sin_phi4' : 31,
     }
 
-    def _read_data(self,data_file):
+    def read_data(self,data_file):
         df = pd.read_csv(data_file)
 
         for i in range(1,5):
@@ -225,7 +225,7 @@ if __name__ == '__main__':
     four_leptons_data = FourLeptonsData()
     
     all_data = four_leptons_data.apply_basic_cuts([
-        four_leptons_data._read_data(data_file) for data_file in data_files
+        four_leptons_data.read_data(data_file) for data_file in data_files
     ])
     X,Y = four_leptons_data.get_training_data(
         all_data,
