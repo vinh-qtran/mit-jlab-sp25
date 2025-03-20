@@ -44,17 +44,23 @@ class SupervisedTraining:
         self.valloader = valloader
 
         self.is_classification = is_classification
-        if self.is_classification:
+        self.num_classes = num_classes
+        if is_classification:
             assert num_classes is not None, 'num_classes must be specified for classification tasks'
-            self.accuracy = Accuracy(task="multiclass", num_classes=num_classes).to(self.device)
 
     def _get_accuracy(self, outputs, targets):     
         """
         Computes accuracy for classification tasks.
         """
-
-        preds = torch.argmax(outputs, dim=1)
-        return self.accuracy(preds, targets).item()
+        if self.num_classes != 2:
+            preds = torch.argmax(outputs, dim=1)
+            accuracy = Accuracy(task="multiclass", num_classes=self.num_classes).to(self.device)
+            return accuracy(preds, targets).item(), 0, 0
+        else:
+            preds = (outputs > 0.5).float()
+            P_detection = (torch.sum(preds * targets) / torch.sum(targets)).item()
+            P_false_alarm = (torch.sum(preds * (1 - targets)) / torch.sum(1 - targets)).item()
+            return (P_detection + 1 - P_false_alarm) / 2, P_detection, P_false_alarm
 
     def _train_epoch(self):
         """
@@ -62,7 +68,9 @@ class SupervisedTraining:
         """
 
         current_train_loss = 0.0
-        accuracy = 0.0
+        current_accuracy = 0.0
+        current_P_detection = 0.0
+        current_P_false_alarm = 0.0
 
         self.model.train()
         for train_inputs, train_targets in self.trainloader:
@@ -72,7 +80,8 @@ class SupervisedTraining:
             self.optimizer.zero_grad()
 
             train_outputs = self.model(train_inputs)
-            train_loss = self.criterion(train_outputs if self.is_classification else train_outputs.flatten(), train_targets)
+            train_outputs = train_outputs if self.is_classification and self.num_classes != 2 else train_outputs.flatten()
+            train_loss = self.criterion(train_outputs, train_targets)
 
             current_train_loss += train_loss.item()
 
@@ -83,9 +92,13 @@ class SupervisedTraining:
 
             # Compute accuracy for classification tasks
             if self.is_classification:
-                accuracy += self._get_accuracy(train_outputs, train_targets)
+                accuracy, P_detection, P_false_alarm = self._get_accuracy(train_outputs, train_targets)
 
-        return current_train_loss/len(self.trainloader), accuracy/len(self.trainloader)
+                current_accuracy += accuracy
+                current_P_detection += P_detection
+                current_P_false_alarm += P_false_alarm
+
+        return current_train_loss/len(self.trainloader), current_accuracy/len(self.trainloader), current_P_detection/len(self.trainloader), current_P_false_alarm/len(self.trainloader)
     
     def _val_epoch(self):
         """
@@ -93,7 +106,9 @@ class SupervisedTraining:
         """
 
         current_val_loss = 0.0
-        accuracy = 0.0
+        current_accuracy = 0.0
+        current_P_detection = 0.0
+        current_P_false_alarm = 0.0
 
         self.model.eval()
         with torch.no_grad():
@@ -102,15 +117,20 @@ class SupervisedTraining:
                 val_targets = val_targets.to(self.device)
 
                 val_outputs = self.model(val_inputs)
-                val_loss = self.criterion(val_outputs if  self.is_classification else val_outputs.flatten(), val_targets)
+                val_outputs = val_outputs if self.is_classification and self.num_classes != 2 else val_outputs.flatten()
+                val_loss = self.criterion(val_outputs, val_targets)
 
                 current_val_loss += val_loss.item()
 
                 # Compute accuracy for classification tasks
                 if self.is_classification:
-                    accuracy += self._get_accuracy(val_outputs, val_targets)
+                    accuracy, P_detection, P_false_alarm = self._get_accuracy(val_outputs, val_targets)
 
-        return current_val_loss/len(self.valloader), accuracy/len(self.valloader)
+                    current_accuracy += accuracy
+                    current_P_detection += P_detection
+                    current_P_false_alarm += P_false_alarm
+
+        return current_val_loss/len(self.valloader), current_accuracy/len(self.valloader), current_P_detection/len(self.valloader), current_P_false_alarm/len(self.valloader)
 
     def _save_model(self, outpath):
         """
@@ -141,13 +161,19 @@ class SupervisedTraining:
         train_accuracies = []
         val_accuracies = []
 
+        train_P_detections = []
+        val_P_detections = []
+
+        train_P_false_alarms = []
+        val_P_false_alarms = []
+
         best_val_loss = float('inf')
 
         # Train for the specified number of epochs
         for epoch in tqdm(range(1,self.num_epochs+1),desc='Training'):
             # Train and validate
-            train_loss, train_acc = self._train_epoch()
-            val_loss, val_acc = self._val_epoch()
+            train_loss, train_acc, train_P_D, train_P_F = self._train_epoch()
+            val_loss, val_acc, val_P_D, val_P_F = self._val_epoch()
 
             # Save model if validation loss is the best so far
             if val_loss < best_val_loss:
@@ -168,6 +194,12 @@ class SupervisedTraining:
             train_accuracies.append(train_acc)
             val_accuracies.append(val_acc)
 
+            train_P_detections.append(train_P_D)
+            val_P_detections.append(val_P_D)
+
+            train_P_false_alarms.append(train_P_F)
+            val_P_false_alarms.append(val_P_F)
+
             if save_training_stats_every and epoch % save_training_stats_every == 0:
                 with open(f'{outpath}/training_stats.pkl', 'wb') as f:
                     training_stats = {
@@ -179,5 +211,11 @@ class SupervisedTraining:
                     if self.is_classification:
                         training_stats['train_accuracies'] = train_accuracies
                         training_stats['val_accuracies'] = val_accuracies
+                        
+                        training_stats['train_P_detections'] = train_P_detections
+                        training_stats['val_P_detections'] = val_P_detections
+
+                        training_stats['train_P_false_alarms'] = train_P_false_alarms
+                        training_stats['val_P_false_alarms'] = val_P_false_alarms
 
                     pickle.dump(training_stats, f)

@@ -12,7 +12,7 @@ class MLP(nn.Module):
                  dropout = 0.0,
                  activation = nn.ReLU(),
                  norm = nn.BatchNorm1d,
-                 last_activation = nn.Softmax(dim=1)):
+                 last_activation = nn.Identity()):
         super(MLP, self).__init__()
 
         self.input_dim = input_dim
