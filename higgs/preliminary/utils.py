@@ -144,16 +144,28 @@ class FourLeptonsData:
         return total_hist
 
 class FourLeptonNN:
-    def _get_data_and_labels(self,all_data,data_labels,fields):
-        data = np.concatenate([
-            data[:,[params.field_indices[field] for field in fields]] for data in all_data
-        ],axis=0)
+    def _get_data_and_labels(self,all_data,data_labels,fields,test_ratio):
+        trainval_data = []
+        trainval_labels = []
 
-        labels = np.concatenate([
-            np.array([label]*len(data)) for data,label in zip(all_data,data_labels)
-        ],axis=0)
+        test_indices = []
+        test_data = []
 
-        return data, labels
+        for data,label in zip(all_data,data_labels):
+            N_data = len(data)
+            N_test = int(test_ratio*N_data)
+            N_trainval = N_data - N_test
+
+            test_indices.append(np.random.choice(N_data,N_test,replace=False))
+            trainval_indices = np.array([i for i in range(N_data) if i not in test_indices[-1]])
+
+            trainval_data.append(data[trainval_indices][:,[params.field_indices[field] for field in fields]])
+            trainval_labels.append(np.full(N_trainval,label))
+
+            test_data.append(data[test_indices[-1]][:,[params.field_indices[field] for field in fields]])
+
+        return np.concatenate(trainval_data,axis=0), np.concatenate(trainval_labels,axis=0), \
+               test_data, test_indices
 
     def _balance_categories(self,data,labels):
         catergories = np.unique(labels)
@@ -171,34 +183,33 @@ class FourLeptonNN:
 
         return np.concatenate(reduced_data,axis=0), np.concatenate(reduced_labels,axis=0)
 
-    def get_training_data(self,all_data,data_labels,fields,
-                          balance_categories=True):
+    def get_dataloaders(self,all_data,data_labels,fields,
+                        test_ratio=0.1,train_ratio=0.8,
+                        balance_categories=True,
+                        batch_size=2048,num_workers=8,
+                        seed=42):
         if len(all_data) != len(data_labels):
             raise ValueError('Number of data and labels must be the same')
+
+        np.random.seed(seed)
+        torch.manual_seed(seed)
         
-        data, labels = self._get_data_and_labels(all_data,data_labels,fields)
+        trainval_data, trainval_labels, test_data, test_indices = self._get_data_and_labels(all_data,data_labels,fields,test_ratio)
 
         if balance_categories:
-            data, labels = self._balance_categories(data,labels)
+            trainval_data, trainval_labels = self._balance_categories(trainval_data,trainval_labels)
 
-        X = torch.tensor(data,dtype=torch.float32)
-        Y = torch.tensor(labels,dtype=torch.float32)
+        trainval_dataset = TensorDataset(
+            torch.tensor(trainval_data,dtype=torch.float32),
+            torch.tensor(trainval_labels,dtype=torch.float32)
+        )
 
-        return X,Y
+        N_trainval = trainval_dataset.tensors[0].shape[0]
 
-    def get_training_dataloaders(self,X,Y,
-                                 train_ratio=0.8,
-                                 batch_size=2048,num_workers=8,
-                                 seed=42):
-        torch.manual_seed(seed)
+        N_train = int(train_ratio*N_trainval)
+        N_val = N_trainval - N_train
 
-        dataset = TensorDataset(X,Y)
-
-        N_data = dataset.tensors[0].shape[0]
-        N_train = int(train_ratio*N_data)
-        N_val = N_data - N_train
-
-        train_dataset, val_dataset = random_split(dataset,[N_train,N_val])
+        train_dataset, val_dataset = random_split(trainval_dataset,[N_train,N_val])
 
         train_loader = DataLoader(train_dataset,
                                   batch_size=batch_size,
@@ -210,33 +221,41 @@ class FourLeptonNN:
                                 num_workers=num_workers,
                                 shuffle=False,)
 
-        return train_loader, val_loader, N_data, N_train, N_val
+        test_loaders = [
+            DataLoader(
+                TensorDataset(torch.tensor(data,dtype=torch.float32)),
+                batch_size=batch_size,
+                num_workers=num_workers,
+                shuffle=False
+            ) for data in test_data
+        ]
 
-    def apply_nn_cut(self,all_data,fields,
-                     model,batch_size=2048,num_workers=8,
-                     threshold=0.5,device='mps'):
+        N_test = sum([len(data) for data in test_data])
+
+        return train_loader, val_loader, test_loaders, test_indices, N_trainval, N_test
+
+    def apply_nn_cut(self,all_data,
+                     test_loaders,test_indices,
+                     model,threshold=0.5,device='mps'):
+        model = model.to(device,dtype=torch.float32)
+
         reduced_data = []
 
-        for data in all_data:
-            observed_loader = DataLoader(
-                TensorDataset(torch.tensor(data[:,[params.field_indices[field] for field in fields]],dtype=torch.float32)),
-                batch_size=batch_size,num_workers=num_workers
-            )
-
-            model.to(device,dtype=torch.float32)
-
+        for data,test_loader,test_index in zip(all_data,test_loaders,test_indices):
             model.eval()
+
+            masks = []
+
             with torch.no_grad():
-                masks = []
+                for x in test_loader:
+                    x = x[0].to(device)
+                    y = model(x).cpu().numpy()
 
-                for X in observed_loader:
-                    X = X[0].to(device)
-                    outputs = model(X).cpu().numpy().flatten()
-                    mask = outputs > threshold
+                    masks.append(y > threshold)
 
-                    masks.append(mask)
+            mask = np.concatenate(masks,axis=0).flatten()
 
-            reduced_data.append(data[np.concatenate(masks,axis=0)])
+            reduced_data.append(data[test_index[mask]])
 
         return reduced_data
 
