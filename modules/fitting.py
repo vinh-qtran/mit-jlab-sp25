@@ -93,7 +93,10 @@ class BasePoissonFitter(BaseFitter):
 
     def _get_residuals(self, params):
         yhat = self._get_model(self.x,params)
-        return - 2*poisson.logpmf(self.y, yhat) - np.log(2*np.pi*self.y)
+
+        C = np.log(2*np.pi*self.y) if (yhat == 0).any() else np.log(2*np.pi*yhat)
+
+        return - 2*poisson.logpmf(self.y, yhat) - C
     
 class BaseUniformMonteCarloFitter():
     def __init__(self,
