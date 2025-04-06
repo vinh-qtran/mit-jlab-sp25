@@ -30,14 +30,14 @@ class BaseFitter:
         if self.xerr is not None:
             dyhat_dx = (self._get_model(self.x + self.dx,params) - self._get_model(self.x - self.dx,params)) / (2*self.dx)
             
-            sigma_sqr = self.yerr**2 + dyhat_dx**2 * self.xerr**2
+            sigma = np.sqrt(self.yerr**2 + dyhat_dx**2 * self.xerr**2)
         else:
-            sigma_sqr = self.yerr**2
+            sigma = self.yerr
         
-        return (self.y - yhat)**2 / sigma_sqr
+        return (self.y - yhat) / sigma
     
     def _get_chisqr(self, params):
-        return np.sum(self._get_residuals(params))
+        return np.sum(self._get_residuals(params)**2)
     
     def _get_initial_guess(self):
         raise NotImplementedError("Not implemented in base class.")
@@ -94,9 +94,9 @@ class BasePoissonFitter(BaseFitter):
     def _get_residuals(self, params):
         yhat = self._get_model(self.x,params)
 
-        C = np.log(2*np.pi*self.y) if (yhat == 0).any() else np.log(2*np.pi*yhat)
+        residuals_sqr = - 2*poisson.logpmf(self.y, yhat) - np.log(2*np.pi*self.y)
 
-        return - 2*poisson.logpmf(self.y, yhat) - C
+        return np.sqrt(np.abs(residuals_sqr))
     
 class BaseUniformMonteCarloFitter():
     def __init__(self,

@@ -407,11 +407,11 @@ class MCAData:
         fitter_class = GaussianPoissFitter if poisson_statistic else GaussianFitter
         return self._fit_peaks(bins,counts,lower_idx,upper_idx,fitter_class,initial_guess,poisson_statistic=poisson_statistic)
     
-    def _get_peak_fwhm_counts(self,
-                              bins,counts,count_time,
-                              kdes,kernel_bw,
-                              clear_peaks_idx,clear_valleys_idx,
-                              peak_mu_bin,n_MC=1000):
+    def _get_peak_fwhm_counts_sys(self,
+                                  bins,counts,count_time,
+                                  kdes,kernel_bw,
+                                  clear_peaks_idx,clear_valleys_idx,
+                                  peak_mu_bin,n_MC=1000):
         '''
         Get the counts within the FWHM of a peak. Perform Monte Carlo simulations of the counts, propagating from the uncertainty of the FWHM, if n_MC is provided.
 
@@ -480,6 +480,61 @@ class MCAData:
             return peak_fwhm_rate, peak_fwhm_rate_err
         
         return _get_counts(fwhm_lower_idx, fwhm_upper_idx)
+
+    def _get_peak_fwhm_counts(self,
+                              bins,counts,count_time,
+                              peak_mu_bin,peak_mu_bin_err,
+                              peak_sigma_bin,peak_sigma_bin_err,
+                              n_MC=1000):
+        '''
+        Get the counts within the FWHM of a peak. Perform Monte Carlo simulations of the counts, propagating from the uncertainty of the FWHM, if n_MC is provided.
+
+        Input:
+            bins: 1D array, bin numbers
+            counts: 1D array, counts
+            count_time: float, count time
+            peak_mu_bin: int, bin of the peak
+            peak_mu_bin_err: float, error of the bin of the peak
+            peak_sigma_bin: int, bin of the sigma
+            peak_sigma_bin_err: float, error of the bin of the sigma
+            n_MC: int, number of Monte Carlo simulations
+
+        Output:
+            peak_fwhm_counts: float, counts within the FWHM of the peak
+            peak_fwhm_counts_err: float, error of the counts within the FWHM of the peak
+        '''
+
+        fwhm_scaler = 2.355 / 2
+
+        def _get_count_boundaries(mu_bin,sigma_bin):
+            lower_idx = int(mu_bin - fwhm_scaler*sigma_bin)
+            upper_idx = int(mu_bin + fwhm_scaler*sigma_bin)
+            return lower_idx, upper_idx
+
+        def _get_counts(lower_idx,upper_idx):
+            fwhm_counts = np.sum(counts[lower_idx:upper_idx+1])
+            return fwhm_counts, np.sqrt(fwhm_counts)
+
+        if not n_MC:
+            return _get_counts(*_get_count_boundaries(peak_mu_bin,peak_sigma_bin))
+
+        peak_fwhm_counts = np.array([])
+        peak_fwhm_counts_err = np.array([])
+
+        for i in range(n_MC):
+            mu_bin = np.random.normal(peak_mu_bin,peak_mu_bin_err)
+            sigma_bin = np.random.normal(peak_sigma_bin,peak_sigma_bin_err)
+
+            lower_idx, upper_idx = _get_count_boundaries(mu_bin,sigma_bin)
+            fwhm_counts, fwhm_counts_err = _get_counts(lower_idx,upper_idx)
+
+            peak_fwhm_counts = np.append(peak_fwhm_counts,fwhm_counts)
+            peak_fwhm_counts_err = np.append(peak_fwhm_counts_err,fwhm_counts_err)
+
+        peak_fwhm_rate = np.sum(peak_fwhm_counts/peak_fwhm_counts_err**2) / np.sum(1/peak_fwhm_counts_err**2) / count_time
+        peak_fwhm_rate_err = np.sqrt(np.var(peak_fwhm_counts) + 1/np.sum(1/peak_fwhm_counts_err**2)) / count_time
+
+        return peak_fwhm_rate, peak_fwhm_rate_err
 
 
 ####################################################################################################################
@@ -696,7 +751,7 @@ class MCACompton(MCAData):
         for detector in self.detectors:
             peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
             peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
-            peak_fwhm_rate, peak_fwhm_rate_err, _, _, peak_mu_bin_deviation = self._peak_analysis(detector)
+            peak_fwhm_rate, peak_fwhm_rate_err, peak_fwhm_rate_sys_err, _, _, peak_mu_bin_deviation = self._peak_analysis(detector)
 
             self.__setattr__(detector+'_peak_mu_bin',peak_mu_bin)
             self.__setattr__(detector+'_peak_mu_bin_err',peak_mu_bin_err)
@@ -708,6 +763,7 @@ class MCACompton(MCAData):
             self.__setattr__(detector+'_peak_sigma_energy_err',peak_sigma_energy_err)
             self.__setattr__(detector+'_peak_fwhm_rate',peak_fwhm_rate)
             self.__setattr__(detector+'_peak_fwhm_rate_err',peak_fwhm_rate_err)
+            self.__setattr__(detector+'_peak_fwhm_rate_sys_err',peak_fwhm_rate_sys_err)
             self.__setattr__(detector+'_peak_mu_bin_deviation',peak_mu_bin_deviation)
 
     def _read_data_and_calibrate(self,data_base,data_dir):
@@ -824,11 +880,17 @@ class MCACompton(MCAData):
 
         # Get FWHM
         peak_fwhm_rate, peak_fwhm_rate_err = self._get_peak_fwhm_counts(bins,counts,count_time,
-                                                                        kdes,self.kernel_bw,
-                                                                        clear_peaks_idx,clear_valleys_idx,
-                                                                        peak_mu_bin,n_MC=1000)
+                                                                        peak_mu_bin,peak_mu_bin_err,
+                                                                        peak_sigma_bin,peak_sigma_bin_err,
+                                                                        n_MC=1000
+                                                                    )
+
+        _, peak_fwhm_rate_sys_err = self._get_peak_fwhm_counts_sys(bins,counts,count_time,
+                                                                   kdes,self.kernel_bw,
+                                                                   clear_peaks_idx,clear_valleys_idx,
+                                                                   peak_mu_bin,n_MC=1000)
 
         return peak_mu_bin, peak_mu_bin_err, peak_sigma_bin, peak_sigma_bin_err, \
                peak_mu_energy, peak_mu_energy_err, peak_sigma_energy, peak_sigma_energy_err, \
-               peak_fwhm_rate, peak_fwhm_rate_err, fitting_bins, fitted_counts, peak_mu_bin_deviation
+               peak_fwhm_rate, peak_fwhm_rate_err, peak_fwhm_rate_sys_err, fitting_bins, fitted_counts, peak_mu_bin_deviation
     
