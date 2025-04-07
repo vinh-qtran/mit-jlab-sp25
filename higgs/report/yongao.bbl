@@ -1,0 +1,104 @@
+\begin{thebibliography}{10}
+
+\bibitem{Agostinelli:2002hh}
+S.~Agostinelli et~al.
+\newblock Geant4—a simulation toolkit.
+\newblock {\em Nucl. Instrum. Meth. A}, 506:250--303, 2003.
+
+\bibitem{Alekhin:2011sk}
+S.~Alekhin et~al.
+\newblock {The PDF4LHC Working Group Interim Report}.
+\newblock 2011.
+
+\bibitem{Alioli:2010xd}
+S.~Alioli, P.~Nason, C.~Oleari, and E.~Re.
+\newblock A general framework for implementing nlo calculations in shower monte carlo programs: the powheg box.
+\newblock {\em JHEP}, 06:043, 2010.
+
+\bibitem{Alwall:2007st}
+J.~Alwall, P.~Demin, S.~de~Visscher, R.~Frederix, M.~Herquet, F.~Maltoni, T.~Plehn, D.~L. Rainwater, and T.~Stelzer.
+\newblock {MadGraph/MadEvent v4: The New Web Generation}.
+\newblock {\em JHEP}, 09:028, 2007.
+
+\bibitem{Ball:2011mu}
+R.~D. Ball and others (NNPDF~Collaboration).
+\newblock {Impact of Heavy Quark Masses on Parton Distributions and LHC Phenomenology}.
+\newblock {\em Nucl. Phys. B}, 849:296--363, 2011.
+
+\bibitem{Botje:2011sn}
+M.~Botje et~al.
+\newblock {The PDF4LHC Working Group Interim Recommendations}.
+\newblock 2011.
+
+\bibitem{CMS:2012qbp}
+S.~Chatrchyan et~al.
+\newblock {Observation of a New Boson at a Mass of 125 GeV with the CMS Experiment at the LHC}.
+\newblock {\em Phys. Lett. B}, 716:30--61, 2012.
+
+\bibitem{CMS_2010_data}
+C.~Collaboration.
+\newblock Cms 2010 collision data, 2014.
+
+\bibitem{goodfellow2016deep}
+I.~Goodfellow, Y.~Bengio, and A.~Courville.
+\newblock {\em Deep Learning}.
+\newblock MIT Press, 2016.
+
+\bibitem{Gunion:1990}
+J.~F. Gunion, H.~E. Haber, G.~L. Kane, and S.~Dawson.
+\newblock {\em The Higgs Hunter's Guide}, volume~80 of {\em Frontiers in Physics}.
+\newblock Addison-Wesley, 1990.
+
+\bibitem{Hu2020HiggsTo4L}
+M.~Hu.
+\newblock Higgs to 4l data analysis project, 2020.
+\newblock MIT Junior Lab Spring 2020.
+
+\bibitem{kingma2014adam}
+D.~P. Kingma and J.~Ba.
+\newblock {Adam}: A method for stochastic optimization.
+\newblock {\em arXiv preprint arXiv:1412.6980}, 2014.
+
+\bibitem{Lai:2010vv}
+H.-L. Lai et~al.
+\newblock {New parton distributions for collider physics}.
+\newblock {\em Phys. Rev. D}, 82:074024, 2010.
+
+\bibitem{MIT:Higgs4L2020}
+{MIT Department of Physics}.
+\newblock {Higgs to 4L Data Analysis Project}.
+\newblock Technical report, Massachusetts Institute of Technology, Sep 2020.
+\newblock Dated: September 24, 2020.
+
+\bibitem{PDG2023Higgs}
+{Particle Data Group}.
+\newblock {Status of Higgs Boson Physics}.
+\newblock {\em Prog. Theor. Exp. Phys.}, 2022:083C01, 2022.
+\newblock 2023 update.
+
+\bibitem{paszke2019pytorch}
+A.~Paszke, S.~Gross, F.~Massa, A.~Lerer, J.~Bradbury, G.~Chanan, T.~Killeen, Z.~Lin, N.~Gimelshein, L.~Antiga, A.~Desmaison, A.~Kopf, E.~Yang, Z.~DeVito, M.~Raison, A.~Tejani, S.~Chilamkurthy, B.~Steiner, L.~Fang, J.~Bai, and S.~Chintala.
+\newblock {PyTorch}: An imperative style, high-performance deep learning library.
+\newblock In H.~Wallach, H.~Larochelle, A.~Beygelzimer, F.~d'Alch{\'e} Buc, E.~Fox, and R.~Garnett, editors, {\em Advances in Neural Information Processing Systems 32}, pages 8024--8035. Curran Associates, Inc., 2019.
+
+\bibitem{PeskinSchroeder1995}
+M.~E. Peskin and D.~V. Schroeder.
+\newblock {\em An Introduction to Quantum Field Theory}.
+\newblock Westview Press, Boulder, CO, 1995.
+
+\bibitem{rumelhart1986learning}
+D.~E. Rumelhart, G.~E. Hinton, and R.~J. Williams.
+\newblock Learning representations by back-propagating errors.
+\newblock {\em Nature}, 323(6088):533--536, 1986.
+
+\bibitem{Sjostrand:2006za}
+T.~Sjostrand, S.~Mrenna, and P.~Skands.
+\newblock Pythia 6.4 physics and manual.
+\newblock {\em JHEP}, 05:026, 2006.
+
+\bibitem{Weinberg1995}
+S.~Weinberg.
+\newblock {\em {The Quantum theory of fields. Vol. 1: Foundations}}.
+\newblock Cambridge University Press, 6 2005.
+
+\end{thebibliography}

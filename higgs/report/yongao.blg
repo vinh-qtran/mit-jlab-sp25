@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2023)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: yongao.aux
+The style file: abbrv.bst
+Database file #1: yongaoNotes.bib
+Database file #2: ref.bib
+Warning--I didn't find a database entry for "Cowan:2010js"
+Warning--empty journal in Alekhin:2011sk
+Warning--empty journal in Botje:2011sn
+You've used 20 entries,
+            2118 wiz_defined-function locations,
+            636 strings with 7050 characters,
+and the built_in function-call counts, 6674 in all, are:
+= -- 615
+> -- 415
+< -- 2
++ -- 165
+- -- 142
+* -- 473
+:= -- 1181
+add.period$ -- 62
+call.type$ -- 20
+change.case$ -- 120
+chr.to.int$ -- 0
+cite$ -- 22
+duplicate$ -- 225
+empty$ -- 464
+format.name$ -- 142
+if$ -- 1339
+int.to.chr$ -- 0
+int.to.str$ -- 20
+missing$ -- 21
+newline$ -- 104
+num.names$ -- 42
+pop$ -- 132
+preamble$ -- 1
+purify$ -- 103
+quote$ -- 0
+skip$ -- 162
+stack$ -- 0
+substring$ -- 300
+swap$ -- 31
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 72
+warning$ -- 2
+while$ -- 57
+width$ -- 22
+write$ -- 216
+(There were 3 warnings)
