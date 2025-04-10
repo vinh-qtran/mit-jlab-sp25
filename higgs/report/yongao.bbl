@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{ATLAS:2023oaq}
+G.~Aad et~al.
+\newblock {Combined Measurement of the Higgs Boson Mass from the H\textrightarrow{}\ensuremath{\gamma}\ensuremath{\gamma} and H\textrightarrow{}ZZ*\textrightarrow{}4\ensuremath{\ell} Decay Channels with the ATLAS Detector Using s=7, 8, and 13~TeV pp Collision Data}.
+\newblock {\em Phys. Rev. Lett.}, 131(25):251802, 2023.
+
 \bibitem{Agostinelli:2002hh}
 S.~Agostinelli et~al.
 \newblock Geant4—a simulation toolkit.
@@ -38,6 +43,12 @@ S.~Chatrchyan et~al.
 \bibitem{CMS_2010_data}
 C.~Collaboration.
 \newblock Cms 2010 collision data, 2014.
+
+\bibitem{Cowan:2010js}
+G.~Cowan, K.~Cranmer, E.~Gross, and O.~Vitells.
+\newblock {Asymptotic formulae for likelihood-based tests of new physics}.
+\newblock {\em Eur. Phys. J. C}, 71:1554, 2011.
+\newblock [Erratum: Eur.Phys.J.C 73, 2501 (2013)].
 
 \bibitem{goodfellow2016deep}
 I.~Goodfellow, Y.~Bengio, and A.~Courville.

@@ -4,48 +4,47 @@ The top-level auxiliary file: yongao.aux
 The style file: abbrv.bst
 Database file #1: yongaoNotes.bib
 Database file #2: ref.bib
-Warning--I didn't find a database entry for "Cowan:2010js"
 Warning--empty journal in Alekhin:2011sk
 Warning--empty journal in Botje:2011sn
-You've used 20 entries,
+You've used 22 entries,
             2118 wiz_defined-function locations,
-            636 strings with 7050 characters,
-and the built_in function-call counts, 6674 in all, are:
-= -- 615
-> -- 415
+            651 strings with 7572 characters,
+and the built_in function-call counts, 7341 in all, are:
+= -- 679
+> -- 451
 < -- 2
-+ -- 165
-- -- 142
-* -- 473
-:= -- 1181
-add.period$ -- 62
-call.type$ -- 20
-change.case$ -- 120
++ -- 179
+- -- 154
+* -- 524
+:= -- 1299
+add.period$ -- 69
+call.type$ -- 22
+change.case$ -- 131
 chr.to.int$ -- 0
-cite$ -- 22
-duplicate$ -- 225
-empty$ -- 464
-format.name$ -- 142
-if$ -- 1339
+cite$ -- 24
+duplicate$ -- 247
+empty$ -- 513
+format.name$ -- 154
+if$ -- 1474
 int.to.chr$ -- 0
-int.to.str$ -- 20
-missing$ -- 21
-newline$ -- 104
-num.names$ -- 42
-pop$ -- 132
+int.to.str$ -- 22
+missing$ -- 23
+newline$ -- 115
+num.names$ -- 46
+pop$ -- 138
 preamble$ -- 1
-purify$ -- 103
+purify$ -- 112
 quote$ -- 0
-skip$ -- 162
+skip$ -- 178
 stack$ -- 0
-substring$ -- 300
-swap$ -- 31
+substring$ -- 340
+swap$ -- 33
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 72
+type$ -- 80
 warning$ -- 2
-while$ -- 57
-width$ -- 22
-write$ -- 216
-(There were 3 warnings)
+while$ -- 63
+width$ -- 24
+write$ -- 240
+(There were 2 warnings)

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.28)  3 APR 2025 16:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.28)  8 APR 2025 15:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -746,59 +746,59 @@ Underfull \hbox (badness 1005) in paragraph at lines 313--314
 \OT1/cmr/m/n/10 into sig-nal and back-ground, trained us-ing the pre-
  []
 
-<Figures/training_loss.png, id=161, 554.07pt x 426.393pt>
+<Figures/training_loss.png, id=171, 554.07pt x 426.393pt>
 File: Figures/training_loss.png Graphic file (type png)
 <use Figures/training_loss.png>
-Package pdftex.def Info: Figures/training_loss.png  used on input line 318.
+Package pdftex.def Info: Figures/training_loss.png  used on input line 320.
 (pdftex.def)             Requested size: 117.29782pt x 90.26735pt.
-<Figures/training_accuracy.png, id=163, 554.07pt x 426.393pt>
+<Figures/training_accuracy.png, id=173, 554.07pt x 426.393pt>
 File: Figures/training_accuracy.png Graphic file (type png)
 <use Figures/training_accuracy.png>
-Package pdftex.def Info: Figures/training_accuracy.png  used on input line 319.
+Package pdftex.def Info: Figures/training_accuracy.png  used on input line 321.
 (pdftex.def)             Requested size: 117.29782pt x 90.26735pt.
-<Figures/data.png, id=165, 650.43pt x 505.89pt>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<Figures/data.png, id=175, 650.43pt x 505.89pt>
 File: Figures/data.png Graphic file (type png)
 <use Figures/data.png>
-Package pdftex.def Info: Figures/data.png  used on input line 330.
+Package pdftex.def Info: Figures/data.png  used on input line 332.
 (pdftex.def)             Requested size: 229.49844pt x 178.49992pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-Package natbib Warning: Citation `Cowan:2010js' on page 3 undefined on input line 337.
-
-<Figures/hypo_testing.png, id=167, 638.6259pt x 492.8814pt>
+[3 <./Figures/training_loss.png> <./Figures/training_accuracy.png> <./Figures/data.png>]
+<Figures/hypo_testing.png, id=195, 638.6259pt x 492.8814pt>
 File: Figures/hypo_testing.png Graphic file (type png)
 <use Figures/hypo_testing.png>
-Package pdftex.def Info: Figures/hypo_testing.png  used on input line 340.
+Package pdftex.def Info: Figures/hypo_testing.png  used on input line 351.
 (pdftex.def)             Requested size: 229.49844pt x 177.12129pt.
-[3 <./Figures/training_loss.png> <./Figures/training_accuracy.png> <./Figures/data.png> <./Figures/hypo_testing.png>]
-<Figures/p-value.png, id=186, 650.43pt x 433.62pt>
+<Figures/p-value.png, id=198, 612.1269pt x 426.393pt>
 File: Figures/p-value.png Graphic file (type png)
 <use Figures/p-value.png>
-Package pdftex.def Info: Figures/p-value.png  used on input line 353.
-(pdftex.def)             Requested size: 229.49844pt x 152.99994pt.
- (./yongao.bbl [4 <./Figures/p-value.png>])
+Package pdftex.def Info: Figures/p-value.png  used on input line 366.
+(pdftex.def)             Requested size: 229.49844pt x 159.85794pt.
 
-Package natbib Warning: There were undefined citations.
 
-[5] (./yongao.aux)
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+(./yongao.bbl [4 <./Figures/hypo_testing.png> <./Figures/p-value.png>]) [5] (./yongao.aux)
 Package rerunfilecheck Info: File `yongao.out' has not changed.
-(rerunfilecheck)             Checksum: 8674EA9DB31CA89751B25E95B59ACA53;2564.
+(rerunfilecheck)             Checksum: 8551B5434068C66DABEABB238EE84341;2734.
  ) 
 Here is how much of TeX's memory you used:
- 25454 strings out of 476025
- 498462 string characters out of 5790017
+ 25466 strings out of 476025
+ 498677 string characters out of 5790017
  1924388 words of memory out of 5000000
- 45424 multiletter control sequences out of 15000+600000
- 522080 words of font info for 70 fonts, out of 8000000 for 9000
+ 45432 multiletter control sequences out of 15000+600000
+ 522109 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,14n,90p,901b,1950s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on yongao.pdf (5 pages, 765326 bytes).
+ 84i,14n,90p,882b,1950s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on yongao.pdf (5 pages, 870322 bytes).
 PDF statistics:
- 305 PDF objects out of 1000 (max. 8388607)
- 240 compressed objects within 3 object streams
- 51 named destinations out of 1000 (max. 500000)
- 182 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 337 PDF objects out of 1000 (max. 8388607)
+ 268 compressed objects within 3 object streams
+ 55 named destinations out of 1000 (max. 500000)
+ 190 words of extra memory for PDF output out of 10000 (max. 10000000)
 
