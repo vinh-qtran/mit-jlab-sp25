@@ -1,0 +1,88 @@
+%merlin.mbs apsrev4-1.bst 2010-07-25 4.21a (PWD, AO, DPC) hacked
+%Control: key (0)
+%Control: author (8) initials jnrlst
+%Control: editor formatted (1) identically to author
+%Control: production of article title (-1) disabled
+%Control: page (0) single
+%Control: year (1) truncated
+%Control: production of eprint (0) enabled
+\begin{thebibliography}{12}%
+\makeatletter
+\providecommand \@ifxundefined [1]{%
+ \@ifx{#1\undefined}
+}%
+\providecommand \@ifnum [1]{%
+ \ifnum #1\expandafter \@firstoftwo
+ \else \expandafter \@secondoftwo
+ \fi
+}%
+\providecommand \@ifx [1]{%
+ \ifx #1\expandafter \@firstoftwo
+ \else \expandafter \@secondoftwo
+ \fi
+}%
+\providecommand \natexlab [1]{#1}%
+\providecommand \enquote  [1]{``#1''}%
+\providecommand \bibnamefont  [1]{#1}%
+\providecommand \bibfnamefont [1]{#1}%
+\providecommand \citenamefont [1]{#1}%
+\providecommand \href@noop [0]{\@secondoftwo}%
+\providecommand \href [0]{\begingroup \@sanitize@url \@href}%
+\providecommand \@href[1]{\@@startlink{#1}\@@href}%
+\providecommand \@@href[1]{\endgroup#1\@@endlink}%
+\providecommand \@sanitize@url [0]{\catcode `\\12\catcode `\$12\catcode `\&12\catcode `\#12\catcode `\^12\catcode `\_12\catcode `\%12\relax}%
+\providecommand \@@startlink[1]{}%
+\providecommand \@@endlink[0]{}%
+\providecommand \url  [0]{\begingroup\@sanitize@url \@url }%
+\providecommand \@url [1]{\endgroup\@href {#1}{\urlprefix }}%
+\providecommand \urlprefix  [0]{URL }%
+\providecommand \Eprint [0]{\href }%
+\providecommand \doibase [0]{http://dx.doi.org/}%
+\providecommand \selectlanguage [0]{\@gobble}%
+\providecommand \bibinfo  [0]{\@secondoftwo}%
+\providecommand \bibfield  [0]{\@secondoftwo}%
+\providecommand \translation [1]{[#1]}%
+\providecommand \BibitemOpen [0]{}%
+\providecommand \bibitemStop [0]{}%
+\providecommand \bibitemNoStop [0]{.\EOS\space}%
+\providecommand \EOS [0]{\spacefactor3000\relax}%
+\providecommand \BibitemShut  [1]{\csname bibitem#1\endcsname}%
+\let\auto@bib@innerbib\@empty
+%</preamble>
+\bibitem [{\citenamefont {{UA1 Collaboration}}(1983)}]{UA11983}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibnamefont {{UA1 Collaboration}}},\ }\href {\doibase https://doi.org/10.1016/0370-2693(83)90188-0} {\bibfield  {journal} {\bibinfo  {journal} {Physics Letters B}\ }\textbf {\bibinfo {volume} {126}},\ \bibinfo {pages} {398} (\bibinfo {year} {1983})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{D0 Collaboration}}(1995)}]{D01995}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibnamefont {{D0 Collaboration}}},\ }\href {\doibase 10.1103/PhysRevLett.74.2632} {\bibfield  {journal} {\bibinfo  {journal} {\prl}\ }\textbf {\bibinfo {volume} {74}},\ \bibinfo {pages} {2632} (\bibinfo {year} {1995})},\ \Eprint {http://arxiv.org/abs/hep-ex/9503003} {arXiv:hep-ex/9503003 [hep-ex]} \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{DONUT Collaboration}}(2001)}]{DONUT2001}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibnamefont {{DONUT Collaboration}}},\ }\href {\doibase 10.1016/S0370-2693(01)00307-0} {\bibfield  {journal} {\bibinfo  {journal} {Physics Letters B}\ }\textbf {\bibinfo {volume} {504}},\ \bibinfo {pages} {218} (\bibinfo {year} {2001})},\ \Eprint {http://arxiv.org/abs/hep-ex/0012035} {arXiv:hep-ex/0012035 [hep-ex]} \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Weinberg}(2005)}]{Weinberg1995}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Weinberg}},\ }\href {\doibase 10.1017/CBO9781139644167} {\emph {\bibinfo {title} {{The Quantum theory of fields. Vol. 1: Foundations}}}}\ (\bibinfo  {publisher} {Cambridge University Press},\ \bibinfo {year} {2005})\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Higgs}(1964)}]{Higgs1964}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.~W.}\ \bibnamefont {Higgs}},\ }\href {\doibase 10.1103/PhysRevLett.13.508} {\bibfield  {journal} {\bibinfo  {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {13}},\ \bibinfo {pages} {508} (\bibinfo {year} {1964})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{CMS Collaboration}}(2012)}]{CMS2012}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibnamefont {{CMS Collaboration}}},\ }\href {\doibase 10.1016/j.physletb.2012.08.021} {\bibfield  {journal} {\bibinfo  {journal} {Physics Letters B}\ }\textbf {\bibinfo {volume} {716}},\ \bibinfo {pages} {30} (\bibinfo {year} {2012})},\ \Eprint {http://arxiv.org/abs/1207.7235} {arXiv:1207.7235 [hep-ex]} \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Jomhari}\ \emph {et~al.}(2017)\citenamefont {Jomhari}, \citenamefont {Geiser},\ and\ \citenamefont {Bin~Anuar}}]{Jomhari2017}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {N.~Z.}\ \bibnamefont {Jomhari}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Geiser}}, \ and\ \bibinfo {author} {\bibfnamefont {A.~A.}\ \bibnamefont {Bin~Anuar}},\ }\href {\doibase 10.7483/OPENDATA.CMS.JKB8.RR42} {\  (\bibinfo {year} {2017}),\ 10.7483/OPENDATA.CMS.JKB8.RR42}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Gunion}\ \emph {et~al.}(2000)\citenamefont {Gunion}, \citenamefont {Haber}, \citenamefont {Kane},\ and\ \citenamefont {Dawson}}]{Gunion1989}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {J.~F.}\ \bibnamefont {Gunion}}, \bibinfo {author} {\bibfnamefont {H.~E.}\ \bibnamefont {Haber}}, \bibinfo {author} {\bibfnamefont {G.~L.}\ \bibnamefont {Kane}}, \ and\ \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Dawson}},\ }\href {\doibase 10.1201/9780429496448} {\emph {\bibinfo {title} {{The Higgs Hunter's Guide}}}},\ Vol.~\bibinfo {volume} {80}\ (\bibinfo {year} {2000})\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{Particle Data Group Collaboration}}(2024)}]{PDG2024}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibnamefont {{Particle Data Group Collaboration}}},\ }\href {\doibase 10.1103/PhysRevD.110.030001} {\bibfield  {journal} {\bibinfo  {journal} {Phys. Rev. D}\ }\textbf {\bibinfo {volume} {110}},\ \bibinfo {pages} {030001} (\bibinfo {year} {2024})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{Drell}}\ and\ \citenamefont {{Yan}}(1970)}]{DrellYan1970}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.~D.}\ \bibnamefont {{Drell}}}\ and\ \bibinfo {author} {\bibfnamefont {T.-M.}\ \bibnamefont {{Yan}}},\ }\href {\doibase 10.1103/PhysRevLett.25.316} {\bibfield  {journal} {\bibinfo  {journal} {\prl}\ }\textbf {\bibinfo {volume} {25}},\ \bibinfo {pages} {316} (\bibinfo {year} {1970})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Chatrchyan}\ \emph {et~al.}(2008)\citenamefont {Chatrchyan} \emph {et~al.}}]{CMS2008}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Chatrchyan}} \emph {et~al.} (\bibinfo {collaboration} {CMS}),\ }\href {\doibase 10.1088/1748-0221/3/08/S08004} {\bibfield  {journal} {\bibinfo  {journal} {JINST}\ }\textbf {\bibinfo {volume} {3}},\ \bibinfo {pages} {S08004} (\bibinfo {year} {2008})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Kipf}\ and\ \citenamefont {Welling}(2016)}]{KipfWelling2016}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {T.}~\bibnamefont {Kipf}}\ and\ \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Welling}},\ }\href {https://api.semanticscholar.org/CorpusID:3144218} {\bibfield  {journal} {\bibinfo  {journal} {ArXiv}\ }\textbf {\bibinfo {volume} {abs/1609.02907}} (\bibinfo {year} {2016})}\BibitemShut {NoStop}%
+\end{thebibliography}%

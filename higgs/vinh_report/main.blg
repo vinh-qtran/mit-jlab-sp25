@@ -1,0 +1,71 @@
+This is BibTeX, Version 0.99d (TeX Live 2024)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: apsrev4-1.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: mainNotes.bib
+Database file #2: ref.bib
+Warning--I'm ignoring UA11983's extra "author" field
+--line 11 of file ref.bib
+control{REVTEX41Control}, control.key{N/A}, control.author{N/A}, control.editor{N/A}, control.title{N/A}, control.pages{N/A}, control.year{N/A}, control.eprint{N/A}, 
+control{apsrev41Control}, control.key{N/A}, control.author{08}, control.editor{1}, control.title{}, control.pages{0}, control.year{1}, control.eprint{N/A}, 
+Warning--jnrlst (dependency: not reversed) set 1
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+merlin.mbs apsrev4-1.bst 2010-07-25 4.21a (PWD, AO, DPC) hacked
+Control: key (0) 
+Control: author (8) initials jnrlst
+Control: editor formatted (1) identically to author
+Control: production of article title (-1) disabled
+Control: page (0) single
+Control: year (1) truncated
+Control: production of eprint (0) enabled
+Warning--missing journal in Jomhari2017
+Warning--missing publisher in Gunion1989
+You've used 14 entries,
+            5847 wiz_defined-function locations,
+            1713 strings with 18821 characters,
+and the built_in function-call counts, 10721 in all, are:
+= -- 715
+> -- 196
+< -- 88
++ -- 71
+- -- 59
+* -- 1527
+:= -- 1123
+add.period$ -- 12
+call.type$ -- 14
+change.case$ -- 50
+chr.to.int$ -- 22
+cite$ -- 16
+duplicate$ -- 1071
+empty$ -- 786
+format.name$ -- 107
+if$ -- 2045
+int.to.chr$ -- 1
+int.to.str$ -- 21
+missing$ -- 149
+newline$ -- 88
+num.names$ -- 36
+pop$ -- 482
+preamble$ -- 1
+purify$ -- 60
+quote$ -- 0
+skip$ -- 414
+stack$ -- 0
+substring$ -- 264
+swap$ -- 923
+text.length$ -- 15
+text.prefix$ -- 0
+top$ -- 10
+type$ -- 162
+warning$ -- 3
+while$ -- 41
+width$ -- 0
+write$ -- 149
+(There were 4 warnings)
