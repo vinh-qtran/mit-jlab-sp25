@@ -70,6 +70,11 @@ D.~P. Kingma and J.~Ba.
 \newblock {Adam}: A method for stochastic optimization.
 \newblock {\em arXiv preprint arXiv:1412.6980}, 2014.
 
+\bibitem{kipf2017semi}
+T.~N. Kipf and M.~Welling.
+\newblock Semi-supervised classification with graph convolutional networks.
+\newblock In {\em International Conference on Learning Representations (ICLR)}, 2017.
+
 \bibitem{Lai:2010vv}
 H.-L. Lai et~al.
 \newblock {New parton distributions for collider physics}.
@@ -96,11 +101,6 @@ A.~Paszke, S.~Gross, F.~Massa, A.~Lerer, J.~Bradbury, G.~Chanan, T.~Killeen, Z.~
 M.~E. Peskin and D.~V. Schroeder.
 \newblock {\em An Introduction to Quantum Field Theory}.
 \newblock Westview Press, Boulder, CO, 1995.
-
-\bibitem{rumelhart1986learning}
-D.~E. Rumelhart, G.~E. Hinton, and R.~J. Williams.
-\newblock Learning representations by back-propagating errors.
-\newblock {\em Nature}, 323(6088):533--536, 1986.
 
 \bibitem{Sjostrand:2006za}
 T.~Sjostrand, S.~Mrenna, and P.~Skands.

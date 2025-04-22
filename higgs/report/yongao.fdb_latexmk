@@ -1,15 +1,15 @@
 # Fdb version 4
-["bibtex yongao"] 1744142364 "yongao.aux" "yongao.bbl" "yongao" 1744142391 0
-  "./ref.bib" 1744138787 9749 150e98a7452db6ee8448fbf43aa330b6 ""
-  "./yongaoNotes.bib" 1744142387 0 d41d8cd98f00b204e9800998ecf8427e ""
+["bibtex yongao"] 1745254694 "yongao.aux" "yongao.bbl" "yongao" 1745254698 0
+  "./ref.bib" 1745254583 10062 45a11ff149d44047bb2fe577bbb4879c ""
+  "./yongaoNotes.bib" 1745254695 0 d41d8cd98f00b204e9800998ecf8427e ""
   "/usr/local/texlive/2023/texmf-dist/bibtex/bst/base/abbrv.bst" 1292289607 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "yongao.aux" 1744142391 8008 87c01a2ada61ff7d7f536ba962a58889 "pdflatex"
+  "yongao.aux" 1745254698 8747 5ddae9e88b7efe6e44f7c0e94c8cf359 "pdflatex"
   (generated)
   "yongao.bbl"
   "yongao.blg"
   (rewritten before read)
-["pdflatex"] 1744142387 "/Users/yongao/Desktop/8.13/mit-jlab-sp25/higgs/report/yongao.tex" "yongao.pdf" "yongao" 1744142391 0
-  "/Users/yongao/Desktop/8.13/mit-jlab-sp25/higgs/report/yongao.tex" 1744142387 24694 5815d3faa74d524d5b047ae0d9d71888 ""
+["pdflatex"] 1745254694 "/Users/yongao/Desktop/8.13/mit-jlab-sp25/higgs/report/yongao.tex" "yongao.pdf" "yongao" 1745254698 0
+  "/Users/yongao/Desktop/8.13/mit-jlab-sp25/higgs/report/yongao.tex" 1745254690 25997 5142620b811b070cf43aa837ce23dba1 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/tcrm0900.tfm" 1136768653 1536 c4f439db76ef96a9c53bc437f35ffe20 ""
@@ -212,14 +212,14 @@
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1693271629 7883453 a01431d5d781e0b0b460ca05cd748b25 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
   "Figures/data.png" 1744141201 40149 7811699b08e57dcbef7fb4fe91f5cf9b ""
-  "Figures/hypo_testing.png" 1744141202 85344 56a032486d4235fc28810076b56f2760 ""
-  "Figures/p-value.png" 1744141218 143172 4bc7fb4a25f369e6647335c0df57a74c ""
+  "Figures/hypo_testing.png" 1745253220 85451 16b4b5486462e5573238f2fc7160ecd2 ""
+  "Figures/p-value-2.png" 1745253220 102810 3fea67792f1b6fb85a0d7d928463ef5b ""
   "Figures/training_accuracy.png" 1744141181 206316 f88d4c0c4443f6d1def5b18d655c0b14 ""
   "Figures/training_loss.png" 1744141180 200167 c39db79b1ddf013ce1930b45a5600040 ""
-  "yongao.aux" 1744142391 8008 87c01a2ada61ff7d7f536ba962a58889 "pdflatex"
-  "yongao.bbl" 1744142365 4348 680e9f7b6ba86bfc749c09ccc1e0032a "bibtex yongao"
-  "yongao.out" 1744142391 2734 8551b5434068c66dabeabb238ee84341 "pdflatex"
-  "yongao.tex" 1744142387 24694 5815d3faa74d524d5b047ae0d9d71888 ""
+  "yongao.aux" 1745254698 8747 5ddae9e88b7efe6e44f7c0e94c8cf359 "pdflatex"
+  "yongao.bbl" 1745254694 4364 79ff0d618acde432da40d5d41822f52a "bibtex yongao"
+  "yongao.out" 1745254698 2830 1746bd3f84729f49cd565373624021c2 "pdflatex"
+  "yongao.tex" 1745254690 25997 5142620b811b070cf43aa837ce23dba1 ""
   (generated)
   "yongao.aux"
   "yongao.log"

@@ -933,11 +933,11 @@ INPUT ./Figures/hypo_testing.png
 INPUT Figures/hypo_testing.png
 INPUT ./Figures/hypo_testing.png
 INPUT ./Figures/hypo_testing.png
-INPUT ./Figures/p-value.png
-INPUT ./Figures/p-value.png
-INPUT Figures/p-value.png
-INPUT ./Figures/p-value.png
-INPUT ./Figures/p-value.png
+INPUT ./Figures/p-value-2.png
+INPUT ./Figures/p-value-2.png
+INPUT Figures/p-value-2.png
+INPUT ./Figures/p-value-2.png
+INPUT ./Figures/p-value-2.png
 INPUT ./yongao.bbl
 INPUT yongao.bbl
 INPUT ./yongao.bbl
