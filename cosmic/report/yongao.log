@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.28)  24 APR 2025 14:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.28)  27 APR 2025 16:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -597,56 +597,71 @@ Package hyperref Info: Link coloring ON on input line 25.
 Class revtex4-1 Info: Taking \maketitle back from hyperref on input line 25.
 \openout3 = `yongaoNotes.bib'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 39.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 36.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 39.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 36.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<figure/plot_monobit_histogram.png, id=72, 578.16pt x 433.62pt>
-File: figure/plot_monobit_histogram.png Graphic file (type png)
-<use figure/plot_monobit_histogram.png>
-Package pdftex.def Info: figure/plot_monobit_histogram.png  used on input line 89.
+) [1{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+<figure/monobit_histogram.png, id=169, 578.16pt x 433.62pt>
+File: figure/monobit_histogram.png Graphic file (type png)
+<use figure/monobit_histogram.png>
+Package pdftex.def Info: figure/monobit_histogram.png  used on input line 140.
 (pdftex.def)             Requested size: 229.49844pt x 172.12163pt.
-<figure/plot_autocorrelation.png, id=74, 578.16pt x 433.62pt>
-File: figure/plot_autocorrelation.png Graphic file (type png)
-<use figure/plot_autocorrelation.png>
-Package pdftex.def Info: figure/plot_autocorrelation.png  used on input line 98.
+<figure/running_frequency.png, id=171, 578.16pt x 433.62pt>
+File: figure/running_frequency.png Graphic file (type png)
+<use figure/running_frequency.png>
+Package pdftex.def Info: figure/running_frequency.png  used on input line 146.
 (pdftex.def)             Requested size: 229.49844pt x 172.12163pt.
-<figure/plot_serial_4bit_frequencies.png, id=75, 578.16pt x 433.62pt>
-File: figure/plot_serial_4bit_frequencies.png Graphic file (type png)
-<use figure/plot_serial_4bit_frequencies.png>
-Package pdftex.def Info: figure/plot_serial_4bit_frequencies.png  used on input line 106.
+<figure/serial4.png, id=173, 578.16pt x 433.62pt>
+File: figure/serial4.png Graphic file (type png)
+<use figure/serial4.png>
+Package pdftex.def Info: figure/serial4.png  used on input line 157.
 (pdftex.def)             Requested size: 229.49844pt x 172.12163pt.
-<figure/plot_serial_6bit_frequencies.png, id=76, 578.16pt x 289.08pt>
-File: figure/plot_serial_6bit_frequencies.png Graphic file (type png)
-<use figure/plot_serial_6bit_frequencies.png>
-Package pdftex.def Info: figure/plot_serial_6bit_frequencies.png  used on input line 107.
+<figure/serial6.png, id=174, 578.16pt x 289.08pt>
+File: figure/serial6.png Graphic file (type png)
+<use figure/serial6.png>
+Package pdftex.def Info: figure/serial6.png  used on input line 158.
 (pdftex.def)             Requested size: 229.49844pt x 114.74774pt.
-<figure/plot_toggle_frequency_by_angle.png, id=77, 578.16pt x 433.62pt>
-File: figure/plot_toggle_frequency_by_angle.png Graphic file (type png)
-<use figure/plot_toggle_frequency_by_angle.png>
-Package pdftex.def Info: figure/plot_toggle_frequency_by_angle.png  used on input line 121.
+<figure/acf_bits.png, id=176, 578.16pt x 433.62pt>
+File: figure/acf_bits.png Graphic file (type png)
+<use figure/acf_bits.png>
+Package pdftex.def Info: figure/acf_bits.png  used on input line 168.
 (pdftex.def)             Requested size: 229.49844pt x 172.12163pt.
- [2 <./figure/plot_monobit_histogram.png> <./figure/plot_autocorrelation.png> <./figure/plot_serial_4bit_frequencies.png> <./figure/plot_serial_6bit_frequencies.png>] (./yongao.bbl) [3 <./figure/plot_toggle_frequency_by_angle.png>] (./yongao.aux)
+ [3 <./figure/monobit_histogram.png> <./figure/running_frequency.png>]
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 180.
+
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 180.
+
+
+Class revtex4-1 Warning: Deferred float stuck during \clearpage processing.
+
+<figure/toggle_vs_angle.png, id=193, 578.16pt x 433.62pt>
+File: figure/toggle_vs_angle.png Graphic file (type png)
+<use figure/toggle_vs_angle.png>
+Package pdftex.def Info: figure/toggle_vs_angle.png  used on input line 191.
+(pdftex.def)             Requested size: 229.49844pt x 172.12163pt.
+[4 <./figure/serial4.png> <./figure/serial6.png> <./figure/acf_bits.png> <./figure/toggle_vs_angle.png>] (./yongao.bbl) [5] (./yongao.aux)
 Package rerunfilecheck Info: File `yongao.out' has not changed.
-(rerunfilecheck)             Checksum: F7A81EA3A4BE6981192E85B0B837F1F6;1404.
+(rerunfilecheck)             Checksum: 1342341F55EA772E664773E9BC0EBC7B;4879.
  ) 
 Here is how much of TeX's memory you used:
- 24882 strings out of 476025
- 488061 string characters out of 5790017
+ 24976 strings out of 476025
+ 489028 string characters out of 5790017
  1876388 words of memory out of 5000000
- 44889 multiletter control sequences out of 15000+600000
- 518643 words of font info for 57 fonts, out of 8000000 for 9000
+ 44943 multiletter control sequences out of 15000+600000
+ 520536 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,8n,90p,856b,514s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on yongao.pdf (3 pages, 636469 bytes).
+ 84i,9n,90p,1021b,514s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
+Output written on yongao.pdf (5 pages, 797907 bytes).
 PDF statistics:
- 159 PDF objects out of 1000 (max. 8388607)
- 115 compressed objects within 2 object streams
- 22 named destinations out of 1000 (max. 500000)
- 118 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 304 PDF objects out of 1000 (max. 8388607)
+ 245 compressed objects within 3 object streams
+ 56 named destinations out of 1000 (max. 500000)
+ 275 words of extra memory for PDF output out of 10000 (max. 10000000)
 
