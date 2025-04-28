@@ -142,7 +142,7 @@ class BaseUniformMonteCarloFitter():
 
         return params_mean, params_std, params, e_params
 
-# SPECIFIC FITTERS
+# BAYESIAN FITTERS
 
 class BayesianGaussian:
     def __init__(self,x):
@@ -174,6 +174,7 @@ class BayesianGaussian:
         alpha = 1 - chi2.cdf(chisqr, len(self.x) - len(params))
         return chisqr, alpha
 
+# SPECIFIC FITTERS
 
 class PolynomialFitter(BaseFitter):
     def __init__(self, 

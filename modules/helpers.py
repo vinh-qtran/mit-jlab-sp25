@@ -1,10 +1,11 @@
 import numpy as np
 
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 def set_plot_configs():
     # Define matplotlib style
-    mpl.style.use('classic')
+    plt.style.use('classic')
     mpl.rc('xtick', labelsize=23); mpl.rc('ytick', labelsize=23)
     mpl.rc('xtick.major', size=15 , width=2)
     mpl.rc('xtick.minor', size=8, width=2, visible=True)
