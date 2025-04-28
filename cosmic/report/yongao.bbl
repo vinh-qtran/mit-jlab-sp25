@@ -5,4 +5,28 @@ S.~Axani and J.~Conrad.
 \newblock {\em Junior Lab Manual for CosmicWatch: The Desktop Muon Detector (v3)}, Sept. 2024.
 \newblock Junior Lab Manual, Massachusetts Institute of Technology.
 
+\bibitem{brockwell1991timeseries}
+P.~J. Brockwell and R.~A. Davis.
+\newblock {\em Time Series: Theory and Methods}.
+\newblock Springer Series in Statistics. Springer, New York, 2nd edition, 1991.
+
+\bibitem{lempel1976complexity}
+A.~Lempel and J.~Ziv.
+\newblock On the complexity of finite sequences.
+\newblock {\em IEEE Transactions on Information Theory}, 22(1):75--81, 1976.
+
+\bibitem{gzip}
+J.~loup Gailly and M.~Adler.
+\newblock gzip: Compression software, 1992.
+
+\bibitem{shannon1948mathematical}
+C.~E. Shannon.
+\newblock A mathematical theory of communication.
+\newblock {\em Bell System Technical Journal}, 27(3):379--423, 1948.
+
+\bibitem{stouffer1949american}
+S.~A. Stouffer, E.~A. Suchman, L.~C. DeVinney, S.~A. Star, and R.~M. Williams~Jr.
+\newblock {\em The American Soldier: Adjustment During Army Life}, volume~1.
+\newblock Princeton University Press, Princeton, NJ, 1949.
+
 \end{thebibliography}
