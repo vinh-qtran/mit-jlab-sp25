@@ -1,15 +1,15 @@
 # Fdb version 4
-["bibtex yongao"] 1745785215 "yongao.aux" "yongao.bbl" "yongao" 1745785218 0
+["bibtex yongao"] 1745950498 "yongao.aux" "yongao.bbl" "yongao" 1746033716 0
   "./ref.bib" 1745781856 1595 7084675e3315142f0f6d40a8d6ad228d ""
-  "./yongaoNotes.bib" 1745785215 0 d41d8cd98f00b204e9800998ecf8427e ""
+  "./yongaoNotes.bib" 1746033714 0 d41d8cd98f00b204e9800998ecf8427e ""
   "/usr/local/texlive/2023/texmf-dist/bibtex/bst/base/abbrv.bst" 1292289607 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "yongao.aux" 1745785217 8082 8c88608755538b149ad0e9ac4aa6e010 "pdflatex"
+  "yongao.aux" 1746033715 8114 19dada6115c0c64541fea5699403c033 "pdflatex"
   (generated)
   "yongao.bbl"
   "yongao.blg"
   (rewritten before read)
-["pdflatex"] 1745785215 "/Users/yongao/Desktop/8.13/mit-jlab-sp25/cosmic/report/yongao.tex" "yongao.pdf" "yongao" 1745785218 0
-  "/Users/yongao/Desktop/8.13/mit-jlab-sp25/cosmic/report/yongao.tex" 1745785211 17493 3636fa97f9afbc8f17aea896fa5ed099 ""
+["pdflatex"] 1746033713 "/Users/yongao/Desktop/8.13/mit-jlab-sp25/cosmic/report/yongao.tex" "yongao.pdf" "yongao" 1746033716 0
+  "/Users/yongao/Desktop/8.13/mit-jlab-sp25/cosmic/report/yongao.tex" 1746033713 17649 37d4bfef08f8a4fc0a81eaf527554998 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -200,16 +200,16 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1693271708 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1693271629 7883453 a01431d5d781e0b0b460ca05cd748b25 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "figure/acf_bits.png" 1745785187 102297 619c94e7f13aec8bd534dd587f7d55ee ""
-  "figure/monobit_histogram.png" 1745785186 76248 e4cbd2831ac164590bfab605fcc46dd9 ""
-  "figure/running_frequency.png" 1745785187 123329 77ce0536051af0e76fe7b390fdad83dc ""
-  "figure/serial4.png" 1745785187 88975 8b5194f29d4234675d9f962d4285a126 ""
-  "figure/serial6.png" 1745785188 81107 da2d3d2ee5c6b42e0ce2f6adf1d0cd45 ""
-  "figure/toggle_vs_angle.png" 1745785188 119423 b7d13380d4875158987b197278f9ccc7 ""
-  "yongao.aux" 1745785217 8082 8c88608755538b149ad0e9ac4aa6e010 "pdflatex"
-  "yongao.bbl" 1745785215 1154 d2485d20bcc9cdb30e9c765bcc46ade3 "bibtex yongao"
-  "yongao.out" 1745785217 4879 1342341f55ea772e664773e9bc0ebc7b "pdflatex"
-  "yongao.tex" 1745785211 17493 3636fa97f9afbc8f17aea896fa5ed099 ""
+  "figure/acf_bits.png" 1746033511 105795 a52c8e34affe2913f51bbdd1ee4ace9d ""
+  "figure/monobit_histogram.png" 1746033510 90621 594e390f1302cebd7db8e2773f4ff507 ""
+  "figure/running_frequency.png" 1746033511 138942 865f54fefdb1b265508571113e753c04 ""
+  "figure/serial4.png" 1746033512 98599 b828c7fd048abf14deb8e09494b115a7 ""
+  "figure/serial6.png" 1746033512 76019 4f85f332fca130cab65469087aada187 ""
+  "figure/toggle_vs_angle.png" 1746033512 120867 01ec28f4b3f8d016e72cff00319183ab ""
+  "yongao.aux" 1746033715 8114 19dada6115c0c64541fea5699403c033 "pdflatex"
+  "yongao.bbl" 1745950498 1154 d2485d20bcc9cdb30e9c765bcc46ade3 "bibtex yongao"
+  "yongao.out" 1746033715 4879 1342341f55ea772e664773e9bc0ebc7b "pdflatex"
+  "yongao.tex" 1746033713 17649 37d4bfef08f8a4fc0a81eaf527554998 ""
   (generated)
   "yongao.aux"
   "yongao.log"

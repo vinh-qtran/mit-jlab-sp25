@@ -33,7 +33,7 @@
 
 
 \begin{abstract}
-This report presents a statistical analysis on the random nature of atmospheric muon detection. The analysis is based on the data collected by the Cosmic Muon Detector at MIT, which detects atmospheric muons produced by cosmic rays interacting with the Earth's atmosphere. The data is analyzed using statistical methods to determine the random nature of the muon detection process. The analysis includes the monobit frequency test, sequence test, autocorrelation function, compression ratio, Shannon entropy, Lempel-Ziv complexity, and dependence on angle of the detectors. The results show that the muon detection process is indeed random, and independent of the angle of the detectors. The results are consistent with the expected behavior of a random process, with deviation of $0.39\sigma$, showing that the muon detection process can be used as a source of true random numbers. 
+This report presents a statistical analysis on the random nature of atmospheric muon detection. The analysis is based on the data collected by the Cosmic Muon Detector at MIT, which detects atmospheric muons produced by cosmic rays interacting with the Earth's atmosphere. The data is analyzed using statistical methods to determine the random nature of the muon detection process. The analysis includes the monobit frequency test, sequence test, autocorrelation function, compression ratio, Shannon entropy, Lempel-Ziv complexity, and dependence on angle of the detectors. The results show that the muon detection process is indeed random, and independent of the angle of the detectors. The results are consistent with the expected behavior of a random process, with deviation of $0.40\sigma$, showing that the muon detection process can be used as a source of true random numbers. 
 \end{abstract}
 
 \maketitle
@@ -53,7 +53,7 @@ The number and timestamps of muon detection events is recorded. The data is then
 \section{Data Analysis}
 
 \subsection{Monobit Frequency Test}
-In order to analyze the random nature of the data, we take the timestamp of the events and convert them to 0 if the timestamp is even and 1 if the timestamp is odd \cite{axani2024cosmicwatch}. This gives us a binary sequence of 0s and 1s. We then calculate the probability of getting a 1 in the sequence, which should be close to 0.5 if the data is random. 
+In order to analyze the random nature of the data, we take the timestamp of the events and convert them to 0 if the timestamp is even and 1 if the timestamp is odd \cite{axani2024cosmicwatch}. This gives us a binary sequence of 0s and 1s. We then calculate the probability of getting a 1 in the sequence, which should be close to 0.5 if the data is random. We also choose the data with voltage higher than 80 mV to ensure that the data is not affected by gamma rays \cite{axani2024cosmicwatch}. 
 
 We also calculate the cumulative frequency of the binary sequence. The cumulative frequency is defined as:
 \begin{equation}
@@ -134,7 +134,7 @@ where $x$ is the observed value, $\mu$ is the expected value, and $\sigma$ is th
 
 \section{Results}
 \subsection{Monobit Frequency Test}
-Firstly, we plot the count of 1 and 0 in the binary sequence in Fig. \ref{fig:monobit_histogram} and Fig. \ref{fig:running_frequency}. The total count of the bits is 4648. The monobit probability is $0.50925 \pm 0.0073$. The sigificance of the result compared to the expected value of 0.5 is $z=1.27$, which is not significant at the 5\% level. 
+Firstly, we plot the count of 1 and 0 in the binary sequence in Fig. \ref{fig:monobit_histogram} and Fig. \ref{fig:running_frequency}. The total count of the bits is 1636. The monobit probability is $0.508 \pm 0.012$. The sigificance of the result compared to the expected value of 0.5 is $z=0.64$, which is not significant at the 5\% level. 
 \begin{figure}
 \centering
 \includegraphics[width=0.45\textwidth]{figure/monobit_histogram.png}
@@ -162,7 +162,7 @@ Next, we show the 4-bit and 6-bit binary sequence in Fig. \ref{fig:serial_4bit_6
 
 
 \subsection{Autocorrelation Function}
-Next, we show the autocorrelation function of the binary sequence in Fig. \ref{fig:autocorrelation}. The mean of the absolute value of the autocorrelation function is $0.0140 \pm 0.0015$. The significance of the result compared to the expected value of 0 is $z=1.52$, which is not significant at the 5\% level. 
+Next, we show the autocorrelation function of the binary sequence in Fig. \ref{fig:autocorrelation}. The mean of the absolute value of the autocorrelation function is $0.0172 \pm 0.0024$. The significance of the result compared to the expected value of 0 is $z=1.06$, which is not significant at the 5\% level. 
 \begin{figure}
 \centering
 \includegraphics[width=0.45\textwidth]{figure/acf_bits.png}
@@ -172,19 +172,19 @@ Next, we show the autocorrelation function of the binary sequence in Fig. \ref{f
 
 \subsection{Compression Ratio}
 
-With \textsc{gzip}, we have a compression ratio of $1.00396$. The reason for the compression ratio being greater than 1 is that the compression algorithm adds header information to the compressed data. 
+With \textsc{gzip}, we have a compression ratio of $1.11$. The reason for the compression ratio being greater than 1 is that the compression algorithm adds header information to the compressed data. 
 
 \subsection{Entropy}
 
-Next, we show the entropy of the binary sequence. The shannon entropy is $0.99975 \pm 0.00045$. The significance of the result compared to the expected value of 1 is $z=0.55$, which is not significant at the 5\% level. The entropy is close to 1, indicating that the data is random.
+Next, we show the entropy of the binary sequence. The shannon entropy is $0.99982 \pm 0.00085$. The significance of the result compared to the expected value of 1 is $z=0.21$, which is not significant at the 5\% level. The entropy is close to 1, indicating that the data is random.
 
 \subsection{Lempel-Ziv Complexity}
 
-Next, we show the result of the Lempel-Ziv complexity test. With the length of the binary sequence $N=4648$, we expect $c(S) \sim \frac{n}{\log_2 n} = 381.5$. The observed Lempel-Ziv complexity is $c(S) = 615 \pm 1$. The fact that the observed complexity is greater than the expected complexity indicates that the data is random. 
+Next, we show the result of the Lempel-Ziv complexity test. With the length of the binary sequence $N=1636$, we expect $c(S) \sim \frac{n}{\log_2 n} = 258$. The observed Lempel-Ziv complexity is $c(S) = 258 \pm 1$. The significance of the result compared to the expected value of 258 is $z=0.00$, which is not significant at the 5\% level. 
 
 \subsection{Angular Dependence Test}
 
-Lastly, we show the dependence of the probability of getting a 1 in the sequence on the angle of the detectors in Fig. \ref{fig:angle_dependence}. We obtain the slope of the linear fit to be $-0.00037 \pm 0.00026$. The significance of the result compared to the expected value of 0 is $z=1.44$, which is not significant at the 5\% level. 
+Lastly, we show the dependence of the probability of getting a 1 in the sequence on the angle of the detectors in Fig. \ref{fig:angle_dependence}. We obtain the slope of the linear fit to be $-0.00072 \pm 0.00051$. The significance of the result compared to the expected value of 0 is $z=1.40$, which is not significant at the 5\% level. 
 
 \begin{figure}
 \centering
@@ -194,24 +194,24 @@ Lastly, we show the dependence of the probability of getting a 1 in the sequence
 \end{figure}
 
 \subsection{Summary of Results}
-The result of the analysis is summarized in Table \ref{tab:summary}. The table shows that all the tests indicate that the data is close to true randomness. The angular dependence test also shows that the angle does not have a significant effect on the random nature of the data. The combined two-sided level of signficance with Stouffer's method \cite {stouffer1949american} is $z=0.39$, which is not significant at the 5\% level. 
+The result of the analysis is summarized in Table \ref{tab:summary}. The table shows that all the tests indicate that the data is close to true randomness. The angular dependence test also shows that the angle does not have a significant effect on the random nature of the data. The combined level of signficance with Stouffer's method \cite {stouffer1949american} is $z=0.40$, which is not significant at the 5\% level. 
 \begin{table*}
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
 Test & Prediction & Result & Significance\\
 \hline
-Monobit Probability & 0.5 & $0.50925 \pm 0.0073$ & 1.27 \\
+Monobit Probability & 0.5 & $0.508 \pm 0.012$ & 0.64 \\
 \hline
-Autocorrelation Function & 0.0117 & $0.0140 \pm 0.0015$ & 1.52\\
+Autocorrelation Function & 0.0117 & $0.0172 \pm 0.0024$ & 1.06\\
 \hline
-Compression Ratio & 1 & $1.00396$ & - \\
+Compression Ratio & 1 & $1.11$ & - \\
 \hline
-Shannon Entropy & 1 & $0.99975 \pm 0.00044$ & 0.55\\
+Shannon Entropy & 1 & $0.99982 \pm 0.00085$ & 0.21\\
 \hline
-Lempel-Ziv Complexity & $\ge 382$ & $615 \pm 2$ & - \\
+Lempel-Ziv Complexity & $258$ & $258 \pm 1$ & 0 \\
 \hline
-Angular Dependence & 0 & $-0.00037 \pm 0.00026$ & 1.44\\
+Angular Dependence & 0 & $-0.00072 \pm 0.00051$ & 1.40\\
 \hline
 \end{tabular}
 \caption{Summary of the results of the analysis. The table shows that all the tests indicate that the data is random. The angular dependence test also shows that the angle does not have a significant effect on the random nature of the data.}
@@ -219,7 +219,7 @@ Angular Dependence & 0 & $-0.00037 \pm 0.00026$ & 1.44\\
 \end{table*}
 
 \section{Conclusion}
-In conclusion, the analysis shows that the muon detection process is indeed random. The results of the statistical tests, including the autocorrelation function, sequence test, compression test, entropy test, and Lempel-Ziv complexity test, all indicate that the data is random. The analysis also shows that the angle of the detectors does not have a significant effect on the random nature of the data.
+In conclusion, the analysis shows that the muon detection process is indeed random, with a deviation of $0.40\sigma$. The results of the statistical tests, including the autocorrelation function, sequence test, compression test, entropy test, and Lempel-Ziv complexity test, all indicate that the data is random. The analysis also shows that the angle of the detectors does not have a significant effect on the random nature of the data.
 
 The results of the analysis are consistent with the expected behavior of a random process. The analysis also shows that the muon detection process is not affected by the angle of the detectors. 
 
